@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class CostRepositoryImpl implements CostRepository {
-    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance(10);
     private static final String INSERT_COST_QUERY = "INSERT INTO costs (brand, model, year) values (?, ?, ?);";
     private static final String DELETE_COST_QUERY = "DELETE FROM costs where id = ?;";
     private static final String FIND_ALL_QUERY = "SELECT * FROM costs where cost = ?;";
 
     @Override
-    public List<Cost> findByCost(Double cost) {
+    public List<Cost> getByCost(Double cost) {
         return null;
     }
 
@@ -40,12 +40,12 @@ public class CostRepositoryImpl implements CostRepository {
     }
 
     @Override
-    public List<Cost> findAll() {
+    public List<Cost> getAll() {
         return null;
     }
 
     @Override
-    public Optional<Cost> findById(Long id) {
+    public Optional<Cost> getById(Long id) {
         return Optional.empty();
     }
 

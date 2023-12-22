@@ -9,6 +9,7 @@ public class Service {
     private Car carId;
     private Department departmentId;
 
+    public Service() { }
     public Service(Long id, String name, Double price, Car carId, Department departmentId) {
         this.id = id;
         this.name = name;

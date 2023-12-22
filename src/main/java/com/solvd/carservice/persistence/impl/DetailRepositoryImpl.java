@@ -2,24 +2,23 @@ package com.solvd.carservice.persistence.impl;
 
 import com.solvd.carservice.domain.Detail;
 import com.solvd.carservice.persistence.DetailRepository;
-
 import java.util.List;
 import java.util.Optional;
 
 public class DetailRepositoryImpl implements DetailRepository {
 
     @Override
-    public List<Detail> findByName(String name) {
+    public List<Detail> getByName(String name) {
         return null;
     }
 
     @Override
-    public List<Detail> findByInStock(Boolean inStock) {
+    public List<Detail> getByInStock(Boolean inStock) {
         return null;
     }
 
     @Override
-    public List<Detail> findByDeliveryDays(Integer deliveryDays) {
+    public List<Detail> getByDeliveryDays(Integer deliveryDays) {
         return null;
     }
 
@@ -29,12 +28,12 @@ public class DetailRepositoryImpl implements DetailRepository {
     }
 
     @Override
-    public List<Detail> findAll() {
+    public List<Detail> getAll() {
         return null;
     }
 
     @Override
-    public Optional<Detail> findById(Long id) {
+    public Optional<Detail> getById(Long id) {
         return Optional.empty();
     }
 

@@ -9,7 +9,7 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository{
 
     @Override
-    public List<Order> findByDate(Date date) {
+    public List<Order> getByDate(Date date) {
         return null;
     }
 
@@ -19,12 +19,12 @@ public class OrderRepositoryImpl implements OrderRepository{
     }
 
     @Override
-    public List<Order> findAll() {
+    public List<Order> getAll() {
         return null;
     }
 
     @Override
-    public Optional<Order> findById(Long id) {
+    public Optional<Order> getById(Long id) {
         return Optional.empty();
     }
 

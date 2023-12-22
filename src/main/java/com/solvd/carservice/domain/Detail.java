@@ -9,6 +9,7 @@ public class Detail {
     private Boolean inStock;
     private Integer deliveryDays;
 
+    public Detail() { }
     public Detail(Long id, String name, Car carId, Boolean inStock, Integer deliveryDays) {
         this.id = id;
         this.name = name;

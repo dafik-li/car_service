@@ -13,6 +13,7 @@ public class Employee {
     private String phoneNumber;
     private Department departmentId;
 
+    public Employee() { }
     public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber, Department departmentId) {
         this.id = id;
         this.name = name;

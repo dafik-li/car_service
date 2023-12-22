@@ -5,8 +5,8 @@ import java.util.Optional;
 
 public interface InterfaceRepository<E> {
     void create(E Entity);
-    List<E> findAll();
-    Optional<E> findById(Long id);
-    void update(E Entity);
+    List<E> getAll();
+    Optional<E> getById(Long id);
+    void update(E Entity, String K);
     void deleteById(Long id);
 }

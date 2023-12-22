@@ -7,6 +7,7 @@ public class Department {
     private String name;
     private Company companyId;
 
+    public Department() { }
     public Department(long id, String name, Company companyId) {
         this.id = id;
         this.name = name;

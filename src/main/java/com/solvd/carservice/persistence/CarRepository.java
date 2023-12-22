@@ -4,7 +4,7 @@ import com.solvd.carservice.domain.Car;
 import java.util.List;
 
 public interface CarRepository extends InterfaceRepository<Car>{
-    List<Car> findByBrand(String brand);
-    List<Car> findByModel(String model);
-    List<Car> findByYear(Integer year);
+    List<Car> getByBrand(String brand);
+    List<Car> getByModel(String model);
+    List<Car> getByYear(Integer year);
 }

@@ -1,16 +1,14 @@
 package com.solvd.carservice.persistence.impl;
 
 import com.solvd.carservice.domain.Car;
-import com.solvd.carservice.domain.Company;
 import com.solvd.carservice.persistence.CarRepository;
 import com.solvd.carservice.persistence.ConnectionPool;
-
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
 public class CarRepositoryImpl implements CarRepository {
-    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance(10);
     private static final String INSERT_CAR_QUERY = "INSERT INTO cars(brand, model, year) values (?, ?, ?);";
     private static final String DELETE_CAR_QUERY = "DELETE FROM cars where id = ?;";
     private static final String FIND_ALL_QUERY = "SELECT * FROM cars where name = ?;";
@@ -19,17 +17,17 @@ public class CarRepositoryImpl implements CarRepository {
     private static final String FIND_BY_YEAR_QUERY = "SELECT * FROM cars where year = ?;";
 
     @Override
-    public List<Car> findByBrand(String brand) {
+    public List<Car> getByBrand(String brand) {
         return null;
     }
 
     @Override
-    public List<Car> findByModel(String model) {
+    public List<Car> getByModel(String model) {
         return null;
     }
 
     @Override
-    public List<Car> findByYear(Integer year) {
+    public List<Car> getByYear(Integer year) {
         return null;
     }
 
@@ -54,7 +52,7 @@ public class CarRepositoryImpl implements CarRepository {
     }
 
     @Override
-    public List<Car> findAll() {
+    public List<Car> getAll() {
         List<Car> cars;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
@@ -70,7 +68,7 @@ public class CarRepositoryImpl implements CarRepository {
     }
 
     @Override
-    public Optional<Car> findById(Long id) {
+    public Optional<Car> getById(Long id) {
         return Optional.empty();
     }
 

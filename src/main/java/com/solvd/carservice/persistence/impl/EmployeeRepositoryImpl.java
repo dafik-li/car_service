@@ -2,44 +2,43 @@ package com.solvd.carservice.persistence.impl;
 
 import com.solvd.carservice.domain.Employee;
 import com.solvd.carservice.persistence.EmployeeRepository;
-
 import java.util.List;
 import java.util.Optional;
 
 public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
-    public List<Employee> findByName(String name) {
+    public List<Employee> getByName(String name) {
         return null;
     }
 
     @Override
-    public List<Employee> findBySurname(String surname) {
+    public List<Employee> getBySurname(String surname) {
         return null;
     }
 
     @Override
-    public List<Employee> findByAge(Integer age) {
+    public List<Employee> getByAge(Integer age) {
         return null;
     }
 
     @Override
-    public List<Employee> findByPosition(String position) {
+    public List<Employee> getByPosition(String position) {
         return null;
     }
 
     @Override
-    public List<Employee> findByLevel(Integer level) {
+    public List<Employee> getByLevel(Integer level) {
         return null;
     }
 
     @Override
-    public List<Employee> findBySalary(Integer salary) {
+    public List<Employee> getBySalary(Integer salary) {
         return null;
     }
 
     @Override
-    public List<Employee> findByPhoneNumber(String phoneNumber) {
+    public List<Employee> getByPhoneNumber(String phoneNumber) {
         return null;
     }
 
@@ -49,12 +48,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findAll() {
+    public List<Employee> getAll() {
         return null;
     }
 
     @Override
-    public Optional<Employee> findById(Long id) {
+    public Optional<Employee> getById(Long id) {
         return Optional.empty();
     }
 

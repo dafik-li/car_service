@@ -5,8 +5,8 @@ import java.sql.Date;
 import java.util.List;
 
 public interface ClientRepository extends InterfaceRepository<Client>{
-    List<Client> findByName(String name);
-    List<Client> findBySurname(String surname);
-    List<Client> findByPhoneNumber(String phoneNumber);
-    List<Client> findByBirthday(Date birthday);
+    List<Client> getByName(String name);
+    List<Client> getBySurname(String surname);
+    List<Client> getByPhoneNumber(String phoneNumber);
+    List<Client> getByBirthday(Date birthday);
 }

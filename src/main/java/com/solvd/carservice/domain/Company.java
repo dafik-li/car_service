@@ -7,6 +7,7 @@ public class Company {
     private String name;
     private String address;
 
+    public Company() { }
     public Company(long id, String name, String address) {
         this.id = id;
         this.name = name;

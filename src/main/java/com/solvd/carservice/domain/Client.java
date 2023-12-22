@@ -10,6 +10,7 @@ public class Client {
     private String phoneNumber;
     private Date birthday;
 
+    public Client() { }
     public Client(long id, String name, String surname, String phoneNumber, Date birthday) {
         this.id = id;
         this.name = name;

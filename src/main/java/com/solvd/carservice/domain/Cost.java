@@ -8,6 +8,7 @@ public class Cost {
     private Service serviceId;
     private Detail detailId;
 
+    public Cost() { }
     public Cost(long id, Double cost, Service serviceId, Detail detailId) {
         this.id = id;
         this.cost = cost;

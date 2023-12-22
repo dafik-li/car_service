@@ -3,13 +3,12 @@ package com.solvd.carservice.persistence.impl;
 import com.solvd.carservice.domain.Client;
 import com.solvd.carservice.persistence.ClientRepository;
 import com.solvd.carservice.persistence.ConnectionPool;
-
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
 public class ClientRepositoryImpl implements ClientRepository {
-    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance(10);
     private static final String INSERT_CLIENT_QUERY = "INSERT INTO clients (brand, model, year) values (?, ?, ?);";
     private static final String DELETE_CLIENT_QUERY = "DELETE FROM clients where id = ?;";
     private static final String FIND_ALL_QUERY = "SELECT * FROM clients where name = ?;";
@@ -18,22 +17,22 @@ public class ClientRepositoryImpl implements ClientRepository {
     private static final String FIND_BY_PHONE_NUMBER_QUERY = "SELECT * FROM clients where phone_number = ?;";
     private static final String FIND_BY_BIRTHDAY_QUERY = "SELECT * FROM clients where birthday = ?;";
     @Override
-    public List<Client> findByName(String name) {
+    public List<Client> getByName(String name) {
         return null;
     }
 
     @Override
-    public List<Client> findBySurname(String surname) {
+    public List<Client> getBySurname(String surname) {
         return null;
     }
 
     @Override
-    public List<Client> findByPhoneNumber(String phoneNumber) {
+    public List<Client> getByPhoneNumber(String phoneNumber) {
         return null;
     }
 
     @Override
-    public List<Client> findByBirthday(Date birthday) {
+    public List<Client> getByBirthday(Date birthday) {
         return null;
     }
 
@@ -59,12 +58,12 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public List<Client> findAll() {
+    public List<Client> getAll() {
         return null;
     }
 
     @Override
-    public Optional<Client> findById(Long id) {
+    public Optional<Client> getById(Long id) {
         return Optional.empty();
     }
 

@@ -8,6 +8,7 @@ public class Car {
     private String model;
     private Integer year;
 
+    public Car() { }
     public Car(long id, String brand, String model, Integer year) {
         this.id = id;
         this.brand = brand;

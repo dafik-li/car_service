@@ -4,5 +4,5 @@ import com.solvd.carservice.domain.Department;
 import java.util.List;
 
 public interface DepartmentRepository extends InterfaceRepository<Department> {
-    List<Department> findByName(String name);
+    List<Department> getByName(String name);
 }

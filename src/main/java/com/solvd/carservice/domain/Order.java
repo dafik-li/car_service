@@ -9,6 +9,7 @@ public class Order {
     private Client clientId;
     private Cost costId;
 
+    public Order() { }
     public Order(Long id, Date date, Client clientId, Cost costId) {
         this.id = id;
         this.date = date;
