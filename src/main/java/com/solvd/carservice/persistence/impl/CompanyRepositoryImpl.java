@@ -9,22 +9,22 @@ import java.util.List;
 import java.util.Optional;
 
 public class CompanyRepositoryImpl implements CompanyRepository {
-    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance(10);
-    private static final String INSERT_COMPANY_QUERY = "INSERT INTO companies(name, address) values (?, ?);";
+    private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private static final String INSERT_COMPANY_QUERY = "INSERT INTO companies (name, address) VALUES (?, ?);";
     private static final String DELETE_COMPANY_QUERY = "DELETE FROM companies WHERE id = ?;";
     private static final String UPDATE_COMPANY_NAME_QUERY = "UPDATE companies SET name = ? WHERE id = ?;";
     private static final String UPDATE_COMPANY_ADDRESS_QUERY = "UPDATE companies SET address = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY = "SELECT * FROM companies;";
-    private static final String GET_BY_ID = "SELECT * FROM companies WHERE id = ?;";
-    private static final String GET_BY_NAME_COMPANY_QUERY = "SELECT * FROM companies WHERE name = ?;";
-    private static final String GET_BY_ADDRESS_COMPANY_QUERY = "SELECT * FROM companies WHERE address = ?;";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM companies WHERE id = ?;";
+    private static final String GET_BY_COMPANY_NAME_QUERY = "SELECT * FROM companies WHERE name = ?;";
+    private static final String GET_BY_COMPANY_ADDRESS_QUERY = "SELECT * FROM companies WHERE address = ?;";
 
     @Override
     public List<Company> getByName(String name) {
         List<Company> companies;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_NAME_COMPANY_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_COMPANY_NAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
             companies = mapCompanies(resultSet);
             while (resultSet.next()) {
@@ -42,7 +42,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         List<Company> companies;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ADDRESS_COMPANY_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_COMPANY_ADDRESS_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
             companies = mapCompanies(resultSet);
             while (resultSet.next()) {
@@ -93,7 +93,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         Optional<Company> companyOptional;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
@@ -129,7 +129,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
             preparedStatement.setString(1, value);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to update company" + field, e);
+            throw new RuntimeException("Unable to update company " + field, e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }

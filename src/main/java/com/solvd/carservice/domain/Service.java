@@ -6,14 +6,26 @@ public class Service {
     private Long id;
     private String name;
     private Double price;
+    private Double daysToDo;
     private Car carId;
     private Department departmentId;
 
     public Service() { }
-    public Service(Long id, String name, Double price, Car carId, Department departmentId) {
+    public Service(Long id) {
+        this.id = id;
+    }
+    public Service(String name, Double price, Double daysToDo, Car carId, Department departmentId) {
+        this.name = name;
+        this.price = price;
+        this.daysToDo = daysToDo;
+        this.carId = carId;
+        this.departmentId = departmentId;
+    }
+    public Service(Long id, String name, Double price, Double daysToDo, Car carId, Department departmentId) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.daysToDo = daysToDo;
         this.carId = carId;
         this.departmentId = departmentId;
     }
@@ -34,6 +46,12 @@ public class Service {
     }
     public void setPrice(Double price) {
         this.price = price;
+    }
+    public Double getDaysToDo() {
+        return daysToDo;
+    }
+    public void setDaysToDo(Double daysToDo) {
+        this.daysToDo = daysToDo;
     }
     public Car getCarId() {
         return carId;

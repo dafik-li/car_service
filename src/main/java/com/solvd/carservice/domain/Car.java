@@ -9,16 +9,24 @@ public class Car {
     private Integer year;
 
     public Car() { }
-    public Car(long id, String brand, String model, Integer year) {
+    public Car(String brand, String model, Integer year) {
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+    }
+    public Car(Long id, String brand, String model, Integer year) {
         this.id = id;
         this.brand = brand;
         this.model = model;
         this.year = year;
     }
+    public Car(Long id) {
+    }
+
     public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getBrand() {

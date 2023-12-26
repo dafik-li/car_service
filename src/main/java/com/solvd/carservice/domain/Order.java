@@ -10,6 +10,11 @@ public class Order {
     private Cost costId;
 
     public Order() { }
+    public Order(Date date, Client clientId, Cost costId) {
+        this.date = date;
+        this.clientId = clientId;
+        this.costId = costId;
+    }
     public Order(Long id, Date date, Client clientId, Cost costId) {
         this.id = id;
         this.date = date;

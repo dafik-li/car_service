@@ -9,7 +9,15 @@ public class Cost {
     private Detail detailId;
 
     public Cost() { }
-    public Cost(long id, Double cost, Service serviceId, Detail detailId) {
+    public Cost(Long id) {
+        this.id = id;
+    }
+    public Cost(Double cost, Service serviceId, Detail detailId) {
+        this.cost = cost;
+        this.serviceId = serviceId;
+        this.detailId = detailId;
+    }
+    public Cost(Long id, Double cost, Service serviceId, Detail detailId) {
         this.id = id;
         this.cost = cost;
         this.serviceId = serviceId;
@@ -18,7 +26,7 @@ public class Cost {
     public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public Double getCost() {

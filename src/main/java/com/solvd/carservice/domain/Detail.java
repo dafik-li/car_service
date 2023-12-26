@@ -10,6 +10,15 @@ public class Detail {
     private Integer deliveryDays;
 
     public Detail() { }
+    public Detail(Long id) {
+        this.id = id;
+    }
+    public Detail(String name, Car carId, Boolean inStock, Integer deliveryDays) {
+        this.name = name;
+        this.carId = carId;
+        this.inStock = inStock;
+        this.deliveryDays = deliveryDays;
+    }
     public Detail(Long id, String name, Car carId, Boolean inStock, Integer deliveryDays) {
         this.id = id;
         this.name = name;

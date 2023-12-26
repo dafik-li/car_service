@@ -1,4 +1,6 @@
 package com.solvd.carservice.service;
 
-public interface CostService {
+import com.solvd.carservice.domain.Cost;
+
+public interface CostService extends InterfaceService<Cost>{
 }

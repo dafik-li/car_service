@@ -11,17 +11,27 @@ public class Client {
     private Date birthday;
 
     public Client() { }
-    public Client(long id, String name, String surname, String phoneNumber, Date birthday) {
+    public Client(Long id) {
+        this.id = id;
+    }
+    public Client(String name, String surname, String phoneNumber, Date birthday) {
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+    }
+    public Client(Long id, String name, String surname, String phoneNumber, Date birthday) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
         this.birthday = birthday;
     }
+
     public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {

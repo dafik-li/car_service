@@ -8,15 +8,23 @@ public class Department {
     private Company companyId;
 
     public Department() { }
-    public Department(long id, String name, Company companyId) {
+    public Department(Long id) {
+        this.id = id;
+    }
+    public Department(String name, Company companyId) {
+        this.name = name;
+        this.companyId = companyId;
+    }
+    public Department(Long id, String name, Company companyId) {
         this.id = id;
         this.name = name;
         this.companyId = companyId;
     }
+
     public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {

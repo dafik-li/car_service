@@ -8,15 +8,21 @@ public class Company {
     private String address;
 
     public Company() { }
-    public Company(long id, String name, String address) {
+    public Company(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+    public Company(Long id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;
     }
+    public Company(Long id) {
+    }
     public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {

@@ -16,10 +16,10 @@ public class ConnectionPool {
     private volatile static ConnectionPool instance;
     private final List<Connection> connections = new CopyOnWriteArrayList<>();
     private final int poolNumbers;
-    private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/car_service";
+    private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/car_service_project";
     private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = "123";
+    private static final String DB_PASSWORD = "dafik1987";
 
     public ConnectionPool(int poolNumbers) {
         this.poolNumbers = poolNumbers;
@@ -40,13 +40,13 @@ public class ConnectionPool {
         }
     }
     //lazy-initialization with thread-safe and high performance - using double checked block with synchronized
-    public static ConnectionPool getInstance(int poolNumbers) {
+    public static ConnectionPool getInstance() {
         ConnectionPool localInstance = instance;
         if (localInstance == null) {
             synchronized (ConnectionPool.class) {
                 localInstance = instance;
                 if (localInstance == null) {
-                    instance = localInstance = new ConnectionPool(poolNumbers);
+                    instance = localInstance = new ConnectionPool(1);
                 }
             }
         }
