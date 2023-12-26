@@ -1,4 +1,4 @@
-package com.solvd.carservice.utils;
+package com.solvd.carservice.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -9,16 +9,13 @@ public class ConsoleMenu {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ConsoleMenu.class);
 
-    public ConsoleMenu() {
-    }
-
     public void moderateStartPageMenu() {
         LOGGER.info("Welcome to a Tony Montana's car service!" + "\n" +
                 "If you want to pimp your car - press 1" + "\n" +
                 "If you our admin - press 2" + "\n" +
                 "If you don't need anything - press 0");
     }
-    public void moderateTablesMenu() {
+    public void chooseControllerMenu() {
         LOGGER.info("Hallo our admin! Which table do you want to work with?" + "\n" +
                 "1 - companies" + "\n" +
                 "2 - departments" + "\n" +
@@ -31,7 +28,7 @@ public class ConsoleMenu {
                 "9 - clients" + "\n" +
                 "0 - return");
     }
-    public void moderateActionsMenu() {
+    public void chooseActionMenu() {
         LOGGER.info("What operation you want to do?" + "\n" +
                 "1 - add" + "\n" +
                 "2 - retrieveAll" + "\n" +

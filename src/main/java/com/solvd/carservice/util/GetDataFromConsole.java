@@ -1,4 +1,4 @@
-package com.solvd.carservice.utils;
+package com.solvd.carservice.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -25,7 +25,7 @@ public class GetDataFromConsole {
             LOGGER.info("You typed - " + query);
             fromConsole = Long.parseLong(query);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return fromConsole;
     }
@@ -37,7 +37,7 @@ public class GetDataFromConsole {
             LOGGER.info("You typed - " + query);
             fromConsole = Integer.parseInt(query);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return fromConsole;
     }
@@ -49,7 +49,7 @@ public class GetDataFromConsole {
             LOGGER.info("You typed - " + query);
             fromConsole = Double.parseDouble(query);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return fromConsole;
     }
@@ -59,7 +59,7 @@ public class GetDataFromConsole {
         try {
             LOGGER.info("You typed - " + fromConsole);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return fromConsole;
     }
@@ -74,7 +74,7 @@ public class GetDataFromConsole {
             fromConsole = simpleDateFormat.parse(query);
             fromConsoleSql = new Date(fromConsole.getTime());
         } catch (NumberFormatException | ParseException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return fromConsoleSql;
     }
@@ -86,7 +86,7 @@ public class GetDataFromConsole {
             LOGGER.info("You typed - " + query);
             fromConsole = Boolean.parseBoolean(query);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return fromConsole;
     }

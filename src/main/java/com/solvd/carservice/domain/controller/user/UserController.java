@@ -1,7 +1,9 @@
-package com.solvd.carservice.domain.controller;
+package com.solvd.carservice.domain.controller.user;
 
-import com.solvd.carservice.utils.ConsoleMenu;
-import com.solvd.carservice.utils.GetDataFromConsole;
+import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.util.ConsoleMenu;
+import com.solvd.carservice.util.GetDataFromConsole;
+import com.solvd.carservice.util.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
@@ -11,7 +13,7 @@ public class UserController {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(ActionController.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(Generator.class);
     private final Scanner scanner;
     private final Validator validator;
     private final GetDataFromConsole getDataFromConsole;

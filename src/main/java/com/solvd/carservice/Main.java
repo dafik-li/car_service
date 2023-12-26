@@ -1,11 +1,11 @@
 package com.solvd.carservice;
 
-import com.solvd.carservice.domain.controller.ActionController;
+import com.solvd.carservice.domain.controller.Generator;
 
 public class Main {
 
     public static void main(String[] args) {
-        ActionController actionController = new ActionController();
-        actionController.authorization();
+        Generator generator = new Generator();
+        generator.authorization();
     }
 }
