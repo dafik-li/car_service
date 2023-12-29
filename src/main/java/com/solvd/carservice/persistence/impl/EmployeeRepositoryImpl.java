@@ -1,7 +1,9 @@
 package com.solvd.carservice.persistence.impl;
 
+import com.solvd.carservice.domain.Company;
 import com.solvd.carservice.domain.Department;
 import com.solvd.carservice.domain.Employee;
+import com.solvd.carservice.domain.Service;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.EmployeeRepository;
 import java.sql.*;
@@ -13,6 +15,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_EMPLOYEE_QUERY = "INSERT INTO employees " +
             "(name, surname, age, position, level, salary, phone_number, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (employee_id, service_id) VALUES (?, ?);";
     private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_NAME_QUERY = "UPDATE employees SET name = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_SURNAME_QUERY = "UPDATE employees SET surname = ? WHERE id = ?;";
@@ -21,7 +24,10 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     private static final String UPDATE_EMPLOYEE_LEVEL_QUERY = "UPDATE employees SET level = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM employees";
+    private static final String GET_ALL_QUERY =
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address FROM employees e " +
+            "LEFT JOIN departments d on e.department_id = d.id " +
+            "LEFT JOIN companies c on d.company_id = c.id;";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM employees WHERE id = ?;";
     private static final String GET_BY_EMPLOYEE_NAME_QUERY = "SELECT * FROM employees WHERE name = ?;";
     private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = "SELECT * FROM employees WHERE surname = ?;";
@@ -158,6 +164,20 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return employees;
     }
     @Override
+    public void appendService(Employee employee, Service service) {
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_EMPLOYEE_SERVICE_QUERY);
+            preparedStatement.setLong(1, employee.getId());
+            preparedStatement.setLong(2, service.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to create employee-service", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+    }
+    @Override
     public void create(Employee employee) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
@@ -206,7 +226,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             employeeOptional = Optional.of(
-                    new Employee(resultSet.getLong(1),
+                    new Employee(
+                            resultSet.getLong(1),
                             resultSet.getString(2),
                             resultSet.getString(3),
                             resultSet.getInt(4),
@@ -214,7 +235,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                             resultSet.getInt(6),
                             resultSet.getInt(7),
                             resultSet.getString(8),
-                            new Department(resultSet.getLong(9))));
+                            new Department(
+                                    resultSet.getLong(9))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -294,7 +316,14 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 employee.setLevel(resultSet.getInt(6));
                 employee.setSalary(resultSet.getInt(7));
                 employee.setPhoneNumber(resultSet.getString(8));
-                employee.setDepartmentId(new Department(resultSet.getLong(9)));
+                employee.setDepartmentId(
+                        new Department(
+                                resultSet.getLong(9),
+                                resultSet.getString(10),
+                                new Company(
+                                        resultSet.getLong(11),
+                                        resultSet.getString(12),
+                                        resultSet.getString(13))));
                 employees.add(employee);
             }
         } catch (SQLException e) {

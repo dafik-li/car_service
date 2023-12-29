@@ -8,6 +8,9 @@ public class Company {
     private String address;
 
     public Company() { }
+    public Company(Long id) {
+        this.id = id;
+    }
     public Company(String name, String address) {
         this.name = name;
         this.address = address;
@@ -16,8 +19,6 @@ public class Company {
         this.id = id;
         this.name = name;
         this.address = address;
-    }
-    public Company(Long id) {
     }
     public Long getId() {
         return id;

@@ -140,7 +140,8 @@ public class ClientRepositoryImpl implements ClientRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             clientOptional = Optional.of(
-                    new Client(resultSet.getLong(1),
+                    new Client(
+                            resultSet.getLong(1),
                             resultSet.getString(2),
                             resultSet.getString(3),
                             resultSet.getString(4),

@@ -9,6 +9,9 @@ public class Car {
     private Integer year;
 
     public Car() { }
+    public Car(Long id) {
+        this.id = id;
+    }
     public Car(String brand, String model, Integer year) {
         this.brand = brand;
         this.model = model;
@@ -20,9 +23,6 @@ public class Car {
         this.model = model;
         this.year = year;
     }
-    public Car(Long id) {
-    }
-
     public Long getId() {
         return id;
     }

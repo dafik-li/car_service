@@ -39,12 +39,17 @@ public class ServiceController extends AbstractController {
         Service service = new Service(
                 getDataFromConsole.getStringFromConsole("name"),
                 getDataFromConsole.getDoubleFromConsole("price"),
-                getDataFromConsole.getDoubleFromConsole("days to do"),
-                new Car(getDataFromConsole.getLongFromConsole("car")),
-                new Department(getDataFromConsole.getLongFromConsole("department")));
+                getDataFromConsole.getIntegerFromConsole("hours to do"),
+                new Car(
+                        getDataFromConsole.getLongFromConsole("car")),
+                new Department(
+                        getDataFromConsole.getLongFromConsole("department")));
         ServiceService serviceService = new ServiceServiceImpl();
         serviceService.add(service);
-        LOGGER.info("Service - " + service.getName() + " - was added");
+        LOGGER.info(
+                "Service - " +
+                service.getName() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of services");
@@ -53,26 +58,35 @@ public class ServiceController extends AbstractController {
                     "Service id - " + service.getId() + "|" +
                     "name - " + service.getName() + "|" +
                     "price - " + service.getPrice() + "|" +
-                    "days to do - " + service.getDaysToDo() + "|" +
-                    "car - " + service.getCarId() + "|" +
-                    "department - " + service.getDepartmentId());
+                    "hours to do - " + service.getHoursToDo() + "][" +
+                    "car id - " + service.getCarId().getId() + "|" +
+                    "brand - " + service.getCarId().getBrand() + "|" +
+                    "model - " + service.getCarId().getModel() + "|" +
+                    "year - " + service.getCarId().getYear() + "][" +
+                    "department id - " + service.getDepartmentId().getId() + "|" +
+                    "name - " + service.getDepartmentId().getName() + "][" +
+                    "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
+                    "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
+                    "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
         }
     }
     public void change() {
     }
     public void retrieveById() {
-        Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Service id - " + serviceOptional.get().getId() + "|" +
                 "name - "  + serviceOptional.get().getName() + "|" +
                 "price - " + serviceOptional.get().getPrice() + "|" +
-                "days to do - " + serviceOptional.get().getDaysToDo() + "|" +
+                "hours to do - " + serviceOptional.get().getHoursToDo() + "|" +
                 "car - " + serviceOptional.get().getCarId() + "|" +
                 "department - " + serviceOptional.get().getDepartmentId());
     }
     public void removeById() {
         LOGGER.info("Following company will be deleted");
         ServiceService serviceService = new ServiceServiceImpl();
-        serviceService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        serviceService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

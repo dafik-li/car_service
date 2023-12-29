@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.CompanyRepository">
+
+
+    <insert id="add" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO companies (name, address) VALUES (#{name}, #{address})
+    </insert>
+
+
+    <delete id="deleteById">
+        DELETE FROM companies WHERE id = #{id}
+    </delete>
+
+
+
+    <update id="update">
+        UPDATE companies
+        <if test="field == 'name'">
+            SET name = #{company.name}
+        </if>
+        <if test="field == 'address'">
+            SET name = #{company.address}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+
+    <sql id="companySelect">
+        SELECT * FROM companies
+    </sql>
+
+
+    <select id="getById">
+        <include refid="companySelect"/>
+        WHERE id = #{id}
+    </select>
+    <select id="getByName">
+        <include refid="companySelect"/>
+        WHERE name = #{name}
+    </select>
+    <select id="getByAddress">
+        SELECT * FROM companies WHERE address = #{address}
+    </select>
+
+
+</mapper>

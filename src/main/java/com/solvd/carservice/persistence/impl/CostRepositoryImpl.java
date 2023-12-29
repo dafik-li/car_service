@@ -13,7 +13,15 @@ public class CostRepositoryImpl implements CostRepository {
     private static final String INSERT_COST_QUERY = "INSERT INTO costs (cost, service_id, detail_id) VALUES (?, ?, ?);";
     private static final String DELETE_COST_QUERY = "DELETE FROM costs WHERE id = ?;";
     private static final String UPDATE_COST_QUERY = "UPDATE costs SET cost = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM costs;";
+    private static final String GET_ALL_QUERY =
+            "SELECT c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
+                    "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
+                    "FROM costs c " +
+            "LEFT JOIN services s on c.service_id = s.id " +
+            "LEFT JOIN cars on s.car_id = cars.id " +
+            "LEFT JOIN departments d on s.department_id = d.id " +
+            "LEFT JOIN companies com on d.company_id = c.id " +
+            "LEFT JOIN details det on c.detail_id = det.id;";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM costs WHERE id = ?;";
     private static final String GET_BY_COST_COST_QUERY = "SELECT * FROM costs WHERE cost = ?;";
 
@@ -79,10 +87,13 @@ public class CostRepositoryImpl implements CostRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             costOptional = Optional.of(
-                    new Cost(resultSet.getLong(1),
+                    new Cost(
+                            resultSet.getLong(1),
                             resultSet.getDouble(2),
-                            new Service(resultSet.getLong(3)),
-                            new Detail(resultSet.getLong(4))));
+                            new Service(
+                                    resultSet.getLong(3)),
+                            new Detail(
+                                    resultSet.getLong(4))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -132,8 +143,30 @@ public class CostRepositoryImpl implements CostRepository {
                 Cost cost = new Cost();
                 cost.setId(resultSet.getLong(1));
                 cost.setCost(resultSet.getDouble(2));
-                cost.setServiceId(new Service(resultSet.getLong(3)));
-                cost.setDetailId(new Detail(resultSet.getLong(4)));
+                cost.setServiceId(
+                        new Service(
+                                resultSet.getLong(3),
+                                resultSet.getString(4),
+                                resultSet.getDouble(5),
+                                resultSet.getInt(6),
+                                new Car(
+                                        resultSet.getLong(7),
+                                        resultSet.getString(8),
+                                        resultSet.getString(9),
+                                        resultSet.getInt(10)),
+                                new Department(
+                                        resultSet.getLong(11),
+                                        resultSet.getString(12),
+                                        new Company(
+                                                resultSet.getLong(13),
+                                                resultSet.getString(14),
+                                                resultSet.getString(15)))));
+                cost.setDetailId(new Detail(
+                        resultSet.getLong(16),
+                        resultSet.getString(17),
+                        resultSet.getInt(18),
+                        resultSet.getBoolean(19),
+                        resultSet.getInt(20)));
                 costs.add(cost);
             }
         } catch (SQLException e) {

@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Detail {
     private Long id;
     private String name;
+    private Integer price;
     private Car carId;
     private Boolean inStock;
     private Integer deliveryDays;
@@ -13,15 +14,24 @@ public class Detail {
     public Detail(Long id) {
         this.id = id;
     }
-    public Detail(String name, Car carId, Boolean inStock, Integer deliveryDays) {
+    public Detail(Long id, String name, Integer price, Boolean inStock, Integer deliveryDays) {
+        this.id = id;
         this.name = name;
+        this.price = price;
+        this.inStock = inStock;
+        this.deliveryDays = deliveryDays;
+    }
+    public Detail(String name, Integer price, Car carId, Boolean inStock, Integer deliveryDays) {
+        this.name = name;
+        this.price = price;
         this.carId = carId;
         this.inStock = inStock;
         this.deliveryDays = deliveryDays;
     }
-    public Detail(Long id, String name, Car carId, Boolean inStock, Integer deliveryDays) {
+    public Detail(Long id, String name, Integer price, Car carId, Boolean inStock, Integer deliveryDays) {
         this.id = id;
         this.name = name;
+        this.price = price;
         this.carId = carId;
         this.inStock = inStock;
         this.deliveryDays = deliveryDays;
@@ -37,6 +47,12 @@ public class Detail {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public Integer getPrice() {
+        return price;
+    }
+    public void setPrice(Integer price) {
+        this.price = price;
     }
     public Car getCarId() {
         return carId;
@@ -63,22 +79,24 @@ public class Detail {
         Detail detail = (Detail) o;
         return getId().equals(detail.getId()) &&
                 getName().equals(detail.getName()) &&
+                getPrice().equals(detail.getPrice()) &&
                 getCarId().equals(detail.getCarId()) &&
                 getInStock().equals(detail.getInStock()) &&
                 getDeliveryDays().equals(detail.getDeliveryDays());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getCarId(), getInStock(), getDeliveryDays());
+        return Objects.hash(getId(), getName(), getPrice(), getCarId(), getInStock(), getDeliveryDays());
     }
     @Override
     public String toString() {
         return "Detail{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", car_id=" + carId +
-                ", in_stock=" + inStock +
-                ", delivery_days=" + deliveryDays +
+                ", price=" + price +
+                ", carId=" + carId +
+                ", inStock=" + inStock +
+                ", deliveryDays=" + deliveryDays +
                 '}';
     }
 }

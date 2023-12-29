@@ -40,7 +40,12 @@ public class CarController extends AbstractController {
                 getDataFromConsole.getIntegerFromConsole("year"));
         CarService carService = new CarServiceImpl();
         carService.add(car);
-        LOGGER.info("Car - " + car.getBrand() + car.getModel() + car.getYear() + " - was added");
+        LOGGER.info(
+                "Car - " +
+                car.getBrand() +
+                car.getModel() +
+                car.getYear() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of cars");
@@ -53,7 +58,8 @@ public class CarController extends AbstractController {
         }
     }
     public void retrieveById() {
-        Optional<Car> carOptional = new CarServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Car> carOptional = new CarServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Car id - " + carOptional.get().getId() + "|" +
                 "brand - " + carOptional.get().getBrand() + "|" +
@@ -65,6 +71,7 @@ public class CarController extends AbstractController {
     public void removeById() {
         LOGGER.info("Following car will be deleted");
         CarService carService = new CarServiceImpl();
-        carService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        carService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

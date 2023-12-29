@@ -43,10 +43,15 @@ public class EmployeeController extends AbstractController {
                 getDataFromConsole.getIntegerFromConsole("level"),
                 getDataFromConsole.getIntegerFromConsole("salary"),
                 getDataFromConsole.getStringFromConsole("phone number"),
-                new Department(getDataFromConsole.getLongFromConsole("department")));
+                new Department(
+                        getDataFromConsole.getLongFromConsole("department")));
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.add(employee);
-        LOGGER.info("Employee - " + employee.getName() + employee.getSurname() + " - was added");
+        LOGGER.info(
+                "Employee - " +
+                employee.getName() +
+                employee.getSurname() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of employees");
@@ -59,14 +64,19 @@ public class EmployeeController extends AbstractController {
                     "position - " + employee.getPosition() + "|" +
                     "level - " + employee.getLevel() + "|" +
                     "salary - " + employee.getSalary() + "|" +
-                    "phone - " + employee.getPhoneNumber() + "|" +
-                    "department - " + employee.getDepartmentId());
+                    "phone - " + employee.getPhoneNumber() + "[" +
+                    "department id - " + employee.getDepartmentId().getName() + "|" +
+                    "name - " + employee.getDepartmentId().getName() + "][" +
+                    "company id - " + employee.getDepartmentId().getCompanyId().getId() + "|" +
+                    "name - " + employee.getDepartmentId().getCompanyId().getName() + "|" +
+                    "address - " + employee.getDepartmentId().getCompanyId().getAddress() + "]");
         }
     }
     public void change() {
     }
     public void retrieveById() {
-        Optional<Employee> employeeOptional = new EmployeeServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Employee> employeeOptional = new EmployeeServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Employee id - " + employeeOptional.get().getId() + "|" +
                 "name - " + employeeOptional.get().getName() + "|" +
@@ -81,6 +91,7 @@ public class EmployeeController extends AbstractController {
     public void removeById() {
         LOGGER.info("Following employee will be fired");
         EmployeeService employeeService = new EmployeeServiceImpl();
-        employeeService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        employeeService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

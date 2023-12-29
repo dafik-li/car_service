@@ -39,7 +39,11 @@ public class CompanyController extends AbstractController {
                 getDataFromConsole.getStringFromConsole("address"));
         CompanyService companyService = new CompanyServiceImpl();
         companyService.add(company);
-        LOGGER.info("Company - " + company.getName() + company.getAddress() + " - was added");
+        LOGGER.info(
+                "Company - " +
+                company.getName() +
+                company.getAddress() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of companies");
@@ -53,15 +57,17 @@ public class CompanyController extends AbstractController {
     public void change() {
     }
     public void retrieveById() {
-        Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Company id - " + companyOptional.get().getId() + "|" +
                 "name - " + companyOptional.get().getName() + "|" +
                 "address - " + companyOptional.get().getAddress());
     }
     public void removeById() {
-        LOGGER.info("Following company wil be terminated");
+        LOGGER.info("Following company will be terminated");
         CompanyService companyService = new CompanyServiceImpl();
-        companyService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        companyService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

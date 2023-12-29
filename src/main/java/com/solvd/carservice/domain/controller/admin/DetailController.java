@@ -37,12 +37,17 @@ public class DetailController extends AbstractController {
     public void add() {
         Detail detail = new Detail(
                 getDataFromConsole.getStringFromConsole("name"),
-                new Car(getDataFromConsole.getLongFromConsole("car")),
+                getDataFromConsole.getIntegerFromConsole("price"),
+                new Car(
+                        getDataFromConsole.getLongFromConsole("car")),
                 getDataFromConsole.getBooleanFromConsole("in stock"),
                 getDataFromConsole.getIntegerFromConsole("delivery days"));
         DetailService detailService = new DetailServiceImpl();
         detailService.add(detail);
-        LOGGER.info("Detail - " + detail.getName() + " - was added");
+        LOGGER.info(
+                "Detail - "
+                + detail.getName() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of details");
@@ -50,7 +55,11 @@ public class DetailController extends AbstractController {
             LOGGER.info(
                     "Detail id - " + detail.getId() + "|" +
                     "name - " + detail.getName() + "|" +
-                    "car - " + detail.getCarId() + "|" +
+                    "price - " + detail.getPrice() + "[" +
+                    "car id - " + detail.getCarId().getId() + "|" +
+                    "brand - " + detail.getCarId().getBrand() + "|" +
+                    "model - " + detail.getCarId().getModel() + "|" +
+                    "year - " + detail.getCarId().getYear() + "]" +
                     "in stock - " + detail.getInStock() + "|" +
                     "delivery days - " + detail.getDeliveryDays());
         }
@@ -58,10 +67,12 @@ public class DetailController extends AbstractController {
     public void change() {
     }
     public void retrieveById() {
-        Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Detail id - " + detailOptional.get().getId() + "|" +
                 "name - " + detailOptional.get().getName() + "|" +
+                "price - " + detailOptional.get().getPrice() + "|" +
                 "car - " + detailOptional.get().getCarId() + "|" +
                 "in stock - " + detailOptional.get().getInStock() + "|" +
                 "delivery days - " + detailOptional.get().getDeliveryDays());
@@ -69,6 +80,7 @@ public class DetailController extends AbstractController {
     public void removeById() {
         LOGGER.info("Following detail will be deleted");
         DetailService detailService = new DetailServiceImpl();
-        detailService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        detailService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

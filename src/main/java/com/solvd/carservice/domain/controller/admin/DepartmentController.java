@@ -35,26 +35,36 @@ public class DepartmentController extends AbstractController {
         }
     }
     public void add() {
-        Department department = new Department(
-                getDataFromConsole.getStringFromConsole("name"),
-                new Company(getDataFromConsole.getLongFromConsole("company")));
+        Department department =
+                new Department(
+                        getDataFromConsole.getStringFromConsole("name"),
+                new Company(
+                        getDataFromConsole.getLongFromConsole("company")));
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.add(department);
-        LOGGER.info("Department - " + department.getName() + department.getCompanyId() + " - was added");
+        LOGGER.info(
+                "Department - " +
+                department.getName() +
+                department.getCompanyId() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of departments");
         for (Department department : new DepartmentServiceImpl().retrieveAll()) {
             LOGGER.info(
                     "Department id - " + department.getId() + "|" +
-                    "name - " + department.getName() + "|" +
-                    "company - " + department.getCompanyId());
+                    "name - " + department.getName() + "[" +
+                    "company id - " + department.getCompanyId().getId() + "|" +
+                    "name - " + department.getCompanyId().getName() + "|" +
+                    "address - " + department.getCompanyId().getAddress() + "]");
         }
     }
     public void change() {
     }
     public void retrieveById() {
-        Optional<Department> departmentOptional = new DepartmentServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Department> departmentOptional =
+                new DepartmentServiceImpl().retrieveById(
+                        (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Department id - " + departmentOptional.get().getId() + "|" +
                 "name - " + departmentOptional.get().getName() + "|" +
@@ -63,6 +73,7 @@ public class DepartmentController extends AbstractController {
     public void removeById() {
         LOGGER.info("Following department will be redundant");
         DepartmentService departmentService = new DepartmentServiceImpl();
-        departmentService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        departmentService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

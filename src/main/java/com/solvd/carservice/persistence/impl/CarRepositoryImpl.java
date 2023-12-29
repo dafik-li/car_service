@@ -119,7 +119,8 @@ public class CarRepositoryImpl implements CarRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             carOptional = Optional.of(
-                    new Car(resultSet.getLong(1),
+                    new Car(
+                            resultSet.getLong(1),
                             resultSet.getString(2),
                             resultSet.getString(3),
                             resultSet.getInt(4)));

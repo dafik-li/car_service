@@ -10,14 +10,20 @@ import java.util.Optional;
 
 public class DetailRepositoryImpl implements DetailRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String INSERT_DETAIL_QUERY = "INSERT INTO details (name, car_id, in_Stock, delivery_days) VALUES (?, ?, ?, ?);";
+    private static final String INSERT_DETAIL_QUERY = "INSERT INTO details " +
+            "(name, price, car_id, in_Stock, delivery_days) VALUES (?, ?, ?, ?, ?);";
     private static final String DELETE_DETAIL_QUERY = "DELETE FROM details WHERE id = ?;";
     private static final String UPDATE_DETAIL_NAME_QUERY = "UPDATE details SET name = ? WHERE id = ?;";
+    private static final String UPDATE_DETAIL_PRICE_QUERY = "UPDATE details SET price = ? WHERE id = ?;";
     private static final String UPDATE_DETAIL_IN_STOCK_QUERY = "UPDATE details SET in_Stock = ? WHERE id = ?;";
     private static final String UPDATE_DETAIL_DELIVERY_DAYS_QUERY = "UPDATE details SET delivery_days = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM details;";
+    private static final String GET_ALL_QUERY =
+            "SELECT details.id, details.name, details.price, details.in_stock, details.delivery_days, cars.id, cars.brand, cars.model, cars.year " +
+                    "FROM details " +
+                    "LEFT JOIN cars on details.car_id = cars.id;";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM details WHERE id = ?;";
     private static final String GET_BY_DETAIL_NAME_QUERY = "SELECT * FROM details WHERE name = ?;";
+    private static final String GET_BY_DETAIL_PRICE_QUERY = "SELECT * FROM details WHERE price = ?;";
     private static final String GET_BY_DETAIL_IN_STOCK_QUERY = "SELECT * FROM details WHERE in_Stock = ?;";
     private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = "SELECT * FROM details WHERE delivery_days = ?;";
 
@@ -34,6 +40,24 @@ public class DetailRepositoryImpl implements DetailRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get detail name", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return details;
+    }
+    @Override
+    public List<Detail> getByPrice(Integer price) {
+        List<Detail> details;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_DETAIL_PRICE_QUERY);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            details = mapDetails(resultSet);
+            while (resultSet.next()) {
+                resultSet.getString("price");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get detail price", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -81,9 +105,10 @@ public class DetailRepositoryImpl implements DetailRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_DETAIL_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, detail.getName());
-            preparedStatement.setLong(2, detail.getCarId().getId());
-            preparedStatement.setBoolean(3, detail.getInStock());
-            preparedStatement.setInt(4, detail.getDeliveryDays());
+            preparedStatement.setInt(2, detail.getPrice());
+            preparedStatement.setLong(3, detail.getCarId().getId());
+            preparedStatement.setBoolean(4, detail.getInStock());
+            preparedStatement.setInt(5, detail.getDeliveryDays());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
@@ -120,11 +145,14 @@ public class DetailRepositoryImpl implements DetailRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             detailOptional = Optional.of(
-                    new Detail(resultSet.getLong(1),
+                    new Detail(
+                            resultSet.getLong(1),
                             resultSet.getString(2),
-                            new Car(resultSet.getLong(3)),
-                            resultSet.getBoolean(4),
-                            resultSet.getInt(5)));
+                            resultSet.getInt(3),
+                            new Car(
+                                    resultSet.getLong(4)),
+                            resultSet.getBoolean(5),
+                            resultSet.getInt(6)));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -141,6 +169,10 @@ public class DetailRepositoryImpl implements DetailRepository {
             case "name" :
                 query = UPDATE_DETAIL_NAME_QUERY;
                 value = detail.getName();
+                break;
+            case "price" :
+                query = UPDATE_DETAIL_PRICE_QUERY;
+                value = String.valueOf(detail.getPrice());
                 break;
             case "in_stock" :
                 query = UPDATE_DETAIL_IN_STOCK_QUERY;
@@ -182,9 +214,15 @@ public class DetailRepositoryImpl implements DetailRepository {
                 Detail detail = new Detail();
                 detail.setId(resultSet.getLong(1));
                 detail.setName(resultSet.getString(2));
-                detail.setCarId(new Car(resultSet.getLong(3)));
-                detail.setInStock(resultSet.getBoolean(4));
-                detail.setDeliveryDays(resultSet.getInt(5));
+                detail.setPrice(resultSet.getInt(3));
+                detail.setCarId(
+                        new Car(
+                                resultSet.getLong(4),
+                                resultSet.getString(5),
+                                resultSet.getString(6),
+                                resultSet.getInt(7)));
+                detail.setInStock(resultSet.getBoolean(8));
+                detail.setDeliveryDays(resultSet.getInt(9));
                 details.add(detail);
             }
         } catch (SQLException e) {

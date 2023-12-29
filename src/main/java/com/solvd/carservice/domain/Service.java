@@ -6,7 +6,7 @@ public class Service {
     private Long id;
     private String name;
     private Double price;
-    private Double daysToDo;
+    private Integer hoursToDo;
     private Car carId;
     private Department departmentId;
 
@@ -14,18 +14,18 @@ public class Service {
     public Service(Long id) {
         this.id = id;
     }
-    public Service(String name, Double price, Double daysToDo, Car carId, Department departmentId) {
+    public Service(String name, Double price, Integer hoursToDo, Car carId, Department departmentId) {
         this.name = name;
         this.price = price;
-        this.daysToDo = daysToDo;
+        this.hoursToDo = hoursToDo;
         this.carId = carId;
         this.departmentId = departmentId;
     }
-    public Service(Long id, String name, Double price, Double daysToDo, Car carId, Department departmentId) {
+    public Service(Long id, String name, Double price, Integer hoursToDo, Car carId, Department departmentId) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.daysToDo = daysToDo;
+        this.hoursToDo = hoursToDo;
         this.carId = carId;
         this.departmentId = departmentId;
     }
@@ -47,11 +47,11 @@ public class Service {
     public void setPrice(Double price) {
         this.price = price;
     }
-    public Double getDaysToDo() {
-        return daysToDo;
+    public Integer getHoursToDo() {
+        return hoursToDo;
     }
-    public void setDaysToDo(Double daysToDo) {
-        this.daysToDo = daysToDo;
+    public void setHoursToDo(Integer hoursToDo) {
+        this.hoursToDo = hoursToDo;
     }
     public Car getCarId() {
         return carId;
@@ -65,6 +65,7 @@ public class Service {
     public void setDepartmentId(Department departmentId) {
         this.departmentId = departmentId;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,12 +74,13 @@ public class Service {
         return getId().equals(service.getId()) &&
                 getName().equals(service.getName()) &&
                 getPrice().equals(service.getPrice()) &&
+                getHoursToDo().equals(service.getHoursToDo()) &&
                 getCarId().equals(service.getCarId()) &&
                 getDepartmentId().equals(service.getDepartmentId());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getPrice(), getCarId(), getDepartmentId());
+        return Objects.hash(getId(), getName(), getPrice(), getHoursToDo(), getCarId(), getDepartmentId());
     }
     @Override
     public String toString() {
@@ -86,8 +88,9 @@ public class Service {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", car_id=" + carId +
-                ", department_id=" + departmentId +
+                ", hoursToDo=" + hoursToDo +
+                ", carId=" + carId +
+                ", departmentId=" + departmentId +
                 '}';
     }
 }

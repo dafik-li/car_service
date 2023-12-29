@@ -1,8 +1,6 @@
 package com.solvd.carservice.persistence.impl;
 
-import com.solvd.carservice.domain.Car;
-import com.solvd.carservice.domain.Department;
-import com.solvd.carservice.domain.Service;
+import com.solvd.carservice.domain.*;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.ServiceRepository;
 import java.sql.*;
@@ -12,15 +10,21 @@ import java.util.Optional;
 
 public class ServiceRepositoryImpl implements ServiceRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String INSERT_SERVICE_QUERY = "INSERT INTO services (name, price, car_id, department_id) VALUES (?, ?, ?, ?);";
+    private static final String INSERT_SERVICE_QUERY = "INSERT INTO services " +
+            "(name, price, hours_to_do, car_id, department_id) VALUES (?, ?, ?, ?, ?);";
     private static final String DELETE_SERVICE_QUERY = "DELETE FROM services WHERE id = ?;";
     private static final String UPDATE_SERVICE_NAME_QUERY = "UPDATE services SET name = ? WHERE id = ?;";
     private static final String UPDATE_SERVICE_PRICE_QUERY = "UPDATE services SET price = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM services;";
+    private static final String GET_ALL_QUERY =
+            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
+                    "d.id, d.name, com.id, com.name, com.address FROM services " +
+            "LEFT JOIN cars on services.car_id = cars.id " +
+            "LEFT JOIN departments d on services.department_id = d.id " +
+            "LEFT JOIN companies com on d.company_id = com.id;";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM services WHERE id = ?;";
     private static final String GET_BY_SERVICE_NAME_QUERY = "SELECT * FROM services WHERE name = ?;";
     private static final String GET_BY_SERVICE_PRICE_QUERY = "SELECT * FROM services WHERE price = ?;";
-    private static final String GET_BY_SERVICE_DAYSTODO_QUERY = "SELECT * FROM services WHERE days_to_do = ?;";
+    private static final String GET_BY_SERVICE_HOURS_TODO_QUERY = "SELECT * FROM services WHERE hours_to_do = ?;";
 
     @Override
     public List<Service> getByName(String name) {
@@ -59,18 +63,18 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return services;
     }
     @Override
-    public List<Service> getByDaysToDo(Double price) {
+    public List<Service> getByHoursToDo(Integer hoursToDo) {
         List<Service> services;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_DAYSTODO_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_HOURS_TODO_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
             services = mapServices(resultSet);
             while (resultSet.next()) {
-                resultSet.getString("days_to_do");
+                resultSet.getString("hours_to_do");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to get service days to do", e);
+            throw new RuntimeException("Unable to get service hours to do", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -83,8 +87,9 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SERVICE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, service.getName());
             preparedStatement.setDouble(2, service.getPrice());
-            preparedStatement.setLong(3, service.getCarId().getId());
-            preparedStatement.setLong(4, service.getDepartmentId().getId());
+            preparedStatement.setInt(3, service.getHoursToDo());
+            preparedStatement.setLong(4, service.getCarId().getId());
+            preparedStatement.setLong(5, service.getDepartmentId().getId());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
@@ -121,12 +126,15 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             serviceOptional = Optional.of(
-                    new Service(resultSet.getLong(1),
+                    new Service(
+                            resultSet.getLong(1),
                             resultSet.getString(2),
                             resultSet.getDouble(3),
-                            resultSet.getDouble(4),
-                            new Car(resultSet.getLong(5)),
-                            new Department(resultSet.getLong(6))));
+                            resultSet.getInt(4),
+                            new Car(
+                                    resultSet.getLong(5)),
+                            new Department(
+                                    resultSet.getLong(6))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -181,8 +189,21 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                 service.setId(resultSet.getLong(1));
                 service.setName(resultSet.getString(2));
                 service.setPrice(resultSet.getDouble(3));
-                service.setCarId(new Car(resultSet.getLong(4)));
-                service.setDepartmentId(new Department(resultSet.getLong(5)));
+                service.setHoursToDo(resultSet.getInt(4));
+                service.setCarId(
+                        new Car(
+                                resultSet.getLong(5),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getInt(8)));
+                service.setDepartmentId(
+                        new Department(
+                                resultSet.getLong(9),
+                                resultSet.getString(10),
+                                new Company(
+                                        resultSet.getLong(11),
+                                        resultSet.getString(12),
+                                        resultSet.getString(13))));
                 services.add(service);
             }
         } catch (SQLException e) {

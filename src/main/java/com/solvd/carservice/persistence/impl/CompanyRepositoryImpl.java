@@ -98,9 +98,10 @@ public class CompanyRepositoryImpl implements CompanyRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             companyOptional = Optional.of(
-                    new Company(resultSet.getLong(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3)));
+                    new Company(
+                            resultSet.getLong(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3)));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {

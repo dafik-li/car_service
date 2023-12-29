@@ -34,13 +34,19 @@ public class ClientController extends AbstractController {
         }
     }
     public void add() {
-        Client client = new Client(getDataFromConsole.getStringFromConsole("name"),
-                getDataFromConsole.getStringFromConsole("surname"),
-                getDataFromConsole.getStringFromConsole("phone number"),
-                getDataFromConsole.getDateFromConsole("birthday"));
+        Client client =
+                new Client(
+                        getDataFromConsole.getStringFromConsole("name"),
+                        getDataFromConsole.getStringFromConsole("surname"),
+                        getDataFromConsole.getStringFromConsole("phone number"),
+                        getDataFromConsole.getDateFromConsole("birthday"));
         ClientService clientService = new ClientServiceImpl();
         clientService.add(client);
-        LOGGER.info("Client - " + client.getName() + client.getSurname() + " - was added");
+        LOGGER.info(
+                "Client - " +
+                client.getName() +
+                client.getSurname() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of clients");
@@ -54,7 +60,8 @@ public class ClientController extends AbstractController {
         }
     }
     public void retrieveById() {
-        Optional<Client> clientOptional = new ClientServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Client id - " + clientOptional.get().getId() + "|" +
                 "name - " + clientOptional.get().getName() + "|" +
@@ -67,6 +74,7 @@ public class ClientController extends AbstractController {
     public void removeById() {
         LOGGER.info("Following car will be deleted");
         ClientService clientService = new ClientServiceImpl();
-        clientService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        clientService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }

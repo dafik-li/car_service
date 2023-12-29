@@ -38,26 +38,50 @@ public class CostController extends AbstractController {
     public void add() {
         Cost cost = new Cost(
                 getDataFromConsole.getDoubleFromConsole("cost"),
-                new Service(getDataFromConsole.getLongFromConsole("service")),
-                new Detail(getDataFromConsole.getLongFromConsole("detail")));
+                new Service(
+                        getDataFromConsole.getLongFromConsole("service")),
+                new Detail(
+                        getDataFromConsole.getLongFromConsole("detail")));
         CostService costService = new CostServiceImpl();
         costService.add(cost);
-        LOGGER.info("Cost - " + cost.getCost() + cost.getServiceId() + cost.getDetailId() + " - was added");
+        LOGGER.info(
+                "Cost - " +
+                cost.getCost() +
+                cost.getServiceId() +
+                cost.getDetailId() +
+                " - was added");
     }
     public void retrieveAll() {
         LOGGER.info("List of costs");
         for (Cost cost : new CostServiceImpl().retrieveAll()) {
             LOGGER.info(
                     "Cost id - " + cost.getId() + "|" +
-                    "cost - " + cost.getCost() + "|" +
-                    "service - " + cost.getServiceId() + "|" +
-                    "detail - " + cost.getDetailId());
+                    "cost - " + cost.getCost() + "[" +
+                    "service id - " + cost.getServiceId().getId() + "|" +
+                    "name - " + cost.getServiceId().getName() + "|" +
+                    "price - " + cost.getServiceId().getPrice() + "|" +
+                    "hours to do - " + cost.getServiceId().getHoursToDo() + "][" +
+                    "car id - " + cost.getServiceId().getCarId().getId() + "|" +
+                    "brand - " + cost.getServiceId().getCarId().getBrand() + "|" +
+                    "model - " + cost.getServiceId().getCarId().getModel() + "|" +
+                    "year - " + cost.getServiceId().getCarId().getYear() + "][" +
+                    "department id - " + cost.getServiceId().getDepartmentId().getId() + "|" +
+                    "name - " + cost.getServiceId().getDepartmentId().getName() + "][" +
+                    "company id - " + cost.getServiceId().getDepartmentId().getCompanyId().getId() + "|" +
+                    "name - " + cost.getServiceId().getDepartmentId().getCompanyId().getName() + "|" +
+                    "address - " + cost.getServiceId().getDepartmentId().getCompanyId().getAddress() + "][" +
+                    "detail id - " + cost.getDetailId().getId() + "|" +
+                    "name - " + cost.getDetailId().getName() + "|" +
+                    "price - " + cost.getDetailId().getPrice() + "|" +
+                    "in stock - " + cost.getDetailId().getInStock() + "|" +
+                    "delivery days - " + cost.getDetailId().getDeliveryDays());
         }
     }
     public void change() {
     }
     public void retrieveById() {
-        Optional<Cost> costOptional = new CostServiceImpl().retrieveById((getDataFromConsole.getLongFromConsole("id")));
+        Optional<Cost> costOptional = new CostServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info(
                 "Cost id - " + costOptional.get().getId() + "|" +
                 "cost - " + costOptional.get().getCost() + "|" +
@@ -67,6 +91,7 @@ public class CostController extends AbstractController {
     public void removeById() {
         LOGGER.info("Following cost will be deleted");
         CostService costService = new CostServiceImpl();
-        costService.removeById(getDataFromConsole.getLongFromConsole("id"));
+        costService.removeById(
+                getDataFromConsole.getLongFromConsole("id"));
     }
 }
