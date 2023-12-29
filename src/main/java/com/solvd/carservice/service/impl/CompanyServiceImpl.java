@@ -1,8 +1,8 @@
 package com.solvd.carservice.service.impl;
 
-import com.solvd.carservice.domain.Company;
+import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.persistence.CompanyRepository;
-import com.solvd.carservice.persistence.impl.CompanyRepositoryImpl;
+import com.solvd.carservice.persistence.DAOimpl.CompanyRepositoryImpl;
 import com.solvd.carservice.service.CompanyService;
 import java.util.List;
 import java.util.Optional;

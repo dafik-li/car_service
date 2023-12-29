@@ -36,36 +36,36 @@
         SELECT * FROM clients
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="ClientResultMap">
         <include refid="clientSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="ClientResultMap">
         <include refid="clientSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByName">
+    <select id="getByName" resultMap="ClientResultMap">
         <include refid="clientSelect"/>
         WHERE name = #{name}
     </select>
 
-    <select id="getBySurname">
+    <select id="getBySurname" resultMap="ClientResultMap">
         <include refid="clientSelect"/>
         WHERE surname = #{surname}
     </select>
 
-    <select id="getByPhoneNumber">
+    <select id="getByPhoneNumber" resultMap="ClientResultMap">
         <include refid="clientSelect"/>
         WHERE phone_number = #{phoneNumber}
     </select>
 
-    <select id="getByBirthday">
+    <select id="getByBirthday" resultMap="ClientResultMap">
         <include refid="clientSelect"/>
         WHERE birthday = #{birthday}
     </select>
 
-    <resultMap id="ClientResultMap" type="com.solvd.carservice.domain.Client" autoMapping="false">
+    <resultMap id="ClientResultMap" type="com.solvd.carservice.domain.entity.Client" autoMapping="false">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="surname" property="surname"/>

@@ -1,4 +1,4 @@
-package com.solvd.carservice.domain;
+package com.solvd.carservice.domain.entity;
 
 import java.util.Objects;
 
@@ -20,7 +20,6 @@ public class Department {
         this.name = name;
         this.companyId = companyId;
     }
-
     public Long getId() {
         return id;
     }

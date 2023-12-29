@@ -1,8 +1,8 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.Company;
+import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.controller.Generator;
-import com.solvd.carservice.exception.TableException;
+import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.CompanyService;
 import com.solvd.carservice.service.impl.CompanyServiceImpl;
 import org.apache.logging.log4j.LogManager;

@@ -1,8 +1,8 @@
-package com.solvd.carservice.util;
+package com.solvd.carservice.domain.controller;
 
-import com.solvd.carservice.exception.AuthorizationException;
-import com.solvd.carservice.exception.ModerateException;
-import com.solvd.carservice.exception.TableException;
+import com.solvd.carservice.domain.exception.AuthorizationException;
+import com.solvd.carservice.domain.exception.ModerateException;
+import com.solvd.carservice.domain.exception.TableException;
 
 public class Validator {
 

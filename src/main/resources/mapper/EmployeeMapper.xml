@@ -53,51 +53,51 @@
         companies c on d.company_id = c.id
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByName">
+    <select id="getByName" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE name = #{name}
     </select>
 
-    <select id="getBySurname">
+    <select id="getBySurname" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE surname = #{surname}
     </select>
 
-    <select id="getByAge">
+    <select id="getByAge" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE age = #{age}
     </select>
 
-    <select id="getByPosition">
+    <select id="getByPosition" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE position = #{position}
     </select>
 
-    <select id="getByLevel">
+    <select id="getByLevel" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE level = #{level}
     </select>
 
-    <select id="getBySalary">
+    <select id="getBySalary" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE salary = #{salary}
     </select>
 
-    <select id="getByPhoneNumber">
+    <select id="getByPhoneNumber" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
         WHERE phone_number = #{phoneNumber}
     </select>
 
-    <resultMap id="EmployeeResultMap" type="com.solvd.carservice.domain.Employee" autoMapping="false">
+    <resultMap id="EmployeeResultMap" type="com.solvd.carservice.domain.entity.Employee" autoMapping="false">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="surname" property="surname"/>
@@ -106,7 +106,7 @@
         <result column="level" property="level"/>
         <result column="salary" property="salary"/>
         <result column="phone_number" property="phoneNumber"/>
-        <collection property="departmentId"
+        <association property="departmentId"
                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
     </resultMap>
 

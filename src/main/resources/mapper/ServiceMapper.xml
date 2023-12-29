@@ -43,38 +43,38 @@
         companies com on d.company_id = com.id
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="ServiceResultMap">
         <include refid="serviceSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="ServiceResultMap">
         <include refid="serviceSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByName">
+    <select id="getByName" resultMap="ServiceResultMap">
         <include refid="serviceSelect"/>
         WHERE name = #{name}
     </select>
 
-    <select id="getByPrice">
+    <select id="getByPrice" resultMap="ServiceResultMap">
         <include refid="serviceSelect"/>
         WHERE price = #{price}
     </select>
 
-    <select id="getByHoursToDo">
+    <select id="getByHoursToDo" resultMap="ServiceResultMap">
         <include refid="serviceSelect"/>
         WHERE hours_to_do = #{hoursToDo}
     </select>
 
-    <resultMap id="ServiceResultMap" type="com.solvd.carservice.domain.Service" autoMapping="false">
+    <resultMap id="ServiceResultMap" type="com.solvd.carservice.domain.entity.Service" autoMapping="false">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="price" property="price"/>
         <result column="hours_to_do" property="hoursToDo"/>
-        <collection property="carId"
+        <association property="carId"
                     resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
-        <collection property="departmentId"
+        <association property="departmentId"
                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
     </resultMap>
 

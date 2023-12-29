@@ -1,6 +1,6 @@
 package com.solvd.carservice.persistence;
 
-import com.solvd.carservice.domain.Car;
+import com.solvd.carservice.domain.entity.Car;
 import java.util.List;
 
 public interface CarRepository extends InterfaceRepository<Car>{

@@ -1,6 +1,9 @@
-package com.solvd.carservice.persistence.impl;
+package com.solvd.carservice.persistence.DAOimpl;
 
-import com.solvd.carservice.domain.*;
+import com.solvd.carservice.domain.entity.Car;
+import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.ServiceRepository;
 import java.sql.*;

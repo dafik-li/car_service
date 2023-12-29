@@ -28,24 +28,24 @@
         companies c on d.company_id = c.id
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="DepartmentResultMap">
         <include refid="departmentSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="DepartmentResultMap">
         <include refid="departmentSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByName">
+    <select id="getByName" resultMap="DepartmentResultMap">
         <include refid="departmentSelect"/>
         WHERE name = #{name}
     </select>
 
-    <resultMap id="DepartmentResultMap" type="com.solvd.carservice.domain.Department" autoMapping="false">
+    <resultMap id="DepartmentResultMap" type="com.solvd.carservice.domain.entity.Department" autoMapping="false">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
-        <collection property="companyId"
+        <association property="companyId"
                     resultMap="com.solvd.carservice.persistence.CompanyRepository.CompanyResultMap"/>
     </resultMap>
 

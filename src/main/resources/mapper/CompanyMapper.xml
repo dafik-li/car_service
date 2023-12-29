@@ -30,26 +30,26 @@
         SELECT * FROM companies
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="CompanyResultMap">
         <include refid="companySelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="CompanyResultMap">
         <include refid="companySelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByName">
+    <select id="getByName" resultMap="CompanyResultMap">
         <include refid="companySelect"/>
         WHERE name = #{name}
     </select>
 
-    <select id="getByAddress">
+    <select id="getByAddress" resultMap="CompanyResultMap">
         <include refid="companySelect"/>
         WHERE address = #{address}
     </select>
     
-    <resultMap id="CompanyResultMap" type="com.solvd.carservice.domain.Company" autoMapping="false">
+    <resultMap id="CompanyResultMap" type="com.solvd.carservice.domain.entity.Company" autoMapping="false">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="address" property="address"/>

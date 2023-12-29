@@ -33,31 +33,31 @@
         SELECT * FROM cars
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="CarResultMap">
         <include refid="carSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="CarResultMap">
         <include refid="carSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByBrand">
+    <select id="getByBrand" resultMap="CarResultMap">
         <include refid="carSelect"/>
         WHERE brand = #{brand}
     </select>
 
-    <select id="getByModel">
+    <select id="getByModel" resultMap="CarResultMap">
         <include refid="carSelect"/>
         WHERE model = #{model}
     </select>
 
-    <select id="getByYear">
+    <select id="getByYear" resultMap="CarResultMap">
         <include refid="clientSelect"/>
         WHERE year = #{year}
     </select>
 
-    <resultMap id="CarResultMap" type="com.solvd.carservice.domain.Car" autoMapping="false">
+    <resultMap id="CarResultMap" type="com.solvd.carservice.domain.entity.Car" autoMapping="false">
         <id column="id" property="id"/>
         <result column="brand" property="brand"/>
         <result column="model" property="model"/>

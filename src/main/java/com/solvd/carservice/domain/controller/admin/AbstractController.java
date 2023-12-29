@@ -2,7 +2,7 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.util.ConsoleMenu;
 import com.solvd.carservice.util.GetDataFromConsole;
-import com.solvd.carservice.util.Validator;
+import com.solvd.carservice.domain.controller.Validator;
 import java.util.Scanner;
 
 abstract public class AbstractController {

@@ -1,8 +1,8 @@
 package com.solvd.carservice.service.impl;
 
-import com.solvd.carservice.domain.Car;
+import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.persistence.CarRepository;
-import com.solvd.carservice.persistence.impl.CarRepositoryImpl;
+import com.solvd.carservice.persistence.DAOimpl.CarRepositoryImpl;
 import com.solvd.carservice.service.CarService;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +30,6 @@ public class CarServiceImpl implements CarService {
     @Override
     public void change(Car car, String field) {
         carRepository.update(car, field);
-
     }
     @Override
     public void removeById(Long id) {

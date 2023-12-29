@@ -1,8 +1,8 @@
 package com.solvd.carservice.service.impl;
 
-import com.solvd.carservice.domain.Order;
+import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.persistence.OrderRepository;
-import com.solvd.carservice.persistence.impl.OrderRepositoryImpl;
+import com.solvd.carservice.persistence.DAOimpl.OrderRepositoryImpl;
 import com.solvd.carservice.service.OrderService;
 import java.util.List;
 import java.util.Optional;

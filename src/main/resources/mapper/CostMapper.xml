@@ -38,26 +38,26 @@
         details det on c.detail_id = det.id
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="CostResultMap">
         <include refid="costSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="CostResultMap">
         <include refid="costSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByCost">
+    <select id="getByCost" resultMap="CostResultMap">
         <include refid="costSelect"/>
         WHERE cost = #{cost}
     </select>
 
-    <resultMap id="CostResultMap" type="com.solvd.carservice.domain.Cost" autoMapping="false">
+    <resultMap id="CostResultMap" type="com.solvd.carservice.domain.entity.Cost" autoMapping="false">
         <id column="id" property="id"/>
         <result column="cost" property="cost"/>
-        <collection property="serviceId"
+        <association property="serviceId"
                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
-        <collection property="detailId"
+        <association property="detailId"
                     resultMap="com.solvd.carservice.persistence.DetailRepository.DetailResultMap"/>
     </resultMap>
 

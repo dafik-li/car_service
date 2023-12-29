@@ -42,42 +42,42 @@
         cars on details.car_id = cars.id
     </sql>
 
-    <select id="getAll">
+    <select id="getAll" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
     </select>
 
-    <select id="getById">
+    <select id="getById" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByName">
+    <select id="getByName" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
         WHERE name = #{name}
     </select>
 
-    <select id="getByPrice">
+    <select id="getByPrice" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
         WHERE price = #{price}
     </select>
 
-    <select id="getByInStock">
+    <select id="getByInStock" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
         WHERE in_stock = #{inStock}
     </select>
 
-    <select id="getByDeliveryDays">
+    <select id="getByDeliveryDays" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
         WHERE delivery_days = #{deliveryDays}
     </select>
 
-    <resultMap id="DetailResultMap" type="com.solvd.carservice.domain.Detail" autoMapping="false">
+    <resultMap id="DetailResultMap" type="com.solvd.carservice.domain.entity.Detail" autoMapping="false">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="price" property="price"/>
         <result column="in_stock" property="inStock"/>
         <result column="delivery_days" property="deliveryDays"/>
-        <collection property="carId"
+        <association property="carId"
                     resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
     </resultMap>
 

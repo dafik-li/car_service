@@ -1,4 +1,4 @@
-package com.solvd.carservice.exception;
+package com.solvd.carservice.domain.exception;
 
 public class TableException extends Exception{
     public TableException(String message) {

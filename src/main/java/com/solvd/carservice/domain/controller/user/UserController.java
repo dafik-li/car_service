@@ -3,7 +3,7 @@ package com.solvd.carservice.domain.controller.user;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.util.ConsoleMenu;
 import com.solvd.carservice.util.GetDataFromConsole;
-import com.solvd.carservice.util.Validator;
+import com.solvd.carservice.domain.controller.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 

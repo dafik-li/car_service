@@ -2,10 +2,9 @@ package com.solvd.carservice.domain.controller;
 
 import com.solvd.carservice.domain.controller.admin.ControllerFactory;
 import com.solvd.carservice.domain.controller.user.UserController;
-import com.solvd.carservice.exception.AuthorizationException;
-import com.solvd.carservice.exception.ModerateException;
+import com.solvd.carservice.domain.exception.AuthorizationException;
+import com.solvd.carservice.domain.exception.ModerateException;
 import com.solvd.carservice.util.ConsoleMenu;
-import com.solvd.carservice.util.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import java.util.Scanner;

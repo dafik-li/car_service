@@ -1,6 +1,6 @@
 package com.solvd.carservice.persistence;
 
-import com.solvd.carservice.domain.Client;
+import com.solvd.carservice.domain.entity.Client;
 import java.sql.Date;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.solvd.carservice.persistence;
 
-import com.solvd.carservice.domain.Detail;
+import com.solvd.carservice.domain.entity.Detail;
 import java.util.List;
 
 public interface DetailRepository extends InterfaceRepository<Detail> {

@@ -1,4 +1,4 @@
-package com.solvd.carservice.domain;
+package com.solvd.carservice.domain.entity;
 
 import java.sql.Date;
 import java.util.Objects;
@@ -27,7 +27,6 @@ public class Client {
         this.phoneNumber = phoneNumber;
         this.birthday = birthday;
     }
-
     public Long getId() {
         return id;
     }
