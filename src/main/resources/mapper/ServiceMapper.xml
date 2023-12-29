@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.ServiceRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        services
+        (name, price, hours_to_do, car_id, department_id)
+        VALUES
+        (#{name}, #{price}, #{hoursToDo}, #{carId}, #{departmentId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM services WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE services
+        <if test="field == 'name'">
+            SET name = #{service.name}
+        </if>
+        <if test="field == 'price'">
+            SET price = #{service.price}
+        </if>
+        <if test="field == 'hours_to_do'">
+            SET hours_to_do = #{service.hoursToDo}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="serviceSelect">
+        SELECT
+        services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
+        d.id, d.name, com.id, com.name, com.address
+        FROM
+        services
+        LEFT JOIN
+        cars on services.car_id = cars.id
+        LEFT JOIN
+        departments d on services.department_id = d.id
+        LEFT JOIN
+        companies com on d.company_id = com.id
+    </sql>
+
+    <select id="getAll">
+        <include refid="serviceSelect"/>
+    </select>
+
+    <select id="getById">
+        <include refid="serviceSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName">
+        <include refid="serviceSelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="getByPrice">
+        <include refid="serviceSelect"/>
+        WHERE price = #{price}
+    </select>
+
+    <select id="getByHoursToDo">
+        <include refid="serviceSelect"/>
+        WHERE hours_to_do = #{hoursToDo}
+    </select>
+
+    <resultMap id="ServiceResultMap" type="com.solvd.carservice.domain.Service" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="hours_to_do" property="hoursToDo"/>
+        <collection property="carId"
+                    resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
+        <collection property="departmentId"
+                    resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
+    </resultMap>
+
+</mapper>

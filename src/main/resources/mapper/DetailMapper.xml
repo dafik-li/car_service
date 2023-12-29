@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.DetailRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        details
+        (name, price, car_id, in_stock, delivery_days)
+        VALUES
+        (#{name}, #{price}, #{carId}, #{inStock}, #{deliveryDays})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM details WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE details
+        <if test="field == 'name'">
+            SET name = #{detail.name}
+        </if>
+        <if test="field == 'price'">
+            SET price = #{detail.price}
+        </if>
+        <if test="field == 'in_stock'">
+            SET in_stock = #{detail.inStock}
+        </if>
+        <if test="field == 'delivery_days'">
+            SET delivery_days = #{detail.deliveryDays}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="detailSelect">
+        SELECT
+        details.id, details.name, details.price, details.in_stock, details.delivery_days, cars.id, cars.brand, cars.model, cars.year
+        d.id, d.name, com.id, com.name, com.address
+        FROM
+        details
+        LEFT JOIN
+        cars on details.car_id = cars.id
+    </sql>
+
+    <select id="getAll">
+        <include refid="detailSelect"/>
+    </select>
+
+    <select id="getById">
+        <include refid="detailSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName">
+        <include refid="detailSelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="getByPrice">
+        <include refid="detailSelect"/>
+        WHERE price = #{price}
+    </select>
+
+    <select id="getByInStock">
+        <include refid="detailSelect"/>
+        WHERE in_stock = #{inStock}
+    </select>
+
+    <select id="getByDeliveryDays">
+        <include refid="detailSelect"/>
+        WHERE delivery_days = #{deliveryDays}
+    </select>
+
+    <resultMap id="DetailResultMap" type="com.solvd.carservice.domain.Detail" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="in_stock" property="inStock"/>
+        <result column="delivery_days" property="deliveryDays"/>
+        <collection property="carId"
+                    resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.CostRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        orders
+        (date, client_id, cost_id)
+        VALUES
+        (#{date}, #{clientId}, #{costId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM orders WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE orders SET date = #{order.date} WHERE id = #{id};
+    </update>
+
+    <sql id="costSelect">
+        SELECT
+        o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday,
+        c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
+        d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days
+        FROM
+        orders o
+        LEFT JOIN
+        clients cl on o.client_id = cl.id
+        LEFT JOIN
+        costs c on o.cost_id = c.id
+        LEFT JOIN
+        services s on c.service_id = s.id
+        LEFT JOIN
+        cars on s.car_id = cars.id
+        LEFT JOIN
+        departments d on s.department_id = d.id
+        LEFT JOIN
+        companies com on d.company_id = c.id
+        LEFT JOIN
+        details det on c.detail_id = det.id
+    </sql>
+
+    <select id="getAll">
+        <include refid="costSelect"/>
+    </select>
+
+    <select id="getById">
+        <include refid="costSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByDate">
+        <include refid="costSelect"/>
+        WHERE date = #{date}
+    </select>
+
+    <resultMap id="CostResultMap" type="com.solvd.carservice.domain.Cost" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="date" property="date"/>
+        <collection property="clientId"
+                    resultMap="com.solvd.carservice.persistence.ClientRepository.ClientResultMap"/>
+        <collection property="costId"
+                    resultMap="com.solvd.carservice.persistence.CostRepository.CostResultMap"/>
+    </resultMap>
+
+</mapper>

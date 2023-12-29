@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.EmployeeRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        employees
+        (name, surname, age, position, level, salary, phone_number, department_id)
+        VALUES
+        (#{name}, #{surname}, #{age}, #{position}, #{level}, #{salary}, #{phoneNumber}, #{departmentId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM employees WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE employees
+        <if test="field == 'name'">
+            SET name = #{employee.name}
+        </if>
+        <if test="field == 'surname'">
+            SET surname = #{employee.surname}
+        </if>
+        <if test="field == 'age'">
+            SET age = #{employee.age}
+        </if>
+        <if test="field == 'position'">
+            SET position = #{employee.position}
+        </if>
+        <if test="field == 'level'">
+            SET level = #{employee.level}
+        </if>
+        <if test="field == 'salary'">
+            SET salary = #{employee.salary}
+        </if>
+
+        <if test="field == 'phone_number'">
+            SET phone_number = #{employee.phoneNumber}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="employeeSelect">
+        SELECT
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address
+        FROM
+        employees e
+        LEFT JOIN
+        departments d on e.department_id = d.id
+        LEFT JOIN
+        companies c on d.company_id = c.id
+    </sql>
+
+    <select id="getAll">
+        <include refid="employeeSelect"/>
+    </select>
+
+    <select id="getById">
+        <include refid="employeeSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName">
+        <include refid="employeeSelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="getBySurname">
+        <include refid="employeeSelect"/>
+        WHERE surname = #{surname}
+    </select>
+
+    <select id="getByAge">
+        <include refid="employeeSelect"/>
+        WHERE age = #{age}
+    </select>
+
+    <select id="getByPosition">
+        <include refid="employeeSelect"/>
+        WHERE position = #{position}
+    </select>
+
+    <select id="getByLevel">
+        <include refid="employeeSelect"/>
+        WHERE level = #{level}
+    </select>
+
+    <select id="getBySalary">
+        <include refid="employeeSelect"/>
+        WHERE salary = #{salary}
+    </select>
+
+    <select id="getByPhoneNumber">
+        <include refid="employeeSelect"/>
+        WHERE phone_number = #{phoneNumber}
+    </select>
+
+    <resultMap id="EmployeeResultMap" type="com.solvd.carservice.domain.Employee" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="surname" property="surname"/>
+        <result column="age" property="age"/>
+        <result column="position" property="position"/>
+        <result column="level" property="level"/>
+        <result column="salary" property="salary"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <collection property="departmentId"
+                    resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
+    </resultMap>
+
+</mapper>

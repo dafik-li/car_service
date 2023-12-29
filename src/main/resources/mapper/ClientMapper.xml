@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.ClientRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        clients
+        (name, surname, phone_number, birthday)
+        VALUES
+        (#{name}, #{surname}, #{phoneNumber}, #{birthday})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM clients WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE clients
+        <if test="field == 'name'">
+            SET name = #{client.name}
+        </if>
+        <if test="field == 'surname'">
+            SET surname = #{client.surname}
+        </if>
+        <if test="field == 'phone_number'">
+            SET phone_number = #{client.phoneNumber}
+        </if>
+        <if test="field == 'birthday'">
+            SET birthday = #{client.birthday}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="clientSelect">
+        SELECT * FROM clients
+    </sql>
+
+    <select id="getAll">
+        <include refid="clientSelect"/>
+    </select>
+
+    <select id="getById">
+        <include refid="clientSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName">
+        <include refid="clientSelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="getBySurname">
+        <include refid="clientSelect"/>
+        WHERE surname = #{surname}
+    </select>
+
+    <select id="getByPhoneNumber">
+        <include refid="clientSelect"/>
+        WHERE phone_number = #{phoneNumber}
+    </select>
+
+    <select id="getByBirthday">
+        <include refid="clientSelect"/>
+        WHERE birthday = #{birthday}
+    </select>
+
+    <resultMap id="ClientResultMap" type="com.solvd.carservice.domain.Client" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="surname" property="surname"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="birthday" property="birthday"/>
+    </resultMap>
+
+</mapper>

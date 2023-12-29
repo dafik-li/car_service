@@ -13,7 +13,8 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments (name, company_id) VALUES (?, ?);";
     private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ?;";
     private static final String UPDATE_DEPARTMENT_NAME_QUERY = "UPDATE departments SET name = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM departments d LEFT JOIN companies c on d.company_id = c.id;";
+    private static final String GET_ALL_QUERY =
+            "SELECT d.id, d.name, c.id, c.name, c.address FROM departments d LEFT JOIN companies c on d.company_id = c.id;";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM departments WHERE id = ?;";
     private static final String GET_BY_DEPARTMENT_NAME_QUERY = "SELECT * FROM departments WHERE name = ?;";
 
@@ -94,7 +95,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         String query;
         String value;
         switch (field) {
-            case "cost" :
+            case "name" :
                 query = UPDATE_DEPARTMENT_NAME_QUERY;
                 value = department.getName();
                 break;

@@ -108,7 +108,7 @@ public class OrderRepositoryImpl implements OrderRepository{
         String query;
         String value;
         switch (field) {
-            case "order" :
+            case "date" :
                 query = UPDATE_ORDER_QUERY;
                 value = String.valueOf(order.getDate());
                 break;
