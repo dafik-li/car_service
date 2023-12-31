@@ -38,7 +38,7 @@ public class DepartmentRepositoryMybatisImpl implements DepartmentRepository {
         }
     }
     @Override
-    public void update(Department department, String field) {
+    public void update(Optional<Department> department, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             DepartmentRepository departmentRepository = sqlSession.getMapper(DepartmentRepository.class);
             departmentRepository.update(department, field);

@@ -2,6 +2,7 @@ package com.solvd.carservice.persistence;
 
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface EmployeeRepository extends InterfaceRepository<Employee>{
@@ -12,5 +13,5 @@ public interface EmployeeRepository extends InterfaceRepository<Employee>{
     List<Employee> getByLevel(Integer level);
     List<Employee> getBySalary(Integer salary);
     List<Employee> getByPhoneNumber(String phoneNumber);
-    void appendService(Employee employee, Service service);
+    void appendService(@Param("employee") Employee employeeId, @Param("service") Service serviceId);
 }

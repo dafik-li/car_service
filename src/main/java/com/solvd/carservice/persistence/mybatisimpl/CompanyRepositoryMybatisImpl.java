@@ -45,7 +45,7 @@ public class CompanyRepositoryMybatisImpl implements CompanyRepository {
         }
     }
     @Override
-    public void update(Company company, String field) {
+    public void update(Optional<Company> company, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             CompanyRepository companyRepository = sqlSession.getMapper(CompanyRepository.class);
             companyRepository.update(company, field);

@@ -2,16 +2,17 @@ package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.persistence.ClientRepository;
-import com.solvd.carservice.persistence.DAOimpl.ClientRepositoryImpl;
 import com.solvd.carservice.service.ClientService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public ClientServiceImpl() {
-        this.clientRepository = new ClientRepositoryImpl();
+        this.clientRepository = switcherRepository.switchRepository(ClientRepository.class);
     }
     @Override
     public Client add(Client client) {
@@ -28,7 +29,7 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.getById(id);
     }
     @Override
-    public void change(Client client, String field) {
+    public void change(Optional<Client> client, String field) {
         clientRepository.update(client, field);
     }
     @Override

@@ -7,6 +7,6 @@ public interface InterfaceService<E> {
     E add(E entity);
     List<E> retrieveAll();
     Optional<E> retrieveById(Long id);
-    void change(E entity, String K);
+    void change(Optional<E> entity, String K);
     void removeById(Long id);
 }

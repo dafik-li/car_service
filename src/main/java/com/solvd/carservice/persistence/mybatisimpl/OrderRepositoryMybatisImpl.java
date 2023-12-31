@@ -39,7 +39,7 @@ public class OrderRepositoryMybatisImpl implements OrderRepository {
         }
     }
     @Override
-    public void update(Order order, String field) {
+    public void update(Optional<Order> order, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             OrderRepository orderRepository = sqlSession.getMapper(OrderRepository.class);
             orderRepository.update(order, field);

@@ -2,16 +2,17 @@ package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.persistence.DetailRepository;
-import com.solvd.carservice.persistence.DAOimpl.DetailRepositoryImpl;
 import com.solvd.carservice.service.DetailService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class DetailServiceImpl implements DetailService {
     private final DetailRepository detailRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public DetailServiceImpl() {
-        this.detailRepository = new DetailRepositoryImpl();
+        this.detailRepository = switcherRepository.switchRepository(DetailRepository.class);
     }
     @Override
     public Detail add(Detail detail) {
@@ -28,7 +29,7 @@ public class DetailServiceImpl implements DetailService {
         return detailRepository.getById(id);
     }
     @Override
-    public void change(Detail detail, String field) {
+    public void change(Optional<Detail> detail, String field) {
         detailRepository.update(detail, field);
     }
     @Override

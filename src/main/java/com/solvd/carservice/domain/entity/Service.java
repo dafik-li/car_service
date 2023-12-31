@@ -1,5 +1,6 @@
 package com.solvd.carservice.domain.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Service {
@@ -9,6 +10,7 @@ public class Service {
     private Integer hoursToDo;
     private Car carId;
     private Department departmentId;
+    private List<Employee> employees;
 
     public Service() { }
     public Service(Long id) {
@@ -19,6 +21,13 @@ public class Service {
         this.price = price;
         this.hoursToDo = hoursToDo;
         this.carId = carId;
+        this.departmentId = departmentId;
+    }
+    public Service(Long id, String name, Double price, Integer hoursToDo, Department departmentId) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.hoursToDo = hoursToDo;
         this.departmentId = departmentId;
     }
     public Service(Long id, String name, Double price, Integer hoursToDo, Car carId, Department departmentId) {
@@ -65,7 +74,12 @@ public class Service {
     public void setDepartmentId(Department departmentId) {
         this.departmentId = departmentId;
     }
-
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

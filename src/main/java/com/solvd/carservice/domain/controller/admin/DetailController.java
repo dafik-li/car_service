@@ -1,8 +1,8 @@
 package com.solvd.carservice.domain.controller.admin;
 
+import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Detail;
-import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.DetailService;
 import com.solvd.carservice.service.impl.DetailServiceImpl;
@@ -17,7 +17,7 @@ public class DetailController extends AbstractController {
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
 
     public void moderate() {
-        consoleMenu.chooseActionMenu();
+        consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": add(); break;
@@ -65,22 +65,47 @@ public class DetailController extends AbstractController {
         }
     }
     public void change() {
+        LOGGER.info("Update detail");
+        Optional<Detail> detail = retrieveById();
+        DetailService detailService = new DetailServiceImpl();
+        String field = getDataFromConsole.getStringFromConsole("select field");
+        switch (field) {
+            case "name":
+                detail.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                break;
+            case "price":
+                detail.get().setPrice(getDataFromConsole.getIntegerFromConsole("price"));
+                break;
+            case "in_stock":
+                detail.get().setInStock(getDataFromConsole.getBooleanFromConsole("in_stock"));
+                break;
+            case "delivery_days":
+                detail.get().setDeliveryDays(getDataFromConsole.getIntegerFromConsole("delivery_days"));
+                break;
+        }
+        detailService.change(detail, field);
+        LOGGER.info("Client " + field + " was changed");
     }
-    public void retrieveById() {
+    public Optional<Detail> retrieveById() {
         Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info(
+        LOGGER.info("\n|" +
                 "Detail id - " + detailOptional.get().getId() + "|" +
                 "name - " + detailOptional.get().getName() + "|" +
-                "price - " + detailOptional.get().getPrice() + "|" +
-                "car - " + detailOptional.get().getCarId() + "|" +
+                "price - " + detailOptional.get().getPrice() + "\n[" +
+                "car id - " + detailOptional.get().getCarId().getId() + "|" +
+                "brand - " + detailOptional.get().getCarId().getBrand() + "|" +
+                "model - " + detailOptional.get().getCarId().getModel() + "|" +
+                "year - " + detailOptional.get().getCarId().getYear() + "]\n" +
                 "in stock - " + detailOptional.get().getInStock() + "|" +
-                "delivery days - " + detailOptional.get().getDeliveryDays());
+                "delivery days - " + detailOptional.get().getDeliveryDays() + "|");
+        return detailOptional;
     }
     public void removeById() {
         LOGGER.info("Following detail will be deleted");
         DetailService detailService = new DetailServiceImpl();
         detailService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
+        LOGGER.info("Successful deleted");
     }
 }

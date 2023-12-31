@@ -1,9 +1,9 @@
 package com.solvd.carservice.domain.controller.admin;
 
+import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Order;
-import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.OrderService;
 import com.solvd.carservice.service.impl.OrderServiceImpl;
@@ -18,7 +18,7 @@ public class OrderController extends AbstractController {
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
 
     public void moderate() {
-        consoleMenu.chooseActionMenu();
+        consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": add(); break;
@@ -81,24 +81,60 @@ public class OrderController extends AbstractController {
                     "name - " + order.getCostId().getDetailId().getName() + "|" +
                     "price - " + order.getCostId().getDetailId().getPrice() + "|" +
                     "in stock - " + order.getCostId().getDetailId().getInStock() + "|" +
-                    "delivery days - " + order.getCostId().getDetailId().getDeliveryDays());
+                    "delivery days - " + order.getCostId().getDetailId().getDeliveryDays() + "]");
         }
     }
     public void change() {
+        LOGGER.info("Update order");
+        Optional<Order> order = retrieveById();
+        OrderService orderService = new OrderServiceImpl();
+        String field = getDataFromConsole.getStringFromConsole("select field");
+        switch (field) {
+            case "date":
+                order.get().setDate(getDataFromConsole.getDateFromConsole("date"));
+                break;
+        }
+        orderService.change(order, field);
+        LOGGER.info("Order " + field + " was changed");
     }
-    public void retrieveById() {
+    public Optional<Order> retrieveById() {
         Optional<Order> orderOptional = new OrderServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info(
+        LOGGER.info("\n|" +
                 "Order id - " + orderOptional.get().getId() + "|" +
-                "date - " + orderOptional.get().getDate() + "|" +
-                "client - " + orderOptional.get().getClientId()  + "|" +
-                "cost - " + orderOptional.get().getCostId());
+                "date - " + orderOptional.get().getDate() + "\n[" +
+                "client id - " + orderOptional.get().getClientId().getId() + "|" +
+                "name - " + orderOptional.get().getClientId().getName() + "|" +
+                "surname - " + orderOptional.get().getClientId().getSurname() + "|" +
+                "phone number - " + orderOptional.get().getClientId().getPhoneNumber() + "|" +
+                "birthday - " + orderOptional.get().getClientId().getBirthday() + "]\n[" +
+                "cost id - " + orderOptional.get().getCostId().getId() + "|" +
+                "cost - " + orderOptional.get().getCostId().getCost() + "\n[" +
+                "service id - " + orderOptional.get().getCostId().getServiceId().getId() + "|" +
+                "name - " + orderOptional.get().getCostId().getServiceId().getName() + "|" +
+                "price - " + orderOptional.get().getCostId().getServiceId().getPrice() + "|" +
+                "hours to do - " + orderOptional.get().getCostId().getServiceId().getHoursToDo() + "]\n[" +
+                "car id - " + orderOptional.get().getCostId().getServiceId().getCarId().getId() + "|" +
+                "brand - " + orderOptional.get().getCostId().getServiceId().getCarId().getBrand() + "|" +
+                "model - " + orderOptional.get().getCostId().getServiceId().getCarId().getModel() + "|" +
+                "year - " + orderOptional.get().getCostId().getServiceId().getCarId().getYear() + "]\n[" +
+                "department id - " + orderOptional.get().getCostId().getServiceId().getDepartmentId().getId() + "|" +
+                "name - " + orderOptional.get().getCostId().getServiceId().getDepartmentId().getName() + "]\n[" +
+                "company id - " + orderOptional.get().getCostId().getServiceId().getDepartmentId().getCompanyId().getId() + "|" +
+                "name - " + orderOptional.get().getCostId().getServiceId().getDepartmentId().getCompanyId().getName() + "|" +
+                "address - " + orderOptional.get().getCostId().getServiceId().getDepartmentId().getCompanyId().getAddress() + "]\n[" +
+                "detail id - " + orderOptional.get().getCostId().getDetailId().getId() + "|" +
+                "name - " + orderOptional.get().getCostId().getDetailId().getName() + "|" +
+                "price - " + orderOptional.get().getCostId().getDetailId().getPrice() + "|" +
+                "in stock - " + orderOptional.get().getCostId().getDetailId().getInStock() + "|" +
+                "delivery days - " + orderOptional.get().getCostId().getDetailId().getDeliveryDays() + "]");
+        return orderOptional;
     }
     public void removeById() {
         LOGGER.info("Following order will be deleted");
         OrderService orderService = new OrderServiceImpl();
         orderService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
+        LOGGER.info("Successful deleted");
     }
 }

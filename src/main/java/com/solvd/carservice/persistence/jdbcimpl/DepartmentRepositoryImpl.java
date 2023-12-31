@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
@@ -15,9 +15,11 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ?;";
     private static final String UPDATE_DEPARTMENT_NAME_QUERY = "UPDATE departments SET name = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT d.id, d.name, c.id, c.name, c.address FROM departments d LEFT JOIN companies c on d.company_id = c.id;";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM departments WHERE id = ?;";
-    private static final String GET_BY_DEPARTMENT_NAME_QUERY = "SELECT * FROM departments WHERE name = ?;";
+            "SELECT d.id, d.name, c.id, c.name, c.address " +
+            "FROM departments d " +
+            "LEFT JOIN companies c ON d.company_id = c.id ";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE d.id = ? ");
+    private static final String GET_BY_DEPARTMENT_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
 
     @Override
     public List<Department> getByName(String name) {
@@ -82,7 +84,10 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
             departmentOptional = Optional.of(
                     new Department(resultSet.getLong(1),
                             resultSet.getString(2),
-                            new Company(resultSet.getLong(3))));
+                            new Company(
+                                    resultSet.getLong(3),
+                                    resultSet.getString(4),
+                                    resultSet.getString(5))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -91,20 +96,21 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         return departmentOptional;
     }
     @Override
-    public void update(Department department, String field) {
+    public void update(Optional<Department> department, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "name" :
                 query = UPDATE_DEPARTMENT_NAME_QUERY;
-                value = department.getName();
+                value = department.get().getName();
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, department.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update department " + field, e);

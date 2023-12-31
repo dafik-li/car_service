@@ -60,7 +60,7 @@ public class ClientRepositoryMybatisImpl implements ClientRepository {
         }
     }
     @Override
-    public void update(Client client, String field) {
+    public void update(Optional<Client> client, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             ClientRepository clientRepository = sqlSession.getMapper(ClientRepository.class);
             clientRepository.update(client, field);

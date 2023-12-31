@@ -16,7 +16,7 @@ public class CompanyController extends AbstractController {
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CompanyController.class);
 
     public void moderate() {
-        consoleMenu.chooseActionMenu();
+        consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": add(); break;
@@ -54,20 +54,37 @@ public class CompanyController extends AbstractController {
                     "address - " + company.getAddress());
         }
     }
+    @Override
     public void change() {
+        LOGGER.info("Update company");
+        Optional<Company> company = retrieveById();
+        CompanyService companyService = new CompanyServiceImpl();
+        String field = getDataFromConsole.getStringFromConsole("select field");
+        switch (field) {
+            case "name":
+                company.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                break;
+            case "address":
+                company.get().setAddress(getDataFromConsole.getStringFromConsole("address"));
+                break;
+        }
+        companyService.change(company, field);
+        LOGGER.info("Company " + field + " was changed");
     }
-    public void retrieveById() {
+    public Optional<Company> retrieveById() {
         Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info(
+        LOGGER.info("|" +
                 "Company id - " + companyOptional.get().getId() + "|" +
                 "name - " + companyOptional.get().getName() + "|" +
-                "address - " + companyOptional.get().getAddress());
+                "address - " + companyOptional.get().getAddress() + "|");
+        return companyOptional;
     }
     public void removeById() {
         LOGGER.info("Following company will be terminated");
         CompanyService companyService = new CompanyServiceImpl();
         companyService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
+        LOGGER.info("Successful deleted");
     }
 }

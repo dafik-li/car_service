@@ -2,16 +2,17 @@ package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.persistence.OrderRepository;
-import com.solvd.carservice.persistence.DAOimpl.OrderRepositoryImpl;
 import com.solvd.carservice.service.OrderService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public OrderServiceImpl() {
-        this.orderRepository = new OrderRepositoryImpl();
+        this.orderRepository = switcherRepository.switchRepository(OrderRepository.class);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.getById(id);
     }
     @Override
-    public void change(Order order, String field) {
+    public void change(Optional<Order> order, String field) {
         orderRepository.update(order, field);
     }
     @Override

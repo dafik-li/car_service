@@ -36,11 +36,11 @@
         FROM
         services
         LEFT JOIN
-        cars on services.car_id = cars.id
+        cars ON services.car_id = cars.id
         LEFT JOIN
-        departments d on services.department_id = d.id
+        departments d ON services.department_id = d.id
         LEFT JOIN
-        companies com on d.company_id = com.id
+        companies com ON d.company_id = com.id
     </sql>
 
     <select id="getAll" resultMap="ServiceResultMap">
@@ -76,6 +76,8 @@
                     resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
         <association property="departmentId"
                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
+        <collection property="services"
+                    resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
     </resultMap>
 
 </mapper>

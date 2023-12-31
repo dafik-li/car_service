@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.persistence.CarRepository;
@@ -132,28 +132,29 @@ public class CarRepositoryImpl implements CarRepository {
         return carOptional;
     }
     @Override
-    public void update(Car car, String field) {
+    public void update(Optional<Car> car, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "brand" :
                 query = UPDATE_CAR_BRAND_QUERY;
-                value = car.getBrand();
+                value = car.get().getBrand();
                 break;
             case "model" :
                 query = UPDATE_CAR_MODEL_QUERY;
-                value = car.getModel();
+                value = car.get().getModel();
                 break;
             case "year" :
                 query = UPDATE_CAR_YEAR_QUERY;
-                value = String.valueOf(car.getYear());
+                value = String.valueOf(car.get().getYear());
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, car.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update car " + field, e);

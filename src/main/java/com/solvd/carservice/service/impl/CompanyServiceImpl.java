@@ -2,16 +2,17 @@ package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.persistence.CompanyRepository;
-import com.solvd.carservice.persistence.DAOimpl.CompanyRepositoryImpl;
 import com.solvd.carservice.service.CompanyService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public CompanyServiceImpl() {
-        this.companyRepository = new CompanyRepositoryImpl();
+        this.companyRepository = switcherRepository.switchRepository(CompanyRepository.class);
     }
     @Override
     public Company add(Company company) {
@@ -28,7 +29,7 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.getById(id);
     }
     @Override
-    public void change(Company company, String field) {
+    public void change(Optional<Company> company, String field) {
         companyRepository.update(company, field);
     }
     @Override

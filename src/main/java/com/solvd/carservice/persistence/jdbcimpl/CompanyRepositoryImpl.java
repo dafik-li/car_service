@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.persistence.CompanyRepository;
@@ -12,8 +12,8 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_COMPANY_QUERY = "INSERT INTO companies (name, address) VALUES (?, ?);";
     private static final String DELETE_COMPANY_QUERY = "DELETE FROM companies WHERE id = ?;";
-    private static final String UPDATE_COMPANY_NAME_QUERY = "UPDATE companies SET name = ? WHERE id = ?;";
-    private static final String UPDATE_COMPANY_ADDRESS_QUERY = "UPDATE companies SET address = ? WHERE id = ?;";
+    private static final String UPDATE_COMPANY_NAME_QUERY = "UPDATE companies SET name = ? WHERE id = ?";
+    private static final String UPDATE_COMPANY_ADDRESS_QUERY = "UPDATE companies SET address = ? WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM companies;";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM companies WHERE id = ?;";
     private static final String GET_BY_COMPANY_NAME_QUERY = "SELECT * FROM companies WHERE name = ?;";
@@ -110,24 +110,25 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         return companyOptional;
     }
     @Override
-    public void update(Company company, String field) {
+    public void update(Optional<Company> company, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "name" :
                 query = UPDATE_COMPANY_NAME_QUERY;
-                value = company.getName();
+                value = company.get().getName();
                 break;
             case "address" :
                 query = UPDATE_COMPANY_ADDRESS_QUERY;
-                value = company.getAddress();
+                value = company.get().getAddress();
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, company.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update company " + field, e);

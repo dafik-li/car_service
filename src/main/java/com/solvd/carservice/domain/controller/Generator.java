@@ -5,6 +5,7 @@ import com.solvd.carservice.domain.controller.user.UserController;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.ModerateException;
 import com.solvd.carservice.util.ConsoleMenu;
+import com.solvd.carservice.util.SwitcherRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import java.util.Scanner;
@@ -19,6 +20,7 @@ public class Generator {
     private final ConsoleMenu consoleMenu;
     private final UserController userController;
     private final ControllerFactory controllerFactory;
+    private final SwitcherRepository switcherRepository;
 
     public Generator() {
         this.scanner = new Scanner(System.in);
@@ -26,6 +28,16 @@ public class Generator {
         this.consoleMenu = new ConsoleMenu();
         this.userController = new UserController();
         this.controllerFactory = new ControllerFactory();
+        this.switcherRepository = new SwitcherRepository();
+    }
+    public void selectDBRepository() {
+        consoleMenu.chooseRepository();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": switcherRepository.useJDBCRepository(); authorization(); break;
+            case "2": switcherRepository.useMybatisRepository(); authorization(); break;
+            case "0": System.exit(0);break;
+        }
     }
     public void authorization() {
         consoleMenu.moderateStartPageMenu();
@@ -33,6 +45,7 @@ public class Generator {
         switch (menu) {
             case "1": userController.clientFormBuilder(); break;
             case "2": moderateController(); break;
+            case "3": selectDBRepository(); break;
             case "0": System.exit(0); break;
         }
         try {

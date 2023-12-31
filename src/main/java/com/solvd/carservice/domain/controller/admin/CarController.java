@@ -1,7 +1,7 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.CarService;
 import com.solvd.carservice.service.impl.CarServiceImpl;
@@ -16,7 +16,7 @@ public class CarController extends AbstractController {
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
 
     public void moderate() {
-        consoleMenu.chooseActionMenu();
+        consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": add(); break;
@@ -57,21 +57,40 @@ public class CarController extends AbstractController {
                     "year - " + car.getYear());
         }
     }
-    public void retrieveById() {
+    public void change() {
+        LOGGER.info("Update car");
+        Optional<Car> car = retrieveById();
+        CarService carService = new CarServiceImpl();
+        String field = getDataFromConsole.getStringFromConsole("select field");
+        switch (field) {
+            case "brand":
+                car.get().setBrand(getDataFromConsole.getStringFromConsole("brand"));
+                break;
+            case "model":
+                car.get().setModel(getDataFromConsole.getStringFromConsole("model"));
+                break;
+            case "year":
+                car.get().setYear(getDataFromConsole.getIntegerFromConsole("year"));
+                break;
+        }
+        carService.change(car, field);
+        LOGGER.info("Car " + field + " was changed");
+    }
+    public Optional<Car> retrieveById() {
         Optional<Car> carOptional = new CarServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info(
+        LOGGER.info("|" +
                 "Car id - " + carOptional.get().getId() + "|" +
                 "brand - " + carOptional.get().getBrand() + "|" +
                 "model - " + carOptional.get().getModel() + "|" +
-                "year - " + carOptional.get().getYear());
-    }
-    public void change() {
+                "year - " + carOptional.get().getYear()+ "|");
+        return carOptional;
     }
     public void removeById() {
         LOGGER.info("Following car will be deleted");
         CarService carService = new CarServiceImpl();
         carService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
+        LOGGER.info("Successful deleted");
     }
 }

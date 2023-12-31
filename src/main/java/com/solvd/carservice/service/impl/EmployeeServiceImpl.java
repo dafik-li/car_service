@@ -1,17 +1,19 @@
 package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Employee;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.EmployeeRepository;
-import com.solvd.carservice.persistence.DAOimpl.EmployeeRepositoryImpl;
 import com.solvd.carservice.service.EmployeeService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public EmployeeServiceImpl() {
-        this.employeeRepository = new EmployeeRepositoryImpl();
+        this.employeeRepository = switcherRepository.switchRepository(EmployeeRepository.class);
     }
     @Override
     public Employee add(Employee employee) {
@@ -28,11 +30,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.getById(id);
     }
     @Override
-    public void change(Employee employee, String field) {
+    public void change(Optional<Employee> employee, String field) {
         employeeRepository.update(employee, field);
     }
     @Override
     public void removeById(Long id) {
         employeeRepository.deleteById(id);
+    }
+    @Override
+    public Employee addService(Employee employeeId, Service serviceId) {
+        employeeId.setId(null);
+        employeeRepository.appendService(employeeId, serviceId);
+        return employeeId;
     }
 }

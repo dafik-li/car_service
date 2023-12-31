@@ -34,12 +34,12 @@
 
     <sql id="detailSelect">
         SELECT
-        details.id, details.name, details.price, details.in_stock, details.delivery_days, cars.id, cars.brand, cars.model, cars.year
-        d.id, d.name, com.id, com.name, com.address
+        details.id, details.name, details.price, details.in_stock, details.delivery_days,
+        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
         FROM
         details
         LEFT JOIN
-        cars on details.car_id = cars.id
+        cars ON details.car_id = cars.id
     </sql>
 
     <select id="getAll" resultMap="DetailResultMap">

@@ -38,7 +38,7 @@ public class CostRepositoryMybatisImpl implements CostRepository {
         }
     }
     @Override
-    public void update(Cost cost, String field) {
+    public void update(Optional<Cost> cost, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             CostRepository costRepository = sqlSession.getMapper(CostRepository.class);
             costRepository.update(cost, field);

@@ -60,10 +60,10 @@ public class EmployeeRepositoryMybatisImpl implements EmployeeRepository {
         }
     }
     @Override
-    public void appendService(Employee employee, Service service) {
+    public void appendService(Employee employeeId, Service serviceId) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             EmployeeRepository employeeRepository = sqlSession.getMapper(EmployeeRepository.class);
-            employeeRepository.appendService(employee, service);
+            employeeRepository.appendService(employeeId, serviceId);
         }
     }
     @Override
@@ -88,7 +88,7 @@ public class EmployeeRepositoryMybatisImpl implements EmployeeRepository {
         }
     }
     @Override
-    public void update(Employee employee, String field) {
+    public void update(Optional<Employee> employee, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             EmployeeRepository employeeRepository = sqlSession.getMapper(EmployeeRepository.class);
             employeeRepository.update(employee, field);

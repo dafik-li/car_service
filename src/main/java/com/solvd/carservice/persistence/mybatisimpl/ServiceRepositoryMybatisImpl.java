@@ -52,7 +52,7 @@ public class ServiceRepositoryMybatisImpl implements ServiceRepository {
         }
     }
     @Override
-    public void update(Service service, String field) {
+    public void update(Optional<Service> service, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             ServiceRepository serviceRepository = sqlSession.getMapper(ServiceRepository.class);
             serviceRepository.update(service, field);

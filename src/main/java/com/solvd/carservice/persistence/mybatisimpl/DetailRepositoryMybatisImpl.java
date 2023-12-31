@@ -59,7 +59,7 @@ public class DetailRepositoryMybatisImpl implements DetailRepository {
         }
     }
     @Override
-    public void update(Detail detail, String field) {
+    public void update(Optional<Detail> detail, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             DetailRepository detailRepository = sqlSession.getMapper(DetailRepository.class);
             detailRepository.update(detail, field);

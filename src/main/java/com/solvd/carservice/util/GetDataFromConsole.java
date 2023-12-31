@@ -79,7 +79,7 @@ public class GetDataFromConsole {
         return fromConsoleSql;
     }
     public Boolean getBooleanFromConsole(String name) {
-        LOGGER.info("Enter the " + name);
+        LOGGER.info("Enter the " + name + "true/false");
         boolean fromConsole = false;
         String query = scanner.nextLine();
         try {

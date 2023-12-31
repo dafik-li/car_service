@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.persistence.ConnectionPool;
@@ -16,14 +16,14 @@ public class CostRepositoryImpl implements CostRepository {
     private static final String GET_ALL_QUERY =
             "SELECT c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
                     "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
-                    "FROM costs c " +
-            "LEFT JOIN services s on c.service_id = s.id " +
-            "LEFT JOIN cars on s.car_id = cars.id " +
-            "LEFT JOIN departments d on s.department_id = d.id " +
-            "LEFT JOIN companies com on d.company_id = c.id " +
-            "LEFT JOIN details det on c.detail_id = det.id;";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM costs WHERE id = ?;";
-    private static final String GET_BY_COST_COST_QUERY = "SELECT * FROM costs WHERE cost = ?;";
+            "FROM costs c " +
+            "LEFT JOIN services s ON c.service_id = s.id " +
+            "LEFT JOIN cars ON s.car_id = cars.id " +
+            "LEFT JOIN departments d ON s.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = c.id " +
+            "LEFT JOIN details det ON c.detail_id = det.id ";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE c.id = ? ");
+    private static final String GET_BY_COST_COST_QUERY = GET_ALL_QUERY.concat("WHERE cost = ? ");
 
     @Override
     public List<Cost> getByCost(Double cost) {
@@ -91,9 +91,28 @@ public class CostRepositoryImpl implements CostRepository {
                             resultSet.getLong(1),
                             resultSet.getDouble(2),
                             new Service(
-                                    resultSet.getLong(3)),
+                                    resultSet.getLong(3),
+                                    resultSet.getString(4),
+                                    resultSet.getDouble(5),
+                                    resultSet.getInt(6),
+                                    new Car(
+                                            resultSet.getLong(7),
+                                            resultSet.getString(8),
+                                            resultSet.getString(9),
+                                            resultSet.getInt(10)),
+                                    new Department(
+                                            resultSet.getLong(11),
+                                            resultSet.getString(12),
+                                            new Company(
+                                                    resultSet.getLong(13),
+                                                    resultSet.getString(14),
+                                                    resultSet.getString(15)))),
                             new Detail(
-                                    resultSet.getLong(4))));
+                                    resultSet.getLong(16),
+                                    resultSet.getString(17),
+                                    resultSet.getInt(18),
+                                    resultSet.getBoolean(19),
+                                    resultSet.getInt(20))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -102,20 +121,21 @@ public class CostRepositoryImpl implements CostRepository {
         return costOptional;
     }
     @Override
-    public void update(Cost cost, String field) {
+    public void update(Optional<Cost> cost, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "cost" :
                 query = UPDATE_COST_QUERY;
-                value = String.valueOf(cost.getCost());
+                value = String.valueOf(cost.get().getCost());
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, cost.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update cost " + field, e);

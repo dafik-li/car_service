@@ -9,10 +9,18 @@ public class ConsoleMenu {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ConsoleMenu.class);
 
+
+    public void chooseRepository() {
+        LOGGER.info("Please, choose a desire repository" + "\n" +
+                "jdbc - press 1" + "\n" +
+                "mybatis - press 2" + "\n" +
+                "exit - press 0");
+    }
     public void moderateStartPageMenu() {
         LOGGER.info("Welcome to a Tony Montana's car service!" + "\n" +
                 "If you want to pimp your car - press 1" + "\n" +
                 "If you our admin - press 2" + "\n" +
+                "If you want to change the repository - press 3" + "\n" +
                 "If you don't need anything - press 0");
     }
     public void chooseControllerMenu() {
@@ -28,13 +36,23 @@ public class ConsoleMenu {
                 "9 - clients" + "\n" +
                 "0 - return");
     }
-    public void chooseActionMenu() {
+    public void chooseModerateMenu() {
         LOGGER.info("What operation you want to do?" + "\n" +
                 "1 - add" + "\n" +
                 "2 - retrieveAll" + "\n" +
                 "3 - retrieveById" + "\n" +
                 "4 - change" + "\n" +
                 "5 - removeById" + "\n" +
+                "0 - return");
+    }
+    public void chooseModerateEmployee() {
+        LOGGER.info("What operation you want to do?" + "\n" +
+                "1 - add" + "\n" +
+                "2 - retrieveAll" + "\n" +
+                "3 - retrieveById" + "\n" +
+                "4 - change" + "\n" +
+                "5 - removeById" + "\n" +
+                "6 - addService" + "\n" +
                 "0 - return");
     }
 }

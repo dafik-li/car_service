@@ -1,6 +1,7 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
 import com.solvd.carservice.domain.entity.Car;
+import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.persistence.CarRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import org.apache.ibatis.session.SqlSession;
@@ -52,7 +53,7 @@ public class CarRepositoryMybatisImpl implements CarRepository {
         }
     }
     @Override
-    public void update(Car car, String field) {
+    public void update(Optional<Car> car, String field) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             CarRepository carRepository = sqlSession.getMapper(CarRepository.class);
             carRepository.update(car, field);

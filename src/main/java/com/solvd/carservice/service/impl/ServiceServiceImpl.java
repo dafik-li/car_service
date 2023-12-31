@@ -2,16 +2,17 @@ package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.ServiceRepository;
-import com.solvd.carservice.persistence.DAOimpl.ServiceRepositoryImpl;
 import com.solvd.carservice.service.ServiceService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository serviceRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public ServiceServiceImpl() {
-        this.serviceRepository = new ServiceRepositoryImpl();
+        this.serviceRepository = switcherRepository.switchRepository(ServiceRepository.class);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepository.getById(id);
     }
     @Override
-    public void change(Service service, String field) {
+    public void change(Optional<Service> service, String field) {
         serviceRepository.update(service, field);
     }
     @Override

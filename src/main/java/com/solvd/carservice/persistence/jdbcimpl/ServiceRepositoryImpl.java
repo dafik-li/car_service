@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Company;
@@ -18,16 +18,18 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private static final String DELETE_SERVICE_QUERY = "DELETE FROM services WHERE id = ?;";
     private static final String UPDATE_SERVICE_NAME_QUERY = "UPDATE services SET name = ? WHERE id = ?;";
     private static final String UPDATE_SERVICE_PRICE_QUERY = "UPDATE services SET price = ? WHERE id = ?;";
+    private static final String UPDATE_SERVICE_HOURS_TO_DO_QUERY = "UPDATE services SET hours_to_do = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
-                    "d.id, d.name, com.id, com.name, com.address FROM services " +
-            "LEFT JOIN cars on services.car_id = cars.id " +
-            "LEFT JOIN departments d on services.department_id = d.id " +
-            "LEFT JOIN companies com on d.company_id = com.id;";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM services WHERE id = ?;";
-    private static final String GET_BY_SERVICE_NAME_QUERY = "SELECT * FROM services WHERE name = ?;";
-    private static final String GET_BY_SERVICE_PRICE_QUERY = "SELECT * FROM services WHERE price = ?;";
-    private static final String GET_BY_SERVICE_HOURS_TODO_QUERY = "SELECT * FROM services WHERE hours_to_do = ?;";
+            "SELECT services.id, services.name, services.price, services.hours_to_do, " +
+                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
+            "FROM services " +
+            "LEFT JOIN cars ON services.car_id = cars.id " +
+            "LEFT JOIN departments d ON services.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = com.id ";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE services.id = ? ");
+    private static final String GET_BY_SERVICE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
+    private static final String GET_BY_SERVICE_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
+    private static final String GET_BY_SERVICE_HOURS_TODO_QUERY = GET_ALL_QUERY.concat("WHERE hours_to_do = ? ");
 
     @Override
     public List<Service> getByName(String name) {
@@ -135,9 +137,17 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                             resultSet.getDouble(3),
                             resultSet.getInt(4),
                             new Car(
-                                    resultSet.getLong(5)),
+                                    resultSet.getLong(5),
+                                    resultSet.getString(6),
+                                    resultSet.getString(7),
+                                    resultSet.getInt(8)),
                             new Department(
-                                    resultSet.getLong(6))));
+                                    resultSet.getLong(9),
+                                    resultSet.getString(10),
+                                    new Company(
+                                            resultSet.getLong(11),
+                                            resultSet.getString(12),
+                                            resultSet.getString(13)))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -146,24 +156,29 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceOptional;
     }
     @Override
-    public void update(Service service, String field) {
+    public void update(Optional<Service> service, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "name" :
                 query = UPDATE_SERVICE_NAME_QUERY;
-                value = service.getName();
+                value = service.get().getName();
                 break;
-            case "in_stock" :
+            case "price" :
                 query = UPDATE_SERVICE_PRICE_QUERY;
-                value = String.valueOf(service.getPrice());
+                value = String.valueOf(service.get().getPrice());
+                break;
+            case "hours_to_do" :
+                query = UPDATE_SERVICE_HOURS_TO_DO_QUERY;
+                value = String.valueOf(service.get().getHoursToDo());
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, service.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update service " + field, e);

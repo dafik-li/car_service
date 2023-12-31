@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.persistence.ClientRepository;
@@ -154,32 +154,33 @@ public class ClientRepositoryImpl implements ClientRepository {
         return clientOptional;
     }
     @Override
-    public void update(Client client, String field) {
+    public void update(Optional<Client> client, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "name" :
                 query = UPDATE_CLIENT_NAME_QUERY;
-                value = client.getName();
+                value = client.get().getName();
                 break;
             case "surname" :
                 query = UPDATE_CLIENT_SURNAME_QUERY;
-                value = client.getSurname();
+                value = client.get().getSurname();
                 break;
             case "phone_number" :
                 query = UPDATE_CLIENT_PHONE_NUMBER_QUERY;
-                value = client.getPhoneNumber();
+                value = client.get().getPhoneNumber();
                 break;
             case "birthday" :
                 query = UPDATE_CLIENT_BIRTHDAY_QUERY;
-                value = String.valueOf(client.getBirthday());
+                value = String.valueOf(client.get().getBirthday());
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, client.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update client " + field, e);

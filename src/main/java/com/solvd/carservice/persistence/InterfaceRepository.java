@@ -8,6 +8,6 @@ public interface InterfaceRepository<E> {
     void create(E entity);
     List<E> getAll();
     Optional<E> getById(Long id);
-    void update(@Param("entity") E entity, @Param("string") String K);
+    void update(@Param("entity") Optional<E> entity, @Param("string") String K);
     void deleteById(Long id);
 }

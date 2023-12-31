@@ -1,9 +1,6 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
-import com.solvd.carservice.domain.entity.Company;
-import com.solvd.carservice.domain.entity.Department;
-import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.entity.Service;
+import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.EmployeeRepository;
 import java.sql.*;
@@ -25,17 +22,21 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address FROM employees e " +
-            "LEFT JOIN departments d on e.department_id = d.id " +
-            "LEFT JOIN companies c on d.company_id = c.id;";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM employees WHERE id = ?;";
-    private static final String GET_BY_EMPLOYEE_NAME_QUERY = "SELECT * FROM employees WHERE name = ?;";
-    private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = "SELECT * FROM employees WHERE surname = ?;";
-    private static final String GET_BY_EMPLOYEE_AGE_QUERY = "SELECT * FROM employees WHERE age = ?;";
-    private static final String GET_BY_EMPLOYEE_POSITION_QUERY = "SELECT * FROM employees WHERE position = ?;";
-    private static final String GET_BY_EMPLOYEE_LEVEL_QUERY = "SELECT * FROM employees WHERE level = ?;";
-    private static final String GET_BY_EMPLOYEE_SALARY_QUERY = "SELECT * FROM employees WHERE salary = ?;";
-    private static final String GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY = "SELECT * FROM employees WHERE phone_number = ?;";
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
+                    "services.id, services.name, services.price, services.hours_to_do, d.id, d.name, c.id, c.name, c.address " +
+            "FROM employees e " +
+            "LEFT JOIN employee_services es ON es.employee_id = e.id " +
+            "LEFT JOIN services ON es.service_id = services.id " +
+            "LEFT JOIN departments d ON e.department_id = d.id " +
+            "LEFT JOIN companies c ON d.company_id = c.id ";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE e.id = ? ");
+    private static final String GET_BY_EMPLOYEE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
+    private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE surname = ? ");
+    private static final String GET_BY_EMPLOYEE_AGE_QUERY = GET_ALL_QUERY.concat("WHERE age = ? ");
+    private static final String GET_BY_EMPLOYEE_POSITION_QUERY = GET_ALL_QUERY.concat("WHERE position = ? ");
+    private static final String GET_BY_EMPLOYEE_LEVEL_QUERY = GET_ALL_QUERY.concat("WHERE level = ? ");
+    private static final String GET_BY_EMPLOYEE_SALARY_QUERY = GET_ALL_QUERY.concat("WHERE salary = ? ");
+    private static final String GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY = GET_ALL_QUERY.concat("WHERE phone_number = ? ");
 
     @Override
     public List<Employee> getByName(String name) {
@@ -164,15 +165,15 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return employees;
     }
     @Override
-    public void appendService(Employee employee, Service service) {
+    public void appendService(Employee employeeId, Service serviceId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_EMPLOYEE_SERVICE_QUERY);
-            preparedStatement.setLong(1, employee.getId());
-            preparedStatement.setLong(2, service.getId());
+            preparedStatement.setLong(1, employeeId.getId());
+            preparedStatement.setLong(2, serviceId.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to create employee-service", e);
+            throw new RuntimeException("Unable to create employee-services", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -184,12 +185,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_EMPLOYEE_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, employee.getName());
             preparedStatement.setString(2, employee.getSurname());
-            preparedStatement.setInt(3,employee.getAge());
+            preparedStatement.setInt(3, employee.getAge());
             preparedStatement.setString(4, employee.getPosition());
-            preparedStatement.setInt(5,employee.getLevel());
-            preparedStatement.setInt(6,employee.getSalary());
+            preparedStatement.setInt(5, employee.getLevel());
+            preparedStatement.setInt(6, employee.getSalary());
             preparedStatement.setString(7, employee.getPhoneNumber());
-            preparedStatement.setLong(8,employee.getDepartmentId().getId());
+            preparedStatement.setLong(8, employee.getDepartmentId().getId());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
@@ -235,8 +236,18 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                             resultSet.getInt(6),
                             resultSet.getInt(7),
                             resultSet.getString(8),
-                            new Department(
-                                    resultSet.getLong(9))));
+                            new Service(
+                                    resultSet.getLong(9),
+                                    resultSet.getString(10),
+                                    resultSet.getDouble(11),
+                                    resultSet.getInt(12),
+                                    new Department(
+                                            resultSet.getLong(13),
+                                            resultSet.getString(14),
+                                            new Company(
+                                                    resultSet.getLong(15),
+                                                    resultSet.getString(16),
+                                                    resultSet.getString(17))))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -245,44 +256,45 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return employeeOptional;
     }
     @Override
-    public void update(Employee employee, String field) {
+    public void update(Optional<Employee> employee, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "name" :
                 query = UPDATE_EMPLOYEE_NAME_QUERY;
-                value = employee.getName();
+                value = employee.get().getName();
                 break;
             case "surname" :
                 query = UPDATE_EMPLOYEE_SURNAME_QUERY;
-                value = employee.getSurname();
+                value = employee.get().getSurname();
                 break;
             case "age" :
                 query = UPDATE_EMPLOYEE_AGE_QUERY;
-                value = String.valueOf(employee.getAge());
+                value = String.valueOf(employee.get().getAge());
                 break;
             case "position" :
                 query = UPDATE_EMPLOYEE_POSITION_QUERY;
-                value = employee.getPosition();
+                value = employee.get().getPosition();
                 break;
             case "level" :
                 query = UPDATE_EMPLOYEE_LEVEL_QUERY;
-                value = String.valueOf(employee.getLevel());
+                value = String.valueOf(employee.get().getLevel());
                 break;
             case "salary" :
                 query = UPDATE_EMPLOYEE_SALARY_QUERY;
-                value = String.valueOf(employee.getSalary());
+                value = String.valueOf(employee.get().getSalary());
                 break;
             case "phone_number" :
                 query = UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY;
-                value = employee.getPhoneNumber();
+                value = employee.get().getPhoneNumber();
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, employee.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update employee " + field, e);
@@ -316,14 +328,19 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 employee.setLevel(resultSet.getInt(6));
                 employee.setSalary(resultSet.getInt(7));
                 employee.setPhoneNumber(resultSet.getString(8));
-                employee.setDepartmentId(
-                        new Department(
+                employee.setService(
+                        new Service(
                                 resultSet.getLong(9),
                                 resultSet.getString(10),
-                                new Company(
-                                        resultSet.getLong(11),
-                                        resultSet.getString(12),
-                                        resultSet.getString(13))));
+                                resultSet.getDouble(11),
+                                resultSet.getInt(12),
+                                new Department(
+                                        resultSet.getLong(13),
+                                        resultSet.getString(14),
+                                        new Company(
+                                                resultSet.getLong(15),
+                                                resultSet.getString(16),
+                                                resultSet.getString(17)))));
                 employees.add(employee);
             }
         } catch (SQLException e) {

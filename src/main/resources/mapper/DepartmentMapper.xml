@@ -25,7 +25,7 @@
         FROM
         departments d
         LEFT JOIN
-        companies c on d.company_id = c.id
+        companies c ON d.company_id = c.id
     </sql>
 
     <select id="getAll" resultMap="DepartmentResultMap">

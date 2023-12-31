@@ -2,16 +2,17 @@ package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.persistence.CostRepository;
-import com.solvd.carservice.persistence.DAOimpl.CostRepositoryImpl;
 import com.solvd.carservice.service.CostService;
+import com.solvd.carservice.util.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class CostServiceImpl implements CostService {
     private final CostRepository costRepository;
+    private static final SwitcherRepository switcherRepository = SwitcherRepository.getInstance();
 
     public CostServiceImpl() {
-        this.costRepository = new CostRepositoryImpl();
+        this.costRepository = switcherRepository.switchRepository(CostRepository.class);
     }
     @Override
     public Cost add(Cost cost) {
@@ -28,7 +29,7 @@ public class CostServiceImpl implements CostService {
         return costRepository.getById(id);
     }
     @Override
-    public void change(Cost cost, String field) {
+    public void change(Optional<Cost> cost, String field) {
         costRepository.update(cost, field);
     }
     @Override

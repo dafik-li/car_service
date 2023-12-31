@@ -44,13 +44,18 @@
 
     <sql id="employeeSelect">
         SELECT
-        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
+        services.id, services.name, services.price, services.hours_to_do, d.id, d.name, c.id, c.name, c.address
         FROM
         employees e
         LEFT JOIN
-        departments d on e.department_id = d.id
+        employee_services es ON es.employee_id = e.id
         LEFT JOIN
-        companies c on d.company_id = c.id
+        services ON es.service_id = services.id
+        LEFT JOIN
+        departments d ON e.department_id = d.id
+        LEFT JOIN
+        companies c ON d.company_id = c.id
     </sql>
 
     <select id="getAll" resultMap="EmployeeResultMap">
@@ -106,8 +111,8 @@
         <result column="level" property="level"/>
         <result column="salary" property="salary"/>
         <result column="phone_number" property="phoneNumber"/>
-        <association property="departmentId"
-                    resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
+        <association property="serviceId"
+                    resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
     </resultMap>
 
 </mapper>

@@ -27,15 +27,15 @@
         FROM
         costs c
         LEFT JOIN
-        services s on c.service_id = s.id
+        services s ON c.service_id = s.id
         LEFT JOIN
-        cars on s.car_id = cars.id
+        cars ON s.car_id = cars.id
         LEFT JOIN
-        departments d on s.department_id = d.id
+        departments d ON s.department_id = d.id
         LEFT JOIN
-        companies com on d.company_id = c.id
+        companies com ON d.company_id = c.id
         LEFT JOIN
-        details det on c.detail_id = det.id
+        details det ON c.detail_id = det.id
     </sql>
 
     <select id="getAll" resultMap="CostResultMap">

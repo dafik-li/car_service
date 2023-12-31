@@ -1,4 +1,4 @@
-package com.solvd.carservice.persistence.DAOimpl;
+package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Detail;
@@ -19,14 +19,14 @@ public class DetailRepositoryImpl implements DetailRepository {
     private static final String UPDATE_DETAIL_IN_STOCK_QUERY = "UPDATE details SET in_Stock = ? WHERE id = ?;";
     private static final String UPDATE_DETAIL_DELIVERY_DAYS_QUERY = "UPDATE details SET delivery_days = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT details.id, details.name, details.price, details.in_stock, details.delivery_days, cars.id, cars.brand, cars.model, cars.year " +
-                    "FROM details " +
-                    "LEFT JOIN cars on details.car_id = cars.id;";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM details WHERE id = ?;";
-    private static final String GET_BY_DETAIL_NAME_QUERY = "SELECT * FROM details WHERE name = ?;";
-    private static final String GET_BY_DETAIL_PRICE_QUERY = "SELECT * FROM details WHERE price = ?;";
-    private static final String GET_BY_DETAIL_IN_STOCK_QUERY = "SELECT * FROM details WHERE in_Stock = ?;";
-    private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = "SELECT * FROM details WHERE delivery_days = ?;";
+            "SELECT details.id, details.name, details.price, cars.id, cars.brand, cars.model, cars.year, details.in_stock, details.delivery_days " +
+            "FROM details " +
+            "LEFT JOIN cars ON details.car_id = cars.id;";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE id = ? ");
+    private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
+    private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
+    private static final String GET_BY_DETAIL_IN_STOCK_QUERY = GET_ALL_QUERY.concat("in_Stock = ? ");
+    private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = GET_ALL_QUERY.concat("WHERE delivery_days = ? ");
 
     @Override
     public List<Detail> getByName(String name) {
@@ -151,9 +151,12 @@ public class DetailRepositoryImpl implements DetailRepository {
                             resultSet.getString(2),
                             resultSet.getInt(3),
                             new Car(
-                                    resultSet.getLong(4)),
-                            resultSet.getBoolean(5),
-                            resultSet.getInt(6)));
+                                    resultSet.getLong(4),
+                                    resultSet.getString(5),
+                                    resultSet.getString(6),
+                                    resultSet.getInt(7)),
+                            resultSet.getBoolean(8),
+                            resultSet.getInt(9)));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
@@ -162,32 +165,33 @@ public class DetailRepositoryImpl implements DetailRepository {
         return detailOptional;
     }
     @Override
-    public void update(Detail detail, String field) {
+    public void update(Optional<Detail> detail, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query;
         String value;
         switch (field) {
             case "name" :
                 query = UPDATE_DETAIL_NAME_QUERY;
-                value = detail.getName();
+                value = detail.get().getName();
                 break;
             case "price" :
                 query = UPDATE_DETAIL_PRICE_QUERY;
-                value = String.valueOf(detail.getPrice());
+                value = String.valueOf(detail.get().getPrice());
                 break;
             case "in_stock" :
                 query = UPDATE_DETAIL_IN_STOCK_QUERY;
-                value = String.valueOf(detail.getInStock());
+                value = String.valueOf(detail.get().getInStock());
                 break;
             case "delivery_days" :
                 query = UPDATE_DETAIL_DELIVERY_DAYS_QUERY;
-                value = String.valueOf(detail.getDeliveryDays());
+                value = String.valueOf(detail.get().getDeliveryDays());
                 break;
             default: throw new IllegalStateException("Unexpected value: " + field);
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, detail.get().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to update detail " + field, e);
