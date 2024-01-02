@@ -111,6 +111,8 @@
         <result column="level" property="level"/>
         <result column="salary" property="salary"/>
         <result column="phone_number" property="phoneNumber"/>
+        <association property="departmentId"
+                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
         <association property="serviceId"
                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
     </resultMap>

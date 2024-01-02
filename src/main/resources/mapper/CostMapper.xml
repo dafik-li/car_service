@@ -23,7 +23,6 @@
         SELECT
         c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
         d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days
-        d.id, d.name, com.id, com.name, com.address
         FROM
         costs c
         LEFT JOIN
