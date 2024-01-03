@@ -10,7 +10,7 @@ public class Service {
     private Integer hoursToDo;
     private Car carId;
     private Department departmentId;
-    private List<Employee> employees;
+    private Employee employees;
 
     public Service() { }
     public Service(Long id) {
@@ -74,10 +74,10 @@ public class Service {
     public void setDepartmentId(Department departmentId) {
         this.departmentId = departmentId;
     }
-    public List<Employee> getEmployees() {
+    public Employee getEmployees() {
         return employees;
     }
-    public void setEmployees(List<Employee> employees) {
+    public void setEmployees(Employee employees) {
         this.employees = employees;
     }
     @Override

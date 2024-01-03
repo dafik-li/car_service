@@ -55,6 +55,12 @@ public class EmployeeController extends AbstractController {
                 " - was added");
     }
     public void addService() {
+        LOGGER.info("Add service to employee");
+        EmployeeService employeeService = new EmployeeServiceImpl();
+        Long employeeId = getDataFromConsole.getLongFromConsole("employee_id");
+        Long serviceId = getDataFromConsole.getLongFromConsole("service_id");
+        employeeService.addService(employeeId, serviceId);
+        LOGGER.info("Service id - " + serviceId + " was assigned to the employee id - " + employeeId);
     }
     public void retrieveAll() {
         LOGGER.info("List of employees");

@@ -5,7 +5,9 @@ import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.service.EmployeeService;
 import com.solvd.carservice.service.ServiceService;
+import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -18,7 +20,7 @@ public class ServiceController extends AbstractController {
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ServiceController.class);
 
     public void moderate() {
-        consoleMenu.chooseModerateMenu();
+        consoleMenu.chooseModerateService();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": add(); break;
@@ -26,6 +28,7 @@ public class ServiceController extends AbstractController {
             case "3": retrieveById(); break;
             case "4": change(); break;
             case "5": removeById(); break;
+            case "6": addEmployee(); break;
             case "0": new Generator().moderateController(); break;
         }
         try {
@@ -34,6 +37,14 @@ public class ServiceController extends AbstractController {
             LOGGER.error(e.toString());
             moderate();
         }
+    }
+    public void addEmployee() {
+        LOGGER.info("Add employee to service");
+        ServiceService serviceService = new ServiceServiceImpl();
+        Long serviceId = getDataFromConsole.getLongFromConsole("service_id");
+        Long employeeId = getDataFromConsole.getLongFromConsole("employee_id");
+        serviceService.addEmployee(employeeId, serviceId);
+        LOGGER.info("Employee id - " + employeeId + " was assigned to the service id - " + serviceId);
     }
     public void add() {
         Service service = new Service(
@@ -59,6 +70,14 @@ public class ServiceController extends AbstractController {
                     "name - " + service.getName() + "|" +
                     "price - " + service.getPrice() + "|" +
                     "hours to do - " + service.getHoursToDo() + "[" +
+                    "employee id - " + service.getEmployees().getId() + "|" +
+                    "name - " + service.getEmployees().getName() + "|" +
+                    "surname - " + service.getEmployees().getSurname() + "|" +
+                    "age - " + service.getEmployees().getAge() + "|" +
+                    "position - " + service.getEmployees().getPosition() + "|" +
+                    "level - " + service.getEmployees().getLevel() + "|" +
+                    "salary - " + service.getEmployees().getSalary() + "|" +
+                    "phone - " + service.getEmployees().getPhoneNumber() + "[" +
                     "car id - " + service.getCarId().getId() + "|" +
                     "brand - " + service.getCarId().getBrand() + "|" +
                     "model - " + service.getCarId().getModel() + "|" +

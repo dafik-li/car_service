@@ -11,6 +11,14 @@
         (#{name}, #{surname}, #{age}, #{position}, #{level}, #{salary}, #{phoneNumber}, #{departmentId})
     </insert>
 
+    <insert id="appendService">
+        INSERT INTO
+        employee_services
+        (employee_id, service_id)
+        VALUES
+        (#{employee_id}, #{service_id})
+    </insert>
+
     <delete id="deleteById">
         DELETE FROM employees WHERE id = #{id}
     </delete>
@@ -113,7 +121,7 @@
         <result column="phone_number" property="phoneNumber"/>
         <association property="departmentId"
                      resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
-        <association property="serviceId"
+        <association property="service"
                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
     </resultMap>
 

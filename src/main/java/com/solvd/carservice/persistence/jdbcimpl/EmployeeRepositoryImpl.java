@@ -1,6 +1,9 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
-import com.solvd.carservice.domain.entity.*;
+import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.entity.Employee;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.EmployeeRepository;
 import java.sql.*;
@@ -165,12 +168,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return employees;
     }
     @Override
-    public void appendService(Employee employeeId, Service serviceId) {
+    public void appendService(Long employeeId, Long serviceId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_EMPLOYEE_SERVICE_QUERY);
-            preparedStatement.setLong(1, employeeId.getId());
-            preparedStatement.setLong(2, serviceId.getId());
+            preparedStatement.setLong(1, employeeId);
+            preparedStatement.setLong(2, serviceId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to create employee-services", e);
@@ -261,31 +264,31 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         String query;
         String value;
         switch (field) {
-            case "name" :
+            case "name":
                 query = UPDATE_EMPLOYEE_NAME_QUERY;
                 value = employee.get().getName();
                 break;
-            case "surname" :
+            case "surname":
                 query = UPDATE_EMPLOYEE_SURNAME_QUERY;
                 value = employee.get().getSurname();
                 break;
-            case "age" :
+            case "age":
                 query = UPDATE_EMPLOYEE_AGE_QUERY;
                 value = String.valueOf(employee.get().getAge());
                 break;
-            case "position" :
+            case "position":
                 query = UPDATE_EMPLOYEE_POSITION_QUERY;
                 value = employee.get().getPosition();
                 break;
-            case "level" :
+            case "level":
                 query = UPDATE_EMPLOYEE_LEVEL_QUERY;
                 value = String.valueOf(employee.get().getLevel());
                 break;
-            case "salary" :
+            case "salary":
                 query = UPDATE_EMPLOYEE_SALARY_QUERY;
                 value = String.valueOf(employee.get().getSalary());
                 break;
-            case "phone_number" :
+            case "phone_number":
                 query = UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY;
                 value = employee.get().getPhoneNumber();
                 break;

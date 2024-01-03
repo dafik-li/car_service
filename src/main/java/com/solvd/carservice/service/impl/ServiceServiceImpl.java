@@ -37,4 +37,7 @@ public class ServiceServiceImpl implements ServiceService {
     public void removeById(Long id) {
         serviceRepository.deleteById(id);
     }
+    public void addEmployee(Long employeeId, Long serviceId) {
+        serviceRepository.appendEmployee(employeeId, serviceId);
+    }
 }

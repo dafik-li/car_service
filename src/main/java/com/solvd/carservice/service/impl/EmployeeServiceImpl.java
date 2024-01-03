@@ -1,7 +1,6 @@
 package com.solvd.carservice.service.impl;
 
 import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.EmployeeRepository;
 import com.solvd.carservice.service.EmployeeService;
 import com.solvd.carservice.util.SwitcherRepository;
@@ -38,9 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.deleteById(id);
     }
     @Override
-    public Employee addService(Employee employeeId, Service serviceId) {
-        employeeId.setId(null);
+    public void addService(Long employeeId, Long serviceId) {
         employeeRepository.appendService(employeeId, serviceId);
-        return employeeId;
     }
 }

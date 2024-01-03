@@ -25,6 +25,16 @@ public class Employee {
         this.phoneNumber = phoneNumber;
         this.departmentId = departmentId;
     }
+    public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.position = position;
+        this.level = level;
+        this.salary = salary;
+        this.phoneNumber = phoneNumber;
+    }
     public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber, Service service) {
         this.id = id;
         this.name = name;
