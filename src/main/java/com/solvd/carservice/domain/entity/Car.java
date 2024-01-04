@@ -1,5 +1,6 @@
 package com.solvd.carservice.domain.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Car {
@@ -7,6 +8,7 @@ public class Car {
     private String brand;
     private String model;
     private Integer year;
+    private List<Service> services;
 
     public Car() { }
     public Car(Long id) {
@@ -47,6 +49,12 @@ public class Car {
     public void setYear(Integer year) {
         this.year = year;
     }
+    public List<Service> getServices() {
+        return services;
+    }
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,11 +63,12 @@ public class Car {
         return getId().equals(car.getId()) &&
                 getBrand().equals(car.getBrand()) &&
                 getModel().equals(car.getModel()) &&
-                getYear().equals(car.getYear());
+                getYear().equals(car.getYear()) &&
+                getServices().equals(car.getServices());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getBrand(), getModel(), getYear());
+        return Objects.hash(getId(), getBrand(), getModel(), getYear(), getServices());
     }
     @Override
     public String toString() {

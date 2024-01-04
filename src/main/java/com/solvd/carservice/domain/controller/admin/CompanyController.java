@@ -34,6 +34,14 @@ public class CompanyController extends AbstractController {
         }
     }
     public void add() {
+        consoleMenu.chooseInsertMethod();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": ; break;
+            case "2": ; break;
+            case "3": ; add();break;
+            case "0": System.exit(0);break;
+        }
         Company company = new Company(
                 getDataFromConsole.getStringFromConsole("name"),
                 getDataFromConsole.getStringFromConsole("address"));

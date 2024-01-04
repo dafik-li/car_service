@@ -23,6 +23,13 @@ public class ConsoleMenu {
                 "If you want to change the repository - press 3" + "\n" +
                 "If you don't need anything - press 0");
     }
+    public void chooseInsertMethod() {
+        LOGGER.info("Please, choose a desire method to insert in db" + "\n" +
+                "xml - press 1" + "\n" +
+                "console - press 2" + "\n" +
+                "return - press 3" + "\n" +
+                "exit - press 0");
+    }
     public void chooseControllerMenu() {
         LOGGER.info("Hallo our admin! Which table do you want to work with?" + "\n" +
                 "1 - companies" + "\n" +

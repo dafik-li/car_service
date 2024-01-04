@@ -109,11 +109,12 @@ public class Employee {
                 getLevel().equals(employee.getLevel()) &&
                 getSalary().equals(employee.getSalary()) &&
                 getPhoneNumber().equals(employee.getPhoneNumber()) &&
-                getDepartmentId().equals(employee.getDepartmentId());
+                getDepartmentId().equals(employee.getDepartmentId()) &&
+                getServices().equals(employee.getServices());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSurname(), getAge(), getPosition(), getLevel(), getSalary(), getPhoneNumber(), getDepartmentId());
+        return Objects.hash(getId(), getName(), getSurname(), getAge(), getPosition(), getLevel(), getSalary(), getPhoneNumber(), getDepartmentId(), getServices());
     }
     @Override
     public String toString() {
