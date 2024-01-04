@@ -10,7 +10,7 @@ public class Service {
     private Integer hoursToDo;
     private Car carId;
     private Department departmentId;
-    private Employee employees;
+    private List<Employee> employees;
 
     public Service() { }
     public Service(Long id) {
@@ -23,12 +23,12 @@ public class Service {
         this.carId = carId;
         this.departmentId = departmentId;
     }
-    public Service(Long id, String name, Double price, Integer hoursToDo, Department departmentId) {
+    public Service(Long id, String name, Double price, Integer hoursToDo, Car carId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.hoursToDo = hoursToDo;
-        this.departmentId = departmentId;
+        this.carId = carId;
     }
     public Service(Long id, String name, Double price, Integer hoursToDo, Car carId, Department departmentId) {
         this.id = id;
@@ -74,10 +74,10 @@ public class Service {
     public void setDepartmentId(Department departmentId) {
         this.departmentId = departmentId;
     }
-    public Employee getEmployees() {
+    public List<Employee> getEmployees() {
         return employees;
     }
-    public void setEmployees(Employee employees) {
+    public void setEmployees(List<Employee> employees) {
         this.employees = employees;
     }
     @Override

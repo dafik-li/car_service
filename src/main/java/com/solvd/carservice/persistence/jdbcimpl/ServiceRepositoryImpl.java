@@ -4,12 +4,13 @@ import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.ServiceRepository;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ServiceRepositoryImpl implements ServiceRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private final MapperService mapperService;
+    private final MapperEmployee mapperEmployee;
     private static final String INSERT_SERVICE_QUERY = "INSERT INTO services " +
             "(name, price, hours_to_do, car_id, department_id) VALUES (?, ?, ?, ?, ?);";
     private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (service_id, employee_id) VALUES (?, ?);";
@@ -27,11 +28,26 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id ";
+    private static final String GET_EMPLOYEES_BY_SERVICES_ID =
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
+                    "services.id, services.name, services.price, services.hours_to_do, " +
+                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
+            "FROM employees e " +
+            "LEFT JOIN employee_services es ON es.employee_id = e.id " +
+            "LEFT JOIN services ON es.service_id = services.id " +
+            "LEFT JOIN cars ON services.car_id = cars.id " +
+            "LEFT JOIN departments d ON services.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = com.id " +
+            "WHERE service_id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE services.id = ? ");
     private static final String GET_BY_SERVICE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
     private static final String GET_BY_SERVICE_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
     private static final String GET_BY_SERVICE_HOURS_TODO_QUERY = GET_ALL_QUERY.concat("WHERE hours_to_do = ? ");
 
+    public ServiceRepositoryImpl() {
+        this.mapperService = new MapperService();
+        this.mapperEmployee = new MapperEmployee();
+    }
     @Override
     public List<Service> getByName(String name) {
         List<Service> services;
@@ -39,7 +55,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_NAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapServices(resultSet);
+            services = mapperService.mapServices(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("name");
             }
@@ -57,7 +73,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_PRICE_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapServices(resultSet);
+            services = mapperService.mapServices(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("price");
             }
@@ -75,7 +91,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_HOURS_TODO_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapServices(resultSet);
+            services = mapperService.mapServices(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("hours_to_do");
             }
@@ -120,6 +136,20 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
+    public List<Employee> getEmployeesByServiceId(Service service) {
+        List<Employee> employees;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_EMPLOYEES_BY_SERVICES_ID)) {
+            preparedStatement.setLong(1, service.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            employees = mapperEmployee.mapEmployees(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get service employees", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return employees;
+    }
     @Override
     public List<Service> getAll() {
         List<Service> services;
@@ -127,11 +157,14 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapServices(resultSet);
+            services = mapperService.mapServices(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
+        }
+        for (Service service : services) {
+            service.setEmployees(getEmployeesByServiceId(service));
         }
         return services;
     }
@@ -154,19 +187,13 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                                     resultSet.getLong(5),
                                     resultSet.getString(6),
                                     resultSet.getString(7),
-                                    resultSet.getInt(8)),
-                            new Department(
-                                    resultSet.getLong(9),
-                                    resultSet.getString(10),
-                                    new Company(
-                                            resultSet.getLong(11),
-                                            resultSet.getString(12),
-                                            resultSet.getString(13)))));
+                                    resultSet.getInt(8))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+        serviceOptional.get().setEmployees(getEmployeesByServiceId(serviceOptional.get()));
         return serviceOptional;
     }
     @Override
@@ -212,45 +239,5 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-    }
-    public ArrayList<Service> mapServices(ResultSet resultSet) {
-        ArrayList<Service> services = new ArrayList<>();
-        try {
-            while (resultSet.next()) {
-                Service service = new Service();
-                service.setId(resultSet.getLong(1));
-                service.setName(resultSet.getString(2));
-                service.setPrice(resultSet.getDouble(3));
-                service.setHoursToDo(resultSet.getInt(4));
-                service.setEmployees(
-                        new Employee(
-                                resultSet.getLong(5),
-                                resultSet.getString(6),
-                                resultSet.getString(7),
-                                resultSet.getInt(8),
-                                resultSet.getString(9),
-                                resultSet.getInt(10),
-                                resultSet.getInt(11),
-                                resultSet.getString(12)));
-                service.setCarId(
-                        new Car(
-                                resultSet.getLong(13),
-                                resultSet.getString(14),
-                                resultSet.getString(15),
-                                resultSet.getInt(16)));
-                service.setDepartmentId(
-                        new Department(
-                                resultSet.getLong(17),
-                                resultSet.getString(18),
-                                new Company(
-                                        resultSet.getLong(19),
-                                        resultSet.getString(20),
-                                        resultSet.getString(21))));
-                services.add(service);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to map services", e);
-        }
-        return services;
     }
 }

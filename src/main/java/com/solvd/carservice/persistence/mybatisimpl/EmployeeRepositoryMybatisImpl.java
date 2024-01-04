@@ -1,6 +1,7 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
 import com.solvd.carservice.domain.entity.Employee;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.EmployeeRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import org.apache.ibatis.session.SqlSession;
@@ -56,6 +57,13 @@ public class EmployeeRepositoryMybatisImpl implements EmployeeRepository {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             EmployeeRepository employeeRepository = sqlSession.getMapper(EmployeeRepository.class);
             return employeeRepository.getByPhoneNumber(phoneNumber);
+        }
+    }
+    @Override
+    public List<Service> getServicesByEmployeeId(Employee employee) {
+        try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            EmployeeRepository employeeRepository = sqlSession.getMapper(EmployeeRepository.class);
+            return employeeRepository.getServicesByEmployeeId(employee);
         }
     }
     @Override

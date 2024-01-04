@@ -66,6 +66,27 @@
         companies c ON d.company_id = c.id
     </sql>
 
+    <select id="getServicesByEmployeeId" resultMap="EmployeeResultMap">
+        SELECT
+        services.id, services.name, services.price, services.hours_to_do,
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
+        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        FROM
+        services
+        LEFT JOIN
+        employee_services es ON es.service_id = services.id
+        LEFT JOIN
+        employees e ON es.employee_id = e.id
+        LEFT JOIN
+        cars ON services.car_id = cars.id
+        LEFT JOIN
+        departments d ON services.department_id = d.id
+        LEFT JOIN
+        companies com ON d.company_id = com.id
+        WHERE
+        employee_id = #{employee_id}
+    </select>
+
     <select id="getAll" resultMap="EmployeeResultMap">
         <include refid="employeeSelect"/>
     </select>
@@ -121,7 +142,7 @@
         <result column="phone_number" property="phoneNumber"/>
         <association property="departmentId"
                      resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
-        <association property="service"
+        <collection property="services"
                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
     </resultMap>
 

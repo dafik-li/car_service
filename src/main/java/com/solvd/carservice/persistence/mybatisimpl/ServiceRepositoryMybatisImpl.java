@@ -1,7 +1,7 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
+import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
-import com.solvd.carservice.persistence.EmployeeRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import com.solvd.carservice.persistence.ServiceRepository;
 import org.apache.ibatis.session.SqlSession;
@@ -31,10 +31,17 @@ public class ServiceRepositoryMybatisImpl implements ServiceRepository {
             return serviceRepository.getByHoursToDo(hoursToDo);
         }
     }
+    @Override
+    public List<Employee> getEmployeesByServiceId(Service service) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            ServiceRepository serviceRepository = sqlSession.getMapper(ServiceRepository.class);
+            return serviceRepository.getEmployeesByServiceId(service);
+        }
+    }
     public void appendEmployee(Long employeeId, Long serviceId) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
-            EmployeeRepository employeeRepository = sqlSession.getMapper(EmployeeRepository.class);
-            employeeRepository.appendService(employeeId, serviceId);
+            ServiceRepository serviceRepository = sqlSession.getMapper(ServiceRepository.class);
+            serviceRepository.appendEmployee(employeeId, serviceId);
         }
     }
     @Override

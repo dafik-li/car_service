@@ -3,11 +3,10 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.service.EmployeeService;
 import com.solvd.carservice.service.ServiceService;
-import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -70,23 +69,26 @@ public class ServiceController extends AbstractController {
                     "name - " + service.getName() + "|" +
                     "price - " + service.getPrice() + "|" +
                     "hours to do - " + service.getHoursToDo() + "[" +
-                    "employee id - " + service.getEmployees().getId() + "|" +
-                    "name - " + service.getEmployees().getName() + "|" +
-                    "surname - " + service.getEmployees().getSurname() + "|" +
-                    "age - " + service.getEmployees().getAge() + "|" +
-                    "position - " + service.getEmployees().getPosition() + "|" +
-                    "level - " + service.getEmployees().getLevel() + "|" +
-                    "salary - " + service.getEmployees().getSalary() + "|" +
-                    "phone - " + service.getEmployees().getPhoneNumber() + "[" +
                     "car id - " + service.getCarId().getId() + "|" +
                     "brand - " + service.getCarId().getBrand() + "|" +
                     "model - " + service.getCarId().getModel() + "|" +
-                    "year - " + service.getCarId().getYear() + "][" +
-                    "department id - " + service.getDepartmentId().getId() + "|" +
-                    "name - " + service.getDepartmentId().getName() + "][" +
-                    "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
-                    "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
-                    "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+                    "year - " + service.getCarId().getYear() + "][");
+            for (Employee employee : service.getEmployees()) {
+                LOGGER.info(
+                        "employee id - " + employee.getId() + "|" +
+                        "name - " + employee.getName() + "|" +
+                        "surname - " + employee.getSurname() + "|" +
+                        "age - " + employee.getAge() + "|" +
+                        "position - " + employee.getPosition() + "|" +
+                        "level - " + employee.getLevel() + "|" +
+                        "salary - " + employee.getSalary() + "|" +
+                        "phone - " + employee.getPhoneNumber() + "][" +
+                        "department id - " + service.getDepartmentId().getId() + "|" +
+                        "name - " + service.getDepartmentId().getName() + "][" +
+                        "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
+                        "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
+                        "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+            }
         }
     }
     public void change() {
@@ -111,19 +113,31 @@ public class ServiceController extends AbstractController {
     public Optional<Service> retrieveById() {
         Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("Service id - " + serviceOptional.get().getId() + "|" +
+        LOGGER.info("\n|" +
+                "Service id - " + serviceOptional.get().getId() + "|" +
                 "name - "  + serviceOptional.get().getName() + "|" +
                 "price - " + serviceOptional.get().getPrice() + "|" +
                 "hours to do - " + serviceOptional.get().getHoursToDo() + "[" +
                 "car id - " + serviceOptional.get().getCarId().getId() + "|" +
                 "brand - " + serviceOptional.get().getCarId().getBrand() + "|" +
                 "model - " + serviceOptional.get().getCarId().getModel() + "|" +
-                "year - " + serviceOptional.get().getCarId().getYear() + "][" +
-                "department id - " + serviceOptional.get().getDepartmentId().getId() + "|" +
-                "name - " + serviceOptional.get().getDepartmentId().getName() + "][" +
-                "company id - " + serviceOptional.get().getDepartmentId().getCompanyId().getId() + "|" +
-                "name - " + serviceOptional.get().getDepartmentId().getCompanyId().getName() + "|" +
-                "address - " + serviceOptional.get().getDepartmentId().getCompanyId().getAddress() + "]");
+                "year - " + serviceOptional.get().getCarId().getYear() + "][");
+        for (Employee employee : serviceOptional.get().getEmployees()) {
+            LOGGER.info(
+                    "employee id - " + employee.getId() + "|" +
+                    "name - " + employee.getName() + "|" +
+                    "surname - " + employee.getSurname() + "|" +
+                    "age - " + employee.getAge() + "|" +
+                    "position - " + employee.getPosition() + "|" +
+                    "level - " + employee.getLevel() + "|" +
+                    "salary - " + employee.getSalary() + "|" +
+                    "phone - " + employee.getPhoneNumber() + "][" +
+                    "department id - " + employee.getDepartmentId().getId() + "|" +
+                    "name - " + employee.getDepartmentId().getName() + "][" +
+                    "company id - " + employee.getDepartmentId().getCompanyId().getId() + "|" +
+                    "name - " + employee.getDepartmentId().getCompanyId().getName() + "|" +
+                    "address - " + employee.getDepartmentId().getCompanyId().getAddress() + "]");
+        }
         return serviceOptional;
     }
     public void removeById() {
