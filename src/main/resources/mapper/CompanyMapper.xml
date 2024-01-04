@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.CompanyRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        companies
+        (name, address)
+        VALUES
+        (#{name}, #{address})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM companies WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE companies
+        <if test="field == 'name'">
+            SET name = #{company.name}
+        </if>
+        <if test="field == 'address'">
+            SET address = #{company.address}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="companySelect">
+        SELECT * FROM companies
+    </sql>
+
+    <select id="getAll" resultMap="CompanyResultMap">
+        <include refid="companySelect"/>
+    </select>
+
+    <select id="getById" resultMap="CompanyResultMap">
+        <include refid="companySelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName" resultMap="CompanyResultMap">
+        <include refid="companySelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="getByAddress" resultMap="CompanyResultMap">
+        <include refid="companySelect"/>
+        WHERE address = #{address}
+    </select>
+    
+    <resultMap id="CompanyResultMap" type="com.solvd.carservice.domain.entity.Company" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+    </resultMap>
+
+</mapper>

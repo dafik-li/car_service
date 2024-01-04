@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.DepartmentRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        departments
+        (name, company_id)
+        VALUES
+        (#{name}, #{companyId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM departments WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE departments SET name = #{department.name} WHERE id = #{id};
+    </update>
+
+    <sql id="departmentSelect">
+        SELECT
+        d.id, d.name, c.id, c.name, c.address
+        FROM
+        departments d
+        LEFT JOIN
+        companies c ON d.company_id = c.id
+    </sql>
+
+    <select id="getAll" resultMap="DepartmentResultMap">
+        <include refid="departmentSelect"/>
+    </select>
+
+    <select id="getById" resultMap="DepartmentResultMap">
+        <include refid="departmentSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName" resultMap="DepartmentResultMap">
+        <include refid="departmentSelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <resultMap id="DepartmentResultMap" type="com.solvd.carservice.domain.entity.Department" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association property="companyId"
+                    resultMap="com.solvd.carservice.persistence.CompanyRepository.CompanyResultMap"/>
+    </resultMap>
+
+</mapper>

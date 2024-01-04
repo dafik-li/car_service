@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.CarRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        cars
+        (brand, model, year)
+        VALUES
+        (#{brand}, #{model}, #{year})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM cars WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE cars
+        <if test="field == 'brand'">
+            SET brand = #{car.brand}
+        </if>
+        <if test="field == 'model'">
+            SET model = #{car.model}
+        </if>
+        <if test="field == 'year'">
+            SET year = #{car.year}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="carSelect">
+        SELECT * FROM cars
+    </sql>
+
+    <select id="getAll" resultMap="CarResultMap">
+        <include refid="carSelect"/>
+    </select>
+
+    <select id="getById" resultMap="CarResultMap">
+        <include refid="carSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByBrand" resultMap="CarResultMap">
+        <include refid="carSelect"/>
+        WHERE brand = #{brand}
+    </select>
+
+    <select id="getByModel" resultMap="CarResultMap">
+        <include refid="carSelect"/>
+        WHERE model = #{model}
+    </select>
+
+    <select id="getByYear" resultMap="CarResultMap">
+        <include refid="clientSelect"/>
+        WHERE year = #{year}
+    </select>
+
+    <resultMap id="CarResultMap" type="com.solvd.carservice.domain.entity.Car" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="brand" property="brand"/>
+        <result column="model" property="model"/>
+        <result column="year" property="year"/>
+    </resultMap>
+
+</mapper>

@@ -2,3 +2,4 @@
 *.iml
 *.log
 target
+src/main/resources/*.properties

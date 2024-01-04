@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.ServiceRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        services
+        (name, price, hours_to_do, car_id, department_id)
+        VALUES
+        (#{name}, #{price}, #{hoursToDo}, #{carId}, #{departmentId})
+    </insert>
+
+    <insert id="appendEmployee">
+        INSERT INTO
+        employee_services
+        (service_id, employee_id)
+        VALUES
+        (#{service_id}, #{employee_id})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM services WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE services
+        <if test="field == 'name'">
+            SET name = #{service.name}
+        </if>
+        <if test="field == 'price'">
+            SET price = #{service.price}
+        </if>
+        <if test="field == 'hours_to_do'">
+            SET hours_to_do = #{service.hoursToDo}
+        </if>
+        WHERE id = #{id};
+    </update>
+
+    <sql id="serviceSelect">
+        SELECT
+        services.id, services.name, services.price, services.hours_to_do,
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
+        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        FROM
+        services
+        LEFT JOIN
+        employee_services es ON es.service_id = services.id
+        LEFT JOIN
+        employees e ON es.employee_id = e.id
+        LEFT JOIN
+        cars ON services.car_id = cars.id
+        LEFT JOIN
+        departments d ON services.department_id = d.id
+        LEFT JOIN
+        companies com ON d.company_id = com.id
+    </sql>
+
+    <select id="getEmployeesByServiceId" resultMap="ServiceResultMap">
+        SELECT
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
+        services.id, services.name, services.price, services.hours_to_do,
+        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        FROM
+        employees e
+        LEFT JOIN
+        employee_services es ON es.employee_id = e.id
+        LEFT JOIN
+        services ON es.service_id = services.id
+        LEFT JOIN
+        cars ON services.car_id = cars.id
+        LEFT JOIN
+        departments d ON services.department_id = d.id
+        LEFT JOIN
+        companies com ON d.company_id = com.id
+        WHERE
+        service_id = #{service_id}
+    </select>
+
+    <select id="getAll" resultMap="ServiceResultMap">
+        <include refid="serviceSelect"/>
+    </select>
+
+    <select id="getById" resultMap="ServiceResultMap">
+        <include refid="serviceSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByName" resultMap="ServiceResultMap">
+        <include refid="serviceSelect"/>
+        WHERE name = #{name}
+    </select>
+
+    <select id="getByPrice" resultMap="ServiceResultMap">
+        <include refid="serviceSelect"/>
+        WHERE price = #{price}
+    </select>
+
+    <select id="getByHoursToDo" resultMap="ServiceResultMap">
+        <include refid="serviceSelect"/>
+        WHERE hours_to_do = #{hoursToDo}
+    </select>
+
+    <resultMap id="ServiceResultMap" type="com.solvd.carservice.domain.entity.Service" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="hours_to_do" property="hoursToDo"/>
+        <association property="carId"
+                    resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
+        <association property="departmentId"
+                    resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
+        <collection property="employees"
+                    resultMap="com.solvd.carservice.persistence.EmployeeRepository.EmployeeResultMap"/>
+    </resultMap>
+
+</mapper>

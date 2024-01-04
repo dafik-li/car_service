@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.carservice.persistence.CostRepository">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        costs
+        (cost, service_id, detail_id)
+        VALUES
+        (#{cost}, #{serviceId}, #{detailId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM costs WHERE id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE costs SET cost = #{cost.cost} WHERE id = #{id};
+    </update>
+
+    <sql id="costSelect">
+        SELECT
+        c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
+        d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days
+        FROM
+        costs c
+        LEFT JOIN
+        services s ON c.service_id = s.id
+        LEFT JOIN
+        cars ON s.car_id = cars.id
+        LEFT JOIN
+        departments d ON s.department_id = d.id
+        LEFT JOIN
+        companies com ON d.company_id = c.id
+        LEFT JOIN
+        details det ON c.detail_id = det.id
+    </sql>
+
+    <select id="getAll" resultMap="CostResultMap">
+        <include refid="costSelect"/>
+    </select>
+
+    <select id="getById" resultMap="CostResultMap">
+        <include refid="costSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByCost" resultMap="CostResultMap">
+        <include refid="costSelect"/>
+        WHERE cost = #{cost}
+    </select>
+
+    <resultMap id="CostResultMap" type="com.solvd.carservice.domain.entity.Cost" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="cost" property="cost"/>
+        <association property="serviceId"
+                    resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
+        <association property="detailId"
+                    resultMap="com.solvd.carservice.persistence.DetailRepository.DetailResultMap"/>
+    </resultMap>
+
+</mapper>
