@@ -1,4 +1,5 @@
-<department id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="add_department.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<department id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="department.xsd">
     <name>Dry cleaning</name>
     <companyId id="3">
         <name>Tony Montana Service - Homel</name>
@@ -35,6 +36,16 @@
                         <year>2024</year>
                         <services></services>
                     </carId>
+                    <departmentId id="10">
+                        <name>Dry cleaning</name>
+                        <companyId id="3">
+                            <name>Tony Montana Service - Homel</name>
+                            <address>Homel, str. Independence, 23</address>
+                            <departments></departments>
+                        </companyId>
+                        <employees></employees>
+                        <services></services>
+                    </departmentId>
                     <employees></employees>
                 </service>
             </services>
@@ -51,6 +62,16 @@
                 <year>2024</year>
                 <services></services>
             </carId>
+            <departmentId id="10">
+                <name>Dry cleaning</name>
+                <companyId id="3">
+                    <name>Tony Montana Service - Homel</name>
+                    <address>Homel, str. Independence, 23</address>
+                    <departments></departments>
+                </companyId>
+                <employees></employees>
+                <services></services>
+            </departmentId>
             <employees>
                 <employee id="10">
                     <name>Matthew</name>

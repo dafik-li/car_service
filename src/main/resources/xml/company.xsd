@@ -19,6 +19,7 @@
             <xs:element name="price" type="xs:double"/>
             <xs:element name="hoursToDo" type="xs:integer"/>
             <xs:element name="carId" type="CarType"/>
+            <xs:element name="departmentId" type="DepartmentType"/>
             <xs:element name="employees" type="EmployeesType"/>
         </xs:all>
         <xs:attribute name="id" type="xs:long" use="required"/>
@@ -51,6 +52,22 @@
     </xs:complexType>
 
 
+    <xs:complexType name="DepartmentType">
+        <xs:all>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="companyId" type="CompanyType"/>
+            <xs:element name="employees" type="EmployeesType"/>
+            <xs:element name="services" type="ServicesType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="DepartmentsType">
+        <xs:sequence>
+            <xs:element name="department" type="DepartmentType" minOccurs="0" maxOccurs="99"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
     <xs:complexType name="CompanyType">
         <xs:all>
             <xs:element name="name" type="xs:string"/>
@@ -61,19 +78,7 @@
     </xs:complexType>
 
 
-    <xs:complexType name="DepartmentType">
-        <xs:all>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="companyId" type="CompanyType"/>
-            <xs:element name="employees" type="EmployeesType"/>
-            <xs:element name="services" type="ServicesType"/>
-        </xs:all>
-        <xs:attribute name="id" type="xs:long" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="DepartmentsType"/>
-
-
-    <xs:element name="department" type="DepartmentType"/>
+    <xs:element name="company" type="CompanyType"/>
 
 
 </xs:schema>

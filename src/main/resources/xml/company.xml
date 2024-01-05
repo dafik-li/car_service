@@ -1,4 +1,5 @@
-<company id="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="add_company.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<company id="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="company.xsd">
     <name>Tony Montana Service - Homel</name>
     <address>Homel, str. Independence, 23</address>
     <departments>
@@ -11,13 +12,13 @@
             </companyId>
             <employees>
                 <employee id="10">
-                    <name>New name</name>
-                    <surname>New surname</surname>
-                    <age>100</age>
-                    <position>car mechanic</position>
-                    <level>10</level>
-                    <salary>10000</salary>
-                    <phoneNumber>375299000000</phoneNumber>
+                    <name>Matthew</name>
+                    <surname>McConaughey</surname>
+                    <age>50</age>
+                    <position>cleaner</position>
+                    <level>5</level>
+                    <salary>1000</salary>
+                    <phoneNumber>375291001007</phoneNumber>
                     <departmentId id="10">
                         <name>Dry cleaning</name>
                         <companyId id="3">
@@ -39,6 +40,16 @@
                                 <year>2024</year>
                                 <services></services>
                             </carId>
+                            <departmentId id="10">
+                                <name>Dry cleaning</name>
+                                <companyId id="3">
+                                    <name>Tony Montana Service - Homel</name>
+                                    <address>Homel, str. Independence, 23</address>
+                                    <departments></departments>
+                                </companyId>
+                                <employees></employees>
+                                <services></services>
+                            </departmentId>
                             <employees></employees>
                         </service>
                     </services>
@@ -55,6 +66,16 @@
                         <year>2024</year>
                         <services></services>
                     </carId>
+                    <departmentId id="10">
+                        <name>Dry cleaning</name>
+                        <companyId id="3">
+                            <name>Tony Montana Service - Homel</name>
+                            <address>Homel, str. Independence, 23</address>
+                            <departments></departments>
+                        </companyId>
+                        <employees></employees>
+                        <services></services>
+                    </departmentId>
                     <employees>
                         <employee id="10">
                             <name>Matthew</name>

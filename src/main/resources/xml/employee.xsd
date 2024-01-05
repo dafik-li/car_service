@@ -19,6 +19,7 @@
             <xs:element name="price" type="xs:double"/>
             <xs:element name="hoursToDo" type="xs:integer"/>
             <xs:element name="carId" type="CarType"/>
+            <xs:element name="departmentId" type="DepartmentType"/>
             <xs:element name="employees" type="EmployeesType"/>
         </xs:all>
         <xs:attribute name="id" type="xs:long" use="required"/>
@@ -28,6 +29,33 @@
             <xs:element name="service" type="ServiceType" minOccurs="0" maxOccurs="99"/>
         </xs:sequence>
     </xs:complexType>
+
+
+    <xs:complexType name="CompanyType">
+        <xs:all>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="departments" type="DepartmentsType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="DepartmentType">
+        <xs:all>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="companyId" type="CompanyType"/>
+            <xs:element name="employees" type="EmployeesType"/>
+            <xs:element name="services" type="ServicesType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="DepartmentsType">
+        <xs:sequence>
+            <xs:element name="department" type="DepartmentType" minOccurs="0" maxOccurs="99"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
     <xs:complexType name="EmployeeType">
         <xs:all>
@@ -43,27 +71,14 @@
         </xs:all>
         <xs:attribute name="id" type="xs:long" use="required"/>
     </xs:complexType>
-    <xs:complexType name="EmployeesType"/>
-
-    <xs:complexType name="CompanyType">
-        <xs:all>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="address" type="xs:string"/>
-            <xs:element name="departments" type="DepartmentsType"/>
-        </xs:all>
-        <xs:attribute name="id" type="xs:long" use="required"/>
+    <xs:complexType name="EmployeesType">
+        <xs:sequence>
+            <xs:element name="employee" type="EmployeeType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="DepartmentType">
-        <xs:all>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="companyId" type="CompanyType"/>
-            <xs:element name="employees" type="EmployeesType"/>
-            <xs:element name="services" type="ServicesType"/>
-        </xs:all>
-        <xs:attribute name="id" type="xs:long" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="DepartmentsType"/>
 
     <xs:element name="employee" type="EmployeeType"/>
+
+
 </xs:schema>
