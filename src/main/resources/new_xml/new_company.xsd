@@ -6,7 +6,6 @@
             <xs:element name="brand" type="xs:string"/>
             <xs:element name="model" type="xs:string"/>
             <xs:element name="year" type="xs:integer"/>
-            <xs:element name="services" type="ServicesType"/>
         </xs:all>
         <xs:attribute name="id" type="xs:long" use="required"/>
     </xs:complexType>

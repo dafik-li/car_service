@@ -1,7 +1,6 @@
 package com.solvd.carservice.domain.parser;
 
 import com.solvd.carservice.domain.entity.*;
-
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;

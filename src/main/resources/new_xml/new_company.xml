@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<company id="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_company.xsd">
+<company id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_company.xsd">
     <name>Tony Montana Service - Minsk</name>
     <address>Minsk, av. F. Skaryny, 8</address>
     <departments>
         <department id="10">
             <name>Director</name>
-            <companyId id="3">
+            <companyId id="10">
                 <name>Tony Montana Service - Minsk</name>
                 <address>Minsk, av. F. Skaryny, 8</address>
                 <departments> </departments>
@@ -21,7 +21,7 @@
                     <phoneNumber>375299000000</phoneNumber>
                     <departmentId id="10">
                         <name>Director</name>
-                        <companyId id="3">
+                        <companyId id="10">
                             <name>Tony Montana Service - Minsk</name>
                             <address>Minsk, av. F. Skaryny, 8</address>
                             <departments> </departments>
@@ -41,11 +41,10 @@
                         <brand>Bentley</brand>
                         <model>Continental GTC</model>
                         <year>2020</year>
-                        <services> </services>
                     </carId>
                     <departmentId id="10">
                         <name>Director</name>
-                        <companyId id="3">
+                        <companyId id="10">
                             <name>Tony Montana Service - Minsk</name>
                             <address>Minsk, av. F. Skaryny, 8</address>
                             <departments> </departments>

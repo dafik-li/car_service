@@ -1,12 +1,13 @@
 package com.solvd.carservice;
 
-import com.solvd.carservice.domain.parser.ParseEmployee;
+import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.parser.ParseDepartment;
 
 public class Main {
 
     public static void main(String[] args) {
-        //Generator generator = new Generator();
-        //generator.selectDBRepository();
+        Generator generator = new Generator();
+        generator.selectDBRepository();
         //StaxValidator validator = new StaxValidator();
         //validator.validate();
         //ParseEmployee parseEmployee = new ParseEmployee();
@@ -17,6 +18,5 @@ public class Main {
         //parseDepartment.staxParseDepartment();
         //ParseCompany parseCompany = new ParseCompany();
         //parseCompany.staxParseCompany();
-
     }
 }

@@ -50,17 +50,7 @@
     </xs:complexType>
 
     <xs:complexType name="CompanyType">
-        <xs:all>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="address" type="xs:string"/>
-        </xs:all>
         <xs:attribute name="id" type="xs:long" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="CompaniesType">
-        <xs:sequence>
-            <xs:element name="company" type="CompanyType" minOccurs="0" maxOccurs="10"/>
-        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="DepartmentType">

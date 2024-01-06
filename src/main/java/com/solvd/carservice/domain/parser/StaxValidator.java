@@ -28,7 +28,7 @@ public class StaxValidator {
             Schema schema = factory.newSchema(xsdFile);
             Validator validator = schema.newValidator();
             validator.validate(new StAXSource(reader));
-            System.out.println("Document is valid");
+            LOGGER.info("Document is valid");
         } catch (SAXException | IOException | XMLStreamException e) {
             LOGGER.error(e.toString());
         }
