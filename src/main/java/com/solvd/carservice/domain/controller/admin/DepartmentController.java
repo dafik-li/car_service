@@ -3,7 +3,9 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.parser.Parser;
 import com.solvd.carservice.service.DepartmentService;
 import com.solvd.carservice.service.impl.DepartmentServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +22,7 @@ public class DepartmentController extends AbstractController {
         consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": add(); break;
+            case "1": selectInsertMethod(); break;
             case "2": retrieveAll(); break;
             case "3": retrieveById(); break;
             case "4": change(); break;
@@ -32,6 +34,21 @@ public class DepartmentController extends AbstractController {
         } catch (TableException e) {
             LOGGER.error(e.toString());
             moderate();
+        }
+    }
+    public void selectInsertMethod() {
+        consoleMenu.chooseInsertMethod();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": Parser.addDepartment(); break;
+            case "2": add(); break;
+            case "0": moderate(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            add();
         }
     }
     public void add() {

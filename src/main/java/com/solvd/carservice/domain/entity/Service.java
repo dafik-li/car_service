@@ -11,7 +11,6 @@ public class Service {
     private Car carId;
     private Department departmentId;
     private List<Employee> employees;
-    private List<Cost> costs;
 
     public Service() { }
     public Service(Long id) {
@@ -81,12 +80,6 @@ public class Service {
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
     }
-    public List<Cost> getCosts() {
-        return costs;
-    }
-    public void setCosts(List<Cost> costs) {
-        this.costs = costs;
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,12 +91,11 @@ public class Service {
                 getHoursToDo().equals(service.getHoursToDo()) &&
                 getCarId().equals(service.getCarId()) &&
                 getDepartmentId().equals(service.getDepartmentId()) &&
-                getEmployees().equals(service.getEmployees()) &&
-                getCosts().equals(service.getCosts());
+                getEmployees().equals(service.getEmployees());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getPrice(), getHoursToDo(), getCarId(), getDepartmentId(), getEmployees(), getCosts());
+        return Objects.hash(getId(), getName(), getPrice(), getHoursToDo(), getCarId(), getDepartmentId(), getEmployees());
     }
     @Override
     public String toString() {

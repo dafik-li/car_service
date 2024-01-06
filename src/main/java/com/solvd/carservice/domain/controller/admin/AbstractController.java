@@ -19,6 +19,7 @@ abstract public class AbstractController {
         this.consoleMenu = new ConsoleMenu();
     }
     public abstract void moderate();
+    //public abstract void selectInsertMethod();
     public abstract void add();
     public abstract void retrieveAll();
     public abstract void change();

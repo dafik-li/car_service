@@ -1,4 +1,4 @@
-package com.solvd.carservice.util;
+package com.solvd.carservice.domain.controller;
 
 import com.solvd.carservice.persistence.*;
 import com.solvd.carservice.persistence.jdbcimpl.*;

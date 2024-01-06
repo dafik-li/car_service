@@ -16,7 +16,7 @@ public class ConsoleMenu {
                 "mybatis - press 2" + "\n" +
                 "exit - press 0");
     }
-    public void moderateStartPageMenu() {
+    public void chooseAuthorization() {
         LOGGER.info("Welcome to a Tony Montana's car service!" + "\n" +
                 "If you want to pimp your car - press 1" + "\n" +
                 "If you our admin - press 2" + "\n" +
@@ -27,8 +27,7 @@ public class ConsoleMenu {
         LOGGER.info("Please, choose a desire method to insert in db" + "\n" +
                 "xml - press 1" + "\n" +
                 "console - press 2" + "\n" +
-                "return - press 3" + "\n" +
-                "exit - press 0");
+                "return - press 0");
     }
     public void chooseControllerMenu() {
         LOGGER.info("Hallo our admin! Which table do you want to work with?" + "\n" +
@@ -68,7 +67,7 @@ public class ConsoleMenu {
                 "3 - retrieveById" + "\n" +
                 "4 - change" + "\n" +
                 "5 - removeById" + "\n" +
-                "6 - addService" + "\n" +
+                "6 - addEmployee" + "\n" +
                 "0 - return");
     }
 }

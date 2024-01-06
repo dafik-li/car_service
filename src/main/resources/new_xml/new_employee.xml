@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<employee id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_employee.xsd">
+    <name>s</name>
+    <surname>a</surname>
+    <age>1</age>
+    <position>f</position>
+    <level>1</level>
+    <salary>1</salary>
+    <phoneNumber>g</phoneNumber>
+    <departmentId id="1">
+        <name>f</name>
+        <companyId id="2">
+            <name>f</name>
+            <address>f</address>
+        </companyId>
+    </departmentId>
+    <services> </services>
+</employee>
