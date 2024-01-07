@@ -1,29 +1,24 @@
 package com.solvd.carservice.domain.parser;
 
-import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 public class ParseEmployee {
-    static {
-        System.setProperty("log4j.configurationFile", "log4j2.xml");
-    }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseEmployee.class);
     public static Employee staxParseEmployee() {
         Employee employee = new Employee();
         Department department = new Department();
-        Company company = new Company();
         File xmlFile = new File("src/main/resources/new_xml/new_employee.xml");
         File xsdFile = new File("src/main/resources/new_xml/new_employee.xsd");
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -69,48 +64,23 @@ public class ParseEmployee {
                                         employee.setPhoneNumber(nextEvent.asCharacters().getData());
                                         break;
                                     case "departmentId":
-                                        while (reader.hasNext()) {
-                                            nextEvent = reader.nextEvent();
-                                            if (nextEvent.isStartElement()) {
-                                                startElement = nextEvent.asStartElement();
-                                                if (startElement.getName().getLocalPart().equals("name")) {
+                                        Iterator<Attribute> iterator = startElement.getAttributes();
+                                        while (iterator.hasNext()) {
+                                            Attribute attribute = iterator.next();
+                                            QName name = attribute.getName();
+                                            if (name.getLocalPart().equals("id")) {
+                                                department.setId(Long.valueOf(attribute.getValue()));
+                                                while (reader.hasNext()) {
                                                     nextEvent = reader.nextEvent();
-                                                    department.setName(nextEvent.asCharacters().getData());
-                                                } else if (startElement.getName().getLocalPart().equals("companyId")) {
-                                                    while (reader.hasNext()) {
-                                                        nextEvent = reader.nextEvent();
-                                                        if (nextEvent.isStartElement()) {
-                                                            startElement = nextEvent.asStartElement();
-                                                            if (startElement.getName().getLocalPart().equals("name")) {
-                                                                nextEvent = reader.nextEvent();
-                                                                company.setName(nextEvent.asCharacters().getData());
-                                                            } else if (startElement.getName().getLocalPart().equals("address")) {
-                                                                nextEvent = reader.nextEvent();
-                                                                company.setAddress(nextEvent.asCharacters().getData());
-                                                            }
-                                                        }
-                                                        if (nextEvent.isEndElement()) {
-                                                            EndElement endElement = nextEvent.asEndElement();
-                                                            if (endElement.getName().getLocalPart().equals("companyId")) {
-                                                                department.setCompanyId(company);
-                                                            }
+                                                    if (nextEvent.isEndElement()) {
+                                                        EndElement endElement = nextEvent.asEndElement();
+                                                        if (endElement.getName().getLocalPart().equals("departmentId")) {
+                                                            employee.setDepartmentId(department);
                                                         }
                                                     }
                                                 }
                                             }
-                                            if (nextEvent.isEndElement()) {
-                                                EndElement endElement = nextEvent.asEndElement();
-                                                if (endElement.getName().getLocalPart().equals("departmentId")) {
-                                                    employee.setDepartmentId(department);
-                                                }
-                                            }
                                         }
-                                }
-                            }
-                            if (nextEvent.isEndElement()) {
-                                EndElement endElement = nextEvent.asEndElement();
-                                if (endElement.getName().getLocalPart().equals("employee")) {
-                                    break;
                                 }
                             }
                         }

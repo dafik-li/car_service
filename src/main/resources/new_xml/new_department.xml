@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <department id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_department.xsd">
     <name>Director</name>
-    <companyId id="10"/>
+    <companyId id="7">
+        <name>Tony Montana Service - Minsk</name>
+        <address>Minsk, av. F. Skaryny, 8</address>
+    </companyId>
     <employees>
         <employee id="10">
             <name>Arnold</name>
@@ -13,7 +16,10 @@
             <phoneNumber>375299000000</phoneNumber>
             <departmentId id="10">
                 <name>Director</name>
-                <companyId id="10"/>
+                <companyId id="7">
+                    <name>Tony Montana Service - Minsk</name>
+                    <address>Minsk, av. F. Skaryny, 8</address>
+                </companyId>
                 <employees> </employees>
                 <services> </services>
             </departmentId>
@@ -32,7 +38,10 @@
             </carId>
             <departmentId id="10">
                 <name>Director</name>
-                <companyId id="10"/>
+                <companyId id="7">
+                    <name>Tony Montana Service - Minsk</name>
+                    <address>Minsk, av. F. Skaryny, 8</address>
+                </companyId>
                 <employees> </employees>
                 <services> </services>
             </departmentId>

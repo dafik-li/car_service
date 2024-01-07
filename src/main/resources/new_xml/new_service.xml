@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_service.xsd">
-    <name>d</name>
-    <price>2.5</price>
-    <hoursToDo>3</hoursToDo>
-    <carId id="1">
-        <brand>f</brand>
-        <model>f</model>
-        <year>1</year>
+<service id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_service.xsd">
+    <name>Pump you up</name>
+    <price>100000</price>
+    <hoursToDo>1000</hoursToDo>
+    <carId id="10">
+        <brand>Bentley</brand>
+        <model>Continental GTC</model>
+        <year>2020</year>
     </carId>
-    <departmentId id="1">
-        <name>f</name>
-        <companyId id="1">
-            <name>g</name>
-            <address>g</address>
+    <departmentId id="6">
+        <name>Director</name>
+        <companyId id="7">
+            <name>Tony Montana Service - Minsk</name>
+            <address>Minsk, av. F. Skaryny, 8</address>
         </companyId>
     </departmentId>
     <employees> </employees>

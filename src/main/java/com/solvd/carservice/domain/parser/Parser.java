@@ -24,24 +24,35 @@ public class Parser {
         CompanyService companyService = new CompanyServiceImpl();
         Company company = ParseCompany.staxParseCompany();
         companyService.add(company);
-        LOGGER.info("Id - " + company.getId() + "Company - " + company.getName() + company.getAddress() + " - was added");
+        LOGGER.info(
+                "Id company - " + company.getId() +
+                " - Company - " + company.getName() + " - " + company.getAddress() + " - was added");
     }
     public static void addDepartment() {
         DepartmentService departmentService = new DepartmentServiceImpl();
         Department department = ParseDepartment.staxParseDepartment();
         departmentService.add(department);
-        LOGGER.info("Id - " + department.getId() + "Department - " + department.getName() + department.getCompanyId() + " - was added");
+        LOGGER.info(
+                "Id department - " + department.getId() +
+                " - Department - " + department.getName() + " - " + department.getCompanyId() + " - was added");
     }
     public static void addEmployee() {
         EmployeeService employeeService = new EmployeeServiceImpl();
         Employee employee = ParseEmployee.staxParseEmployee();
         employeeService.add(employee);
-        LOGGER.info("Id - " + employee.getId() + "Employee - " + employee.getName() + " " + employee.getSurname() + " - was added");
+        LOGGER.info(
+                "Id employee - " + employee.getId() +
+                " - Employee - " + employee.getName() + " - " + employee.getSurname() +
+                " - department id - " + employee.getDepartmentId().getId() + " - was added");
     }
     public static void addService() {
         ServiceService serviceService = new ServiceServiceImpl();
         Service service = ParseService.staxParseService();
         serviceService.add(service);
-        LOGGER.info("Id - " + service.getId() + "Service - " + service.getName() + " - was added");
+        LOGGER.info(
+                "Id service - " + service.getId() +
+                " - Service - " + service.getName() +
+                " - car id - " + service.getCarId() +
+                " - department id - " + service.getDepartmentId() +" - was added");
     }
 }

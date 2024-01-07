@@ -50,6 +50,10 @@
     </xs:complexType>
 
     <xs:complexType name="CompanyType">
+        <xs:all>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+        </xs:all>
         <xs:attribute name="id" type="xs:long" use="required"/>
     </xs:complexType>
 
