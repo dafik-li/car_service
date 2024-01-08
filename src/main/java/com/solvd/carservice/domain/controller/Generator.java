@@ -4,7 +4,6 @@ import com.solvd.carservice.domain.controller.admin.ControllerFactory;
 import com.solvd.carservice.domain.controller.user.UserController;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.ModerateException;
-import com.solvd.carservice.domain.parser.Parser;
 import com.solvd.carservice.util.ConsoleMenu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;

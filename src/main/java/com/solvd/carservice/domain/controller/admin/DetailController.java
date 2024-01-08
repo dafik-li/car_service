@@ -44,10 +44,7 @@ public class DetailController extends AbstractController {
                 getDataFromConsole.getIntegerFromConsole("delivery days"));
         DetailService detailService = new DetailServiceImpl();
         detailService.add(detail);
-        LOGGER.info(
-                "Detail - "
-                + detail.getName() +
-                " - was added");
+        display.addedDetail(detail);
     }
     public void retrieveAll() {
         LOGGER.info("List of details");

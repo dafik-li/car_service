@@ -44,12 +44,7 @@ public class CostController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("detail")));
         CostService costService = new CostServiceImpl();
         costService.add(cost);
-        LOGGER.info(
-                "Cost - " +
-                cost.getCost() +
-                cost.getServiceId() +
-                cost.getDetailId() +
-                " - was added");
+        display.addedCost(cost);
     }
     public void retrieveAll() {
         LOGGER.info("List of costs");

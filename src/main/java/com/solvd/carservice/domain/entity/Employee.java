@@ -1,9 +1,15 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+
+@XmlRootElement(name = "employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Employee {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private String surname;
@@ -13,7 +19,11 @@ public class Employee {
     private Integer salary;
     private String phoneNumber;
     private Department departmentId;
+
+    @XmlElementWrapper(name = "services")
+    @XmlElement(name = "service")
     private List<Service> services;
+
 
     public Employee() { }
     public Employee(String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber, Department departmentId) {

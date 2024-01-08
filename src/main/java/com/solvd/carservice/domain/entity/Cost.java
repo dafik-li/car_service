@@ -1,12 +1,23 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
 import java.util.Objects;
 
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Cost {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private Double cost;
     private Service serviceId;
     private Detail detailId;
+
+    @XmlElementWrapper(name = "orders")
+    @XmlElement(name = "order")
+    private List<Order> orders;
+
 
     public Cost() { }
     public Cost(Long id) {
@@ -47,6 +58,12 @@ public class Cost {
     public void setDetailId(Detail detailId) {
         this.detailId = detailId;
     }
+    public List<Order> getOrders() {
+        return orders;
+    }
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,11 +72,12 @@ public class Cost {
         return getId().equals(cost1.getId()) &&
                 getCost().equals(cost1.getCost()) &&
                 getServiceId().equals(cost1.getServiceId()) &&
-                getDetailId().equals(cost1.getDetailId());
+                getDetailId().equals(cost1.getDetailId()) &&
+                getOrders().equals(cost1.getOrders());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCost(), getServiceId(), getDetailId());
+        return Objects.hash(getId(), getCost(), getServiceId(), getDetailId(), getOrders());
     }
     @Override
     public String toString() {

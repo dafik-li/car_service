@@ -14,7 +14,11 @@ public class CarController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
+    private final CarServiceImpl carServiceImpl;
 
+    public CarController() {
+        this.carServiceImpl = new CarServiceImpl();
+    }
     public void moderate() {
         consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
@@ -38,18 +42,12 @@ public class CarController extends AbstractController {
                 getDataFromConsole.getStringFromConsole("brand"),
                 getDataFromConsole.getStringFromConsole("model"),
                 getDataFromConsole.getIntegerFromConsole("year"));
-        CarService carService = new CarServiceImpl();
-        carService.add(car);
-        LOGGER.info(
-                "Car - " +
-                car.getBrand() +
-                car.getModel() +
-                car.getYear() +
-                " - was added");
+        ((CarService) carServiceImpl).add(car);
+        display.addedCar(car);
     }
     public void retrieveAll() {
         LOGGER.info("List of cars");
-        for (Car car : new CarServiceImpl().retrieveAll()) {
+        for (Car car : carServiceImpl.retrieveAll()) {
             LOGGER.info(
                     "Car id - " + car.getId() + "|" +
                     "brand - " + car.getBrand() + "|" +
@@ -60,7 +58,6 @@ public class CarController extends AbstractController {
     public void change() {
         LOGGER.info("Update car");
         Optional<Car> car = retrieveById();
-        CarService carService = new CarServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
         switch (field) {
             case "brand":
@@ -73,11 +70,11 @@ public class CarController extends AbstractController {
                 car.get().setYear(getDataFromConsole.getIntegerFromConsole("year"));
                 break;
         }
-        carService.change(car, field);
+        ((CarService) carServiceImpl).change(car, field);
         LOGGER.info("Car " + field + " was changed");
     }
     public Optional<Car> retrieveById() {
-        Optional<Car> carOptional = new CarServiceImpl().retrieveById(
+        Optional<Car> carOptional = carServiceImpl.retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
         LOGGER.info("|" +
                 "Car id - " + carOptional.get().getId() + "|" +
@@ -88,8 +85,7 @@ public class CarController extends AbstractController {
     }
     public void removeById() {
         LOGGER.info("Following car will be deleted");
-        CarService carService = new CarServiceImpl();
-        carService.removeById(
+        ((CarService) carServiceImpl).removeById(
                 getDataFromConsole.getLongFromConsole("id"));
         LOGGER.info("Successful deleted");
     }

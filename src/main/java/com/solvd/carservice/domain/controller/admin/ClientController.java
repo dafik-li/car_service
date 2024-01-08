@@ -42,11 +42,7 @@ public class ClientController extends AbstractController {
                         getDataFromConsole.getDateFromConsole("birthday"));
         ClientService clientService = new ClientServiceImpl();
         clientService.add(client);
-        LOGGER.info(
-                "Client - " +
-                client.getName() +
-                client.getSurname() +
-                " - was added");
+        display.addedClient(client);
     }
     public void retrieveAll() {
         LOGGER.info("List of clients");

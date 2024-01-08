@@ -4,7 +4,6 @@ import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.parser.Parser;
 import com.solvd.carservice.service.CompanyService;
 import com.solvd.carservice.service.impl.CompanyServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +38,7 @@ public class CompanyController extends AbstractController {
         consoleMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": Parser.addCompany(); break;
+            case "1": selectXmlParser(); break;
             case "2": add(); break;
             case "0": moderate(); break;
         }
@@ -47,7 +46,22 @@ public class CompanyController extends AbstractController {
             validator.validateStartPageMenu(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
-            add();
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addCompany(); break;
+            case "2": jaxbParser.addCompany(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
         }
     }
     public void add() {
@@ -56,11 +70,7 @@ public class CompanyController extends AbstractController {
                 getDataFromConsole.getStringFromConsole("address"));
         CompanyService companyService = new CompanyServiceImpl();
         companyService.add(company);
-        LOGGER.info(
-                "Company - " +
-                company.getName() +
-                company.getAddress() +
-                " - was added");
+        display.addedCompany(company);
     }
     public void retrieveAll() {
         LOGGER.info("List of companies");

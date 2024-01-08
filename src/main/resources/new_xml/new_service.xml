@@ -3,10 +3,10 @@
     <name>Pump you up</name>
     <price>100000</price>
     <hoursToDo>1000</hoursToDo>
-    <carId id="10">
-        <brand>Bentley</brand>
-        <model>Continental GTC</model>
-        <year>2020</year>
+    <carId id="1">
+        <brand>ferrari</brand>
+        <model>monza</model>
+        <year>1990</year>
     </carId>
     <departmentId id="6">
         <name>Director</name>

@@ -44,12 +44,7 @@ public class OrderController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("cost")));
         OrderService orderService = new OrderServiceImpl();
         orderService.add(order);
-        LOGGER.info(
-                "Order - " +
-                order.getDate() +
-                order.getClientId() +
-                order.getCostId() +
-                " - was added");
+        display.addedOrder(order);
     }
     public void retrieveAll() {
         LOGGER.info("List of orders");

@@ -1,13 +1,23 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+
+@XmlRootElement(name = "company")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private String address;
+
+    @XmlElementWrapper(name = "departments")
+    @XmlElement(name = "department")
     private List<Department> departments;
+
 
     public Company() { }
     public Company(Long id) {

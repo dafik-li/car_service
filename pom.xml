@@ -53,8 +53,16 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>${mysqlJDBCVersion}</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>4.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.4</version>
+        </dependency>
     </dependencies>
 
 

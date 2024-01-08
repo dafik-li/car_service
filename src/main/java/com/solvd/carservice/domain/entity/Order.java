@@ -1,13 +1,25 @@
 package com.solvd.carservice.domain.entity;
 
+import com.solvd.carservice.domain.parse.DateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.sql.Date;
 import java.util.Objects;
 
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Order {
+
+    @XmlAttribute(name = "id")
     private Long id;
+
+    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date date;
     private Client clientId;
     private Cost costId;
+
 
     public Order() { }
     public Order(Date date, Client clientId, Cost costId) {

@@ -1,4 +1,4 @@
-package com.solvd.carservice.domain.parser;
+package com.solvd.carservice.domain.parse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -21,7 +21,7 @@ public class StaxValidator {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(StaxValidator.class);
 
-    public static void validate(File xmlFile, File xsdFile) {
+    public void validate(File xmlFile, File xsdFile) {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(xmlFile));
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

@@ -6,7 +6,8 @@ import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.parser.Parser;
+import com.solvd.carservice.domain.parse.JaxbParser;
+import com.solvd.carservice.domain.parse.StaxParser;
 import com.solvd.carservice.service.EmployeeService;
 import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +43,7 @@ public class EmployeeController extends AbstractController {
         consoleMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": Parser.addEmployee(); break;
+            case "1": selectXmlParser(); break;
             case "2": add(); break;
             case "0": moderate(); break;
         }
@@ -50,7 +51,22 @@ public class EmployeeController extends AbstractController {
             validator.validateStartPageMenu(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
-            add();
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addEmployee(); break;
+            case "2": jaxbParser.addEmployee(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
         }
     }
     public void add() {
@@ -66,11 +82,7 @@ public class EmployeeController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("department")));
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.add(employee);
-        LOGGER.info(
-                "Employee - " +
-                employee.getName() + " " +
-                employee.getSurname() +
-                " - was added");
+        display.addedEmployee(employee);
     }
     public void addService() {
         LOGGER.info("Add service to employee");

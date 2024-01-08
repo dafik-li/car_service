@@ -5,7 +5,6 @@ import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.parser.Parser;
 import com.solvd.carservice.service.DepartmentService;
 import com.solvd.carservice.service.impl.DepartmentServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +39,7 @@ public class DepartmentController extends AbstractController {
         consoleMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": Parser.addDepartment(); break;
+            case "1": selectXmlParser(); break;
             case "2": add(); break;
             case "0": moderate(); break;
         }
@@ -48,7 +47,22 @@ public class DepartmentController extends AbstractController {
             validator.validateStartPageMenu(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
-            add();
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addDepartment(); break;
+            case "2": jaxbParser.addDepartment(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
         }
     }
     public void add() {
@@ -59,11 +73,7 @@ public class DepartmentController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("company")));
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.add(department);
-        LOGGER.info(
-                "Department - " +
-                department.getName() +
-                department.getCompanyId() +
-                " - was added");
+        display.addedDepartment(department);
     }
     public void retrieveAll() {
         LOGGER.info("List of departments");

@@ -1,14 +1,29 @@
 package com.solvd.carservice.domain.entity;
 
+import com.solvd.carservice.domain.parse.DateAdapter;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Client {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private String surname;
     private String phoneNumber;
+
+    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date birthday;
+
+    @XmlElementWrapper(name = "orders")
+    @XmlElement(name = "order")
+    private List<Order> orders;
+
 
     public Client() { }
     public Client(Long id) {
@@ -57,6 +72,12 @@ public class Client {
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
+    public List<Order> getOrders() {
+        return orders;
+    }
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,11 +87,12 @@ public class Client {
                 getName().equals(client.getName()) &&
                 getSurname().equals(client.getSurname()) &&
                 getPhoneNumber().equals(client.getPhoneNumber()) &&
-                getBirthday().equals(client.getBirthday());
+                getBirthday().equals(client.getBirthday()) &&
+                getOrders().equals(client.getOrders());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSurname(), getPhoneNumber(), getBirthday());
+        return Objects.hash(getId(), getName(), getSurname(), getPhoneNumber(), getBirthday(), getOrders());
     }
 
     @Override

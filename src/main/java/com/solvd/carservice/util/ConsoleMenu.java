@@ -29,6 +29,12 @@ public class ConsoleMenu {
                 "console - press 2" + "\n" +
                 "return - press 0");
     }
+    public void chooseXmlParser() {
+        LOGGER.info("Please, choose a desire XML parser" + "\n" +
+                "stax - press 1" + "\n" +
+                "jaxb - press 2" + "\n" +
+                "return - press 0");
+    }
     public void chooseControllerMenu() {
         LOGGER.info("Hallo our admin! Which table do you want to work with?" + "\n" +
                 "1 - companies" + "\n" +
@@ -43,7 +49,7 @@ public class ConsoleMenu {
                 "0 - return");
     }
     public void chooseModerateMenu() {
-        LOGGER.info("What operation you want to do?" + "\n" +
+        LOGGER.info("What operation do you want to do?" + "\n" +
                 "1 - add" + "\n" +
                 "2 - retrieveAll" + "\n" +
                 "3 - retrieveById" + "\n" +
