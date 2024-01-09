@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
-
+@XmlRootElement(name = "client")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Client {
 
@@ -18,7 +18,7 @@ public class Client {
     private String phoneNumber;
 
     @XmlJavaTypeAdapter(DateAdapter.class)
-    private Date birthday;
+    private java.util.Date birthday;
 
     @XmlElementWrapper(name = "orders")
     @XmlElement(name = "order")
@@ -66,10 +66,10 @@ public class Client {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    public Date getBirthday() {
+    public java.util.Date getBirthday() {
         return birthday;
     }
-    public void setBirthday(Date birthday) {
+    public void setBirthday(java.util.Date birthday) {
         this.birthday = birthday;
     }
     public List<Order> getOrders() {
@@ -94,7 +94,6 @@ public class Client {
     public int hashCode() {
         return Objects.hash(getId(), getName(), getSurname(), getPhoneNumber(), getBirthday(), getOrders());
     }
-
     @Override
     public String toString() {
         return "Client{" +

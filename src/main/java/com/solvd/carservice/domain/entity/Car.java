@@ -4,7 +4,7 @@ import jakarta.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
-
+@XmlRootElement(name = "car")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Car {
 

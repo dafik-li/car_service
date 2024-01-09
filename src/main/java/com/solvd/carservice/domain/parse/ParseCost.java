@@ -23,40 +23,42 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class ParseService {
+public class ParseCost {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseService.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCost.class);
     private final StaxValidator staxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_service.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_service.xsd");
-    private Service service;
-    private final Department department;
-    private final Car car;
-    private final ParseCompany parseCompany;
+    private final File xmlFile = new File("src/main/resources/new_xml/new_cost.xml");
+    private final File xsdFile = new File("src/main/resources/new_xml/new_cost.xsd");
+    private Cost cost;
+    private final Detail detail;
+    private final Service service;
+    private final ParseCar parseCar;
+    private final ParseDepartment parseDepartment;
 
-    public ParseService() {
+    public ParseCost() {
         this.staxValidator = new StaxValidator();
+        this.cost = new Cost();
+        this.detail = new Detail();
         this.service = new Service();
-        this.department = new Department();
-        this.car = new Car();
-        this.parseCompany = new ParseCompany();
+        this.parseCar = new ParseCar();
+        this.parseDepartment = new ParseDepartment();
     }
-    public Service jaxbParse() {
+    public Cost jaxbParse() {
         try {
-            JAXBContext context = JAXBContext.newInstance(Service.class);
+            JAXBContext context = JAXBContext.newInstance(Cost.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(xsdFile);
             unmarshaller.setSchema(schema);
-            service = (Service) unmarshaller.unmarshal(xmlFile);
+            cost = (Cost) unmarshaller.unmarshal(xmlFile);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
-        return service;
+        return cost;
     }
-    public Service staxParse() {
+    public Cost staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
             staxValidator.validate(xmlFile, xsdFile);
@@ -65,67 +67,23 @@ public class ParseService {
                 XMLEvent nextEvent = reader.nextEvent();
                 if (nextEvent.isStartElement()) {
                     StartElement startElement = nextEvent.asStartElement();
-                    if (startElement.getName().getLocalPart().equals("service")) {
+                    if (startElement.getName().getLocalPart().equals("cost")) {
                         while (reader.hasNext()) {
                             nextEvent = reader.nextEvent();
                             if (nextEvent.isStartElement()) {
                                 startElement = nextEvent.asStartElement();
                                 switch (startElement.getName().getLocalPart()) {
-                                    case "name":
+                                    case "cost":
                                         nextEvent = reader.nextEvent();
-                                        service.setName(nextEvent.asCharacters().getData());
+                                        cost.setCost(Double.parseDouble(nextEvent.asCharacters().getData()));
                                         break;
-                                    case "price":
-                                        nextEvent = reader.nextEvent();
-                                        service.setPrice(Double.parseDouble(nextEvent.asCharacters().getData()));
-                                        break;
-                                    case "hoursToDo":
-                                        nextEvent = reader.nextEvent();
-                                        service.setHoursToDo(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        break;
-                                    case "carId":
+                                    case "serviceId":
                                         Iterator<Attribute> iterator = startElement.getAttributes();
                                         while (iterator.hasNext()) {
                                             Attribute attribute = iterator.next();
                                             QName name = attribute.getName();
                                             if (name.getLocalPart().equals("id")) {
-                                                car.setId(Long.valueOf(attribute.getValue()));
-                                                while (reader.hasNext()) {
-                                                    nextEvent = reader.nextEvent();
-                                                    if (nextEvent.isStartElement()) {
-                                                        startElement = nextEvent.asStartElement();
-                                                        switch (startElement.getName().getLocalPart()) {
-                                                            case "brand":
-                                                                nextEvent = reader.nextEvent();
-                                                                car.setBrand(nextEvent.asCharacters().getData());
-                                                                break;
-                                                            case "model":
-                                                                nextEvent = reader.nextEvent();
-                                                                car.setModel(nextEvent.asCharacters().getData());
-                                                                break;
-                                                            case "year":
-                                                                nextEvent = reader.nextEvent();
-                                                                car.setYear(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                                                break;
-                                                        }
-                                                    }
-                                                    if (nextEvent.isEndElement()) {
-                                                        EndElement endElement = nextEvent.asEndElement();
-                                                        if (endElement.getName().getLocalPart().equals("carId")) {
-                                                            service.setCarId(car);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    case "departmentId":
-                                        iterator = startElement.getAttributes();
-                                        while (iterator.hasNext()) {
-                                            Attribute attribute = iterator.next();
-                                            QName name = attribute.getName();
-                                            if (name.getLocalPart().equals("id")) {
-                                                department.setId(Long.valueOf(attribute.getValue()));
+                                                service.setId(Long.valueOf(attribute.getValue()));
                                                 while (reader.hasNext()) {
                                                     nextEvent = reader.nextEvent();
                                                     if (nextEvent.isStartElement()) {
@@ -133,38 +91,94 @@ public class ParseService {
                                                         switch (startElement.getName().getLocalPart()) {
                                                             case "name":
                                                                 nextEvent = reader.nextEvent();
-                                                                department.setName(nextEvent.asCharacters().getData());
+                                                                service.setName(nextEvent.asCharacters().getData());
                                                                 break;
-                                                            case "companyId":
-                                                                department.setCompanyId(parseCompany.staxParse());
+                                                            case "price":
+                                                                nextEvent = reader.nextEvent();
+                                                                service.setPrice(Double.parseDouble(nextEvent.asCharacters().getData()));
                                                                 break;
+                                                            case "hoursToDo":
+                                                                nextEvent = reader.nextEvent();
+                                                                service.setHoursToDo(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                break;
+                                                            case "carId":
+                                                                service.setCarId(parseCar.staxParse());
+                                                                break;
+                                                            case "departmentId":
+                                                               service.setDepartmentId(parseDepartment.staxParse());
+                                                               break;
                                                         }
                                                     }
                                                     if (nextEvent.isEndElement()) {
                                                         EndElement endElement = nextEvent.asEndElement();
-                                                        if (endElement.getName().getLocalPart().equals("departmentId")) {
-                                                            service.setDepartmentId(department);
+                                                        if (endElement.getName().getLocalPart().equals("serviceId")) {
+                                                            cost.setServiceId(service);
                                                             break;
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+                                    case "detailId":
+                                        iterator = startElement.getAttributes();
+                                        while (iterator.hasNext()) {
+                                            Attribute attribute = iterator.next();
+                                            QName name = attribute.getName();
+                                            if (name.getLocalPart().equals("id")) {
+                                                detail.setId(Long.valueOf(attribute.getValue()));
+                                                while (reader.hasNext()) {
+                                                    nextEvent = reader.nextEvent();
+                                                    if (nextEvent.isStartElement()) {
+                                                        startElement = nextEvent.asStartElement();
+                                                        switch (startElement.getName().getLocalPart()) {
+                                                            case "name":
+                                                                nextEvent = reader.nextEvent();
+                                                                detail.setName(nextEvent.asCharacters().getData());
+                                                                break;
+                                                            case "price":
+                                                                nextEvent = reader.nextEvent();
+                                                                detail.setPrice(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                break;
+                                                            case "carId":
+                                                                detail.setCarId(parseCar.staxParse());
+                                                                break;
+                                                            case "inStock":
+                                                                nextEvent = reader.nextEvent();
+                                                                detail.setInStock(Boolean.parseBoolean(nextEvent.asCharacters().getData()));
+                                                                break;
+                                                            case "deliveryDays":
+                                                                nextEvent = reader.nextEvent();
+                                                                detail.setDeliveryDays(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                break;
+                                                        }
+                                                    }
+                                                    if (nextEvent.isEndElement()) {
+                                                        EndElement endElement = nextEvent.asEndElement();
+                                                        if (endElement.getName().getLocalPart().equals("detailId")) {
+                                                            cost.setDetailId(detail);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                 }
                             }
                             if (nextEvent.isEndElement()) {
                                 EndElement endElement = nextEvent.asEndElement();
-                                if (endElement.getName().getLocalPart().equals("service")) {
+                                if (endElement.getName().getLocalPart().equals("cost")) {
                                     break;
                                 }
                             }
                         }
                     }
                 }
+
             }
         } catch (IOException | XMLStreamException e) {
             throw new RuntimeException(e);
         }
-        return service;
+        return cost;
     }
 }

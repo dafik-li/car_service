@@ -2,6 +2,7 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
+import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.ClientService;
 import com.solvd.carservice.service.impl.ClientServiceImpl;
@@ -13,13 +14,13 @@ public class ClientController extends AbstractController {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(ClientController.class);
 
     public void moderate() {
         consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": add(); break;
+            case "1": selectInsertMethod(); break;
             case "2": retrieveAll(); break;
             case "3": retrieveById(); break;
             case "4": change(); break;
@@ -31,6 +32,36 @@ public class ClientController extends AbstractController {
         } catch (TableException e) {
             LOGGER.error(e.toString());
             moderate();
+        }
+    }
+    public void selectInsertMethod() {
+        consoleMenu.chooseInsertMethod();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": selectXmlParser(); break;
+            case "2": add(); break;
+            case "0": moderate(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addClient(); break;
+            case "2": jaxbParser.addClient(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
         }
     }
     public void add() {

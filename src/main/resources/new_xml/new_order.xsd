@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:complexType name="CostType"/>
+
+    <xs:complexType name="DetailType">
+        <xs:all>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="price" type="xs:int"/>
+            <xs:element name="carId" type="CarType"/>
+            <xs:element name="inStock" type="xs:boolean"/>
+            <xs:element name="deliveryDays" type="xs:int"/>
+            <xs:element name="costs" type="CostsType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+
 
     <xs:complexType name="CostsType">
         <xs:sequence>
@@ -47,8 +59,6 @@
     </xs:complexType>
 
 
-    <xs:complexType name="DetailType"/>
-
     <xs:complexType name="DetailsType">
         <xs:sequence>
             <xs:element name="detail" type="DetailType" minOccurs="0" maxOccurs="unbounded"/>
@@ -88,6 +98,47 @@
         <xs:attribute name="id" type="xs:long" use="required"/>
     </xs:complexType>
 
-    <xs:element name="service" type="ServiceType"/>
+
+    <xs:complexType name="CostType">
+        <xs:all>
+            <xs:element name="cost" type="xs:double"/>
+            <xs:element name="serviceId" type="ServiceType"/>
+            <xs:element name="detailId" type="DetailType"/>
+            <xs:element name="orders" type="OrdersType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="OrdersType">
+        <xs:sequence>
+            <xs:element name="order" type="OrderType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="ClientType">
+        <xs:all>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+            <xs:element name="phoneNumber" type="xs:string"/>
+            <xs:element name="birthday" type="xs:date"/>
+            <xs:element name="orders" type="OrdersType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="OrderType">
+        <xs:all>
+            <xs:element name="date" type="xs:date"/>
+            <xs:element name="clientId" type="ClientType"/>
+            <xs:element name="costId" type="CostType"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="order" type="OrderType"/>
+
 
 </xs:schema>

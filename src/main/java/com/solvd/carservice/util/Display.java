@@ -103,7 +103,7 @@ public class Display {
                 "model - " + detail.getCarId().getModel() + "|" +
                 "year - " + detail.getCarId().getYear() + "]" +
                 "in stock - " + detail.getInStock() + "|" +
-                "delivery days - " + detail.getDeliveryDays() + " was added");
+                "delivery days - " + detail.getDeliveryDays() + "] - was added");
     }
     public void addedOrder(Order order) {
         LOGGER.info(

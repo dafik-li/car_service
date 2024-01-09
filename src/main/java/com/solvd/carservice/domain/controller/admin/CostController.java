@@ -4,6 +4,7 @@ import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.domain.entity.Service;
+import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.CostService;
 import com.solvd.carservice.service.impl.CostServiceImpl;
@@ -21,7 +22,7 @@ public class CostController extends AbstractController {
         consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": add(); break;
+            case "1": selectInsertMethod(); break;
             case "2": retrieveAll(); break;
             case "3": retrieveById(); break;
             case "4": change(); break;
@@ -33,6 +34,35 @@ public class CostController extends AbstractController {
         } catch (TableException e) {
             LOGGER.error(e.toString());
             moderate();
+        }
+    }public void selectInsertMethod() {
+        consoleMenu.chooseInsertMethod();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": selectXmlParser(); break;
+            case "2": add(); break;
+            case "0": moderate(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addCost(); break;
+            case "2": jaxbParser.addCost(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
         }
     }
     public void add() {

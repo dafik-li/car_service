@@ -7,13 +7,19 @@
         <brand>ferrari</brand>
         <model>monza</model>
         <year>1990</year>
+        <services> </services>
+        <details> </details>
     </carId>
     <departmentId id="6">
         <name>Director</name>
         <companyId id="7">
             <name>Tony Montana Service - Minsk</name>
             <address>Minsk, av. F. Skaryny, 8</address>
+            <departments> </departments>
         </companyId>
+        <employees> </employees>
+        <services> </services>
     </departmentId>
     <employees> </employees>
+    <costs> </costs>
 </service>

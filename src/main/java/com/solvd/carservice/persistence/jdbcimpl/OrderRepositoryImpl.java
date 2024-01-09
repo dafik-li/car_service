@@ -52,7 +52,7 @@ public class OrderRepositoryImpl implements OrderRepository{
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ORDER_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setDate(1, order.getDate());
+            preparedStatement.setDate(1, new Date(order.getDate().getTime()));
             preparedStatement.setLong(2, order.getClientId().getId());
             preparedStatement.setLong(3,order.getCostId().getId());
             preparedStatement.executeUpdate();

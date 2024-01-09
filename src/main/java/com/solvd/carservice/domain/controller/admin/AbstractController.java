@@ -28,8 +28,8 @@ abstract public class AbstractController {
         this.jaxbParser = new JaxbParser();
     }
     public abstract void moderate();
-    //public abstract void selectInsertMethod();
-    //public abstract void selectXmlParser();
+    public abstract void selectInsertMethod();
+    public abstract void selectXmlParser();
     public abstract void add();
     public abstract void retrieveAll();
     public abstract void change();

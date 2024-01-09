@@ -1,17 +1,8 @@
 package com.solvd.carservice.domain.parse;
 
-import com.solvd.carservice.domain.entity.Company;
-import com.solvd.carservice.domain.entity.Department;
-import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.entity.Service;
-import com.solvd.carservice.service.CompanyService;
-import com.solvd.carservice.service.DepartmentService;
-import com.solvd.carservice.service.EmployeeService;
-import com.solvd.carservice.service.ServiceService;
-import com.solvd.carservice.service.impl.CompanyServiceImpl;
-import com.solvd.carservice.service.impl.DepartmentServiceImpl;
-import com.solvd.carservice.service.impl.EmployeeServiceImpl;
-import com.solvd.carservice.service.impl.ServiceServiceImpl;
+import com.solvd.carservice.domain.entity.*;
+import com.solvd.carservice.service.*;
+import com.solvd.carservice.service.impl.*;
 
 public class JaxbParser extends AbstractParser {
     public void addCompany() {
@@ -37,5 +28,35 @@ public class JaxbParser extends AbstractParser {
         Service service = parseService.jaxbParse();
         serviceService.add(service);
         display.addedService(service);
+    }
+    public void addCar() {
+        CarService carService = new CarServiceImpl();
+        Car car = parseCar.jaxbParse();
+        carService.add(car);
+        display.addedCar(car);
+    }
+    public void addDetail() {
+        DetailService detailService = new DetailServiceImpl();
+        Detail detail = parseDetail.jaxbParse();
+        detailService.add(detail);
+        display.addedDetail(detail);
+    }
+    public void addClient() {
+        ClientService clientService = new ClientServiceImpl();
+        Client client = parseClient.jaxbParse();
+        clientService.add(client);
+        display.addedClient(client);
+    }
+    public void addCost() {
+        CostService costService = new CostServiceImpl();
+        Cost cost = parseCost.jaxbParse();
+        costService.add(cost);
+        display.addedCost(cost);
+    }
+    public void addOrder() {
+        OrderService orderService = new OrderServiceImpl();
+        Order order = parseOrder.jaxbParse();
+        orderService.add(order);
+        display.addedOrder(order);
     }
 }

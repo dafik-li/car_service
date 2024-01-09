@@ -35,13 +35,13 @@ public class ParseEmployee {
     private final File xsdFile = new File("src/main/resources/new_xml/new_employee.xsd");
     private Employee employee;
     private final Department department;
-    private final Company company;
+    private final ParseCompany parseCompany;
 
     public ParseEmployee() {
         this.staxValidator = new StaxValidator();
         this.employee = new Employee();
         this.department = new Department();
-        this.company = new Company();
+        this.parseCompany = new ParseCompany();
     }
     public Employee jaxbParse() {
         try {
@@ -116,37 +116,8 @@ public class ParseEmployee {
                                                                 department.setName(nextEvent.asCharacters().getData());
                                                                 break;
                                                             case "companyId":
-                                                                iterator = startElement.getAttributes();
-                                                                while (iterator.hasNext()) {
-                                                                    attribute = iterator.next();
-                                                                    name = attribute.getName();
-                                                                    if (name.getLocalPart().equals("id")) {
-                                                                        company.setId(Long.valueOf(attribute.getValue()));
-                                                                        while (reader.hasNext()) {
-                                                                            nextEvent = reader.nextEvent();
-                                                                            if (nextEvent.isStartElement()) {
-                                                                                startElement = nextEvent.asStartElement();
-                                                                                switch (startElement.getName().getLocalPart()) {
-                                                                                    case "name":
-                                                                                        nextEvent = reader.nextEvent();
-                                                                                        company.setName(nextEvent.asCharacters().getData());
-                                                                                        break;
-                                                                                    case "address":
-                                                                                        nextEvent = reader.nextEvent();
-                                                                                        company.setAddress(nextEvent.asCharacters().getData());
-                                                                                        break;
-                                                                                }
-                                                                            }
-                                                                            if (nextEvent.isEndElement()) {
-                                                                                EndElement endElement = nextEvent.asEndElement();
-                                                                                if (endElement.getName().getLocalPart().equals("companyId")) {
-                                                                                    department.setCompanyId(company);
-                                                                                    break;
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
+                                                                department.setCompanyId(parseCompany.staxParse());
+                                                                break;
                                                         }
                                                     }
                                                     if (nextEvent.isEndElement()) {
@@ -159,6 +130,12 @@ public class ParseEmployee {
                                                 }
                                             }
                                         }
+                                }
+                            }
+                            if (nextEvent.isEndElement()) {
+                                EndElement endElement = nextEvent.asEndElement();
+                                if (endElement.getName().getLocalPart().equals("employee")) {
+                                    break;
                                 }
                             }
                         }

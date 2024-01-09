@@ -1,6 +1,6 @@
 package com.solvd.carservice.domain.parse;
 
-import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Car;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -20,34 +20,34 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ParseCompany {
+public class ParseCar {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCompany.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCar.class);
     private final StaxValidator staxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_company.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_company.xsd");
-    private Company company;
+    private final File xmlFile = new File("src/main/resources/new_xml/new_car.xml");
+    private final File xsdFile = new File("src/main/resources/new_xml/new_car.xsd");
+    private Car car;
 
-    public ParseCompany() {
+    public ParseCar() {
         this.staxValidator = new StaxValidator();
-        this.company = new Company();
+        this.car = new Car();
     }
-    public Company jaxbParse() {
+    public Car jaxbParse() {
         try {
-            JAXBContext context = JAXBContext.newInstance(Company.class);
+            JAXBContext context = JAXBContext.newInstance(Car.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(xsdFile);
             unmarshaller.setSchema(schema);
-            company = (Company) unmarshaller.unmarshal(xmlFile);
+            car = (Car) unmarshaller.unmarshal(xmlFile);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
-        return company;
+        return car;
     }
-    public Company staxParse() {
+    public Car staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
             staxValidator.validate(xmlFile, xsdFile);
@@ -56,25 +56,29 @@ public class ParseCompany {
                 XMLEvent nextEvent = reader.nextEvent();
                 if (nextEvent.isStartElement()) {
                     StartElement startElement = nextEvent.asStartElement();
-                    if (startElement.getName().getLocalPart().equals("company")) {
+                    if (startElement.getName().getLocalPart().equals("car")) {
                         while (reader.hasNext()) {
                             nextEvent = reader.nextEvent();
                             if (nextEvent.isStartElement()) {
                                 startElement = nextEvent.asStartElement();
                                 switch (startElement.getName().getLocalPart()) {
-                                    case "name":
+                                    case "brand":
                                         nextEvent = reader.nextEvent();
-                                        company.setName(nextEvent.asCharacters().getData());
+                                        car.setBrand(nextEvent.asCharacters().getData());
                                         break;
-                                    case "address":
+                                    case "model":
                                         nextEvent = reader.nextEvent();
-                                        company.setAddress(nextEvent.asCharacters().getData());
+                                        car.setModel(nextEvent.asCharacters().getData());
+                                        break;
+                                    case "year":
+                                        nextEvent = reader.nextEvent();
+                                        car.setYear(Integer.parseInt(nextEvent.asCharacters().getData()));
                                         break;
                                 }
                             }
                             if (nextEvent.isEndElement()) {
                                 EndElement endElement = nextEvent.asEndElement();
-                                if (endElement.getName().getLocalPart().equals("company")) {
+                                if (endElement.getName().getLocalPart().equals("car")) {
                                     break;
                                 }
                             }
@@ -85,6 +89,6 @@ public class ParseCompany {
         } catch (IOException | XMLStreamException e) {
             throw new RuntimeException(e);
         }
-        return company;
+        return car;
     }
 }

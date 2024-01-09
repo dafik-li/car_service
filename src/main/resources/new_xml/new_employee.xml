@@ -12,7 +12,10 @@
         <companyId id="7">
             <name>Tony Montana Service - Minsk</name>
             <address>Minsk, av. F. Skaryny, 8</address>
+            <departments> </departments>
         </companyId>
+        <employees> </employees>
+        <services> </services>
     </departmentId>
     <services> </services>
 </employee>
