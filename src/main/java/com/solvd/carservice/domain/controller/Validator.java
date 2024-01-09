@@ -21,4 +21,9 @@ public class Validator {
             throw new TableException("Choose a desire action or roll back");
         }
     }
+    public void validateAuthorization(String menu) throws AuthorizationException {
+        if (!menu.equals("1") && !menu.equals("2") && !menu.equals("3") && !menu.equals("0")) {
+            throw new AuthorizationException("What do you want, dude?");
+        }
+    }
 }

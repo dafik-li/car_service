@@ -103,7 +103,7 @@ public class ClientRepositoryImpl implements ClientRepository {
             preparedStatement.setString(1, client.getName());
             preparedStatement.setString(2, client.getSurname());
             preparedStatement.setString(3, client.getPhoneNumber());
-            preparedStatement.setDate(4, client.getBirthday());
+            preparedStatement.setDate(4, new Date(client.getBirthday().getTime()));
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {

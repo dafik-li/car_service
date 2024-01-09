@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<carService xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="carService.xsd">
+    <company>
+        <name>Tony Montana Service - Hrodna</name>
+        <address>Hrodna, str. Svabody, 13</address>
+        <departments>
+            <department>
+                <companyId>
+                    <name>Tony Montana Service - Homel</name>
+                    <address>Homel, str. Independence, 23</address>
+                    <departments></departments>
+                </companyId>
+                <name>Dry cleaning</name>
+                <employees>
+                    <employee>
+                        <name>Al</name>
+                        <surname>Pachino</surname>
+                        <age>65</age>
+                        <position>car mechanic</position>
+                        <level>7</level>
+                        <salary>3000</salary>
+                        <phoneNumber>375291001001</phoneNumber>
+                        <departmentId>
+                            <name>Dry cleaning</name>
+                            <companyId>
+                                <name>Tony Montana Service - Homel</name>
+                                <address>Homel, str. Independence, 23</address>
+                                <departments></departments>
+                            </companyId>
+                            <employees></employees>
+                            <services></services>
+                        </departmentId>
+                        <services>
+                            <service>
+                                <name>dry cleaner</name>
+                                <price>300</price>
+                                <hoursToDo>2</hoursToDo>
+                                <carId>
+                                    <brand>audi</brand>
+                                    <model>a4</model>
+                                    <year>2024</year>
+                                    <services></services>
+                                </carId>
+                                <employees></employees>
+                            </service>
+                        </services>
+                    </employee>
+                </employees>
+                <services>
+                    <service>
+                        <name>dry cleaner</name>
+                        <price>300</price>
+                        <hoursToDo>2</hoursToDo>
+                        <carId>
+                            <brand>audi</brand>
+                            <model>a4</model>
+                            <year>2024</year>
+                            <services></services>
+                        </carId>
+                        <employees>
+                            <employee>
+                                <name>Matthew</name>
+                                <surname>McConaughey</surname>
+                                <age>50</age>
+                                <position>cleaner</position>
+                                <level>5</level>
+                                <salary>1000</salary>
+                                <phoneNumber>375291001007</phoneNumber>
+                                <departmentId>
+                                    <name>Dry cleaning</name>
+                                    <companyId>
+                                        <name>Tony Montana Service - Homel</name>
+                                        <address>Homel, str. Independence, 23</address>
+                                        <departments></departments>
+                                    </companyId>
+                                    <employees></employees>
+                                    <services></services>
+                                </departmentId>
+                                <services></services>
+                            </employee>
+                        </employees>
+                    </service>
+                </services>
+            </department>
+        </departments>
+    </company>
+</carService>

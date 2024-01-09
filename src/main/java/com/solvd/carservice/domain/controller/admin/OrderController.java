@@ -4,6 +4,7 @@ import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Order;
+import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.OrderService;
 import com.solvd.carservice.service.impl.OrderServiceImpl;
@@ -21,7 +22,7 @@ public class OrderController extends AbstractController {
         consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": add(); break;
+            case "1": selectInsertMethod(); break;
             case "2": retrieveAll(); break;
             case "3": retrieveById(); break;
             case "4": change(); break;
@@ -35,6 +36,36 @@ public class OrderController extends AbstractController {
             moderate();
         }
     }
+    public void selectInsertMethod() {
+        consoleMenu.chooseInsertMethod();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": selectXmlParser(); break;
+            case "2": add(); break;
+            case "0": moderate(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addOrder(); break;
+            case "2": jaxbParser.addOrder(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
+        }
+    }
     public void add() {
         Order order = new Order(
                 getDataFromConsole.getDateFromConsole("date"),
@@ -44,12 +75,7 @@ public class OrderController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("cost")));
         OrderService orderService = new OrderServiceImpl();
         orderService.add(order);
-        LOGGER.info(
-                "Order - " +
-                order.getDate() +
-                order.getClientId() +
-                order.getCostId() +
-                " - was added");
+        display.addedOrder(order);
     }
     public void retrieveAll() {
         LOGGER.info("List of orders");

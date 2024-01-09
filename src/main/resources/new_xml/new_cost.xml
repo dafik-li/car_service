@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cost id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_cost.xsd">
+    <cost>50.0</cost>
+    <serviceId id="14">
+        <name>Pump you up</name>
+        <price>100000</price>
+        <hoursToDo>1000</hoursToDo>
+        <carId id="1">
+            <brand>ferrari</brand>
+            <model>monza</model>
+            <year>1990</year>
+            <services> </services>
+            <details> </details>
+        </carId>
+        <departmentId id="6">
+            <name>Director</name>
+            <companyId id="7">
+                <name>Tony Montana Service - Minsk</name>
+                <address>Minsk, av. F. Skaryny, 8</address>
+                <departments> </departments>
+            </companyId>
+            <employees> </employees>
+            <services> </services>
+        </departmentId>
+        <employees> </employees>
+        <costs> </costs>
+    </serviceId>
+    <detailId id="6">
+        <name>new detail</name>
+        <price>100</price>
+        <carId id="8">
+            <brand>audi</brand>
+            <model>a4</model>
+            <year>2024</year>
+            <services> </services>
+            <details> </details>
+        </carId>
+        <inStock>1</inStock>
+        <deliveryDays>0</deliveryDays>
+        <costs> </costs>
+    </detailId>
+    <orders> </orders>
+</cost>

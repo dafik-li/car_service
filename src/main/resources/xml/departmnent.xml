@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<department id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="department.xsd">
+    <name>Dry cleaning</name>
+    <companyId id="3">
+        <name>Tony Montana Service - Homel</name>
+        <address>Homel, str. Independence, 23</address>
+        <departments></departments>
+    </companyId>
+    <employees>
+        <employee id="10">
+            <name>New name</name>
+            <surname>New surname</surname>
+            <age>100</age>
+            <position>car mechanic</position>
+            <level>10</level>
+            <salary>10000</salary>
+            <phoneNumber>375299000000</phoneNumber>
+            <departmentId id="10">
+                <name>Dry cleaning</name>
+                <companyId id="3">
+                    <name>Tony Montana Service - Homel</name>
+                    <address>Homel, str. Independence, 23</address>
+                    <departments></departments>
+                </companyId>
+                <employees></employees>
+                <services></services>
+            </departmentId>
+            <services>
+                <service id="10">
+                    <name>dry cleaner</name>
+                    <price>300</price>
+                    <hoursToDo>2</hoursToDo>
+                    <carId id="10">
+                        <brand>audi</brand>
+                        <model>a4</model>
+                        <year>2024</year>
+                        <services></services>
+                    </carId>
+                    <departmentId id="10">
+                        <name>Dry cleaning</name>
+                        <companyId id="3">
+                            <name>Tony Montana Service - Homel</name>
+                            <address>Homel, str. Independence, 23</address>
+                            <departments></departments>
+                        </companyId>
+                        <employees></employees>
+                        <services></services>
+                    </departmentId>
+                    <employees></employees>
+                </service>
+            </services>
+        </employee>
+    </employees>
+    <services>
+        <service id="10">
+            <name>dry cleaner</name>
+            <price>300</price>
+            <hoursToDo>2</hoursToDo>
+            <carId id="10">
+                <brand>audi</brand>
+                <model>a4</model>
+                <year>2024</year>
+                <services></services>
+            </carId>
+            <departmentId id="10">
+                <name>Dry cleaning</name>
+                <companyId id="3">
+                    <name>Tony Montana Service - Homel</name>
+                    <address>Homel, str. Independence, 23</address>
+                    <departments></departments>
+                </companyId>
+                <employees></employees>
+                <services></services>
+            </departmentId>
+            <employees>
+                <employee id="10">
+                    <name>Matthew</name>
+                    <surname>McConaughey</surname>
+                    <age>50</age>
+                    <position>cleaner</position>
+                    <level>5</level>
+                    <salary>1000</salary>
+                    <phoneNumber>375291001007</phoneNumber>
+                    <departmentId id="10">
+                        <name>Dry cleaning</name>
+                        <companyId id="3">
+                            <name>Tony Montana Service - Homel</name>
+                            <address>Homel, str. Independence, 23</address>
+                            <departments></departments>
+                        </companyId>
+                        <employees></employees>
+                        <services></services>
+                    </departmentId>
+                    <services></services>
+                </employee>
+            </employees>
+        </service>
+    </services>
+</department>

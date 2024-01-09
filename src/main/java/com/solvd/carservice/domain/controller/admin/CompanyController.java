@@ -2,6 +2,7 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.service.CompanyService;
 import com.solvd.carservice.service.impl.CompanyServiceImpl;
@@ -19,7 +20,7 @@ public class CompanyController extends AbstractController {
         consoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": add(); break;
+            case "1": selectInsertMethod(); break;
             case "2": retrieveAll(); break;
             case "3": retrieveById(); break;
             case "4": change(); break;
@@ -33,17 +34,43 @@ public class CompanyController extends AbstractController {
             moderate();
         }
     }
+    public void selectInsertMethod() {
+        consoleMenu.chooseInsertMethod();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": selectXmlParser(); break;
+            case "2": add(); break;
+            case "0": moderate(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectInsertMethod();
+        }
+    }
+    public void selectXmlParser() {
+        consoleMenu.chooseXmlParser();
+        String menu = scanner.nextLine();
+        switch (menu) {
+            case "1": staxParser.addCompany(); break;
+            case "2": jaxbParser.addCompany(); break;
+            case "0": selectInsertMethod(); break;
+        }
+        try {
+            validator.validateStartPageMenu(menu);
+        } catch (AuthorizationException e) {
+            LOGGER.error(e.toString());
+            selectXmlParser();
+        }
+    }
     public void add() {
         Company company = new Company(
                 getDataFromConsole.getStringFromConsole("name"),
                 getDataFromConsole.getStringFromConsole("address"));
         CompanyService companyService = new CompanyServiceImpl();
         companyService.add(company);
-        LOGGER.info(
-                "Company - " +
-                company.getName() +
-                company.getAddress() +
-                " - was added");
+        display.addedCompany(company);
     }
     public void retrieveAll() {
         LOGGER.info("List of companies");
