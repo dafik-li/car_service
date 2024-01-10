@@ -6,8 +6,7 @@ import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.parse.JaxbParser;
-import com.solvd.carservice.domain.parse.StaxParser;
+
 import com.solvd.carservice.service.EmployeeService;
 import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -58,8 +57,9 @@ public class EmployeeController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addEmployee(); break;
-            case "2": jaxbParser.addEmployee(); break;
+            case "1":
+            case "2":
+                parser.addEmployee(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

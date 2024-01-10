@@ -53,8 +53,9 @@ public class ClientController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addClient(); break;
-            case "2": jaxbParser.addClient(); break;
+            case "1":
+            case "2":
+                parser.addClient(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

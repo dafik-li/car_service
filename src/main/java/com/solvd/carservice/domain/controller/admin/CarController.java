@@ -57,8 +57,9 @@ public class CarController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addCar(); break;
-            case "2": jaxbParser.addCar(); break;
+            case "1":
+            case "2":
+                parser.addCar(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

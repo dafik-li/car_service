@@ -7,8 +7,6 @@ import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.parse.JaxbParser;
-import com.solvd.carservice.domain.parse.StaxParser;
 import com.solvd.carservice.service.ServiceService;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -20,13 +18,7 @@ public class ServiceController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ServiceController.class);
-    private final StaxParser staxParser;
-    private final JaxbParser jaxbParser;
 
-    public ServiceController() {
-        this.staxParser = new StaxParser();
-        this.jaxbParser = new JaxbParser();
-    }
     public void moderate() {
         consoleMenu.chooseModerateService();
         String menu = scanner.nextLine();
@@ -65,8 +57,9 @@ public class ServiceController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addService(); break;
-            case "2": jaxbParser.addService(); break;
+            case "1":
+            case "2":
+                parser.addService(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

@@ -54,8 +54,9 @@ public class DepartmentController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addDepartment(); break;
-            case "2": jaxbParser.addDepartment(); break;
+            case "1":
+            case "2":
+                parser.addDepartment(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

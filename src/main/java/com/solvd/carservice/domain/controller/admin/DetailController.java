@@ -54,8 +54,9 @@ public class DetailController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addDetail(); break;
-            case "2": jaxbParser.addDetail(); break;
+            case "1":
+            case "2":
+                parser.addDetail(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

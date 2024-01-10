@@ -1,7 +1,6 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.parse.JaxbParser;
-import com.solvd.carservice.domain.parse.StaxParser;
+import com.solvd.carservice.domain.parse.Parser;
 import com.solvd.carservice.util.ConsoleMenu;
 import com.solvd.carservice.util.GetDataFromConsole;
 import com.solvd.carservice.domain.controller.Validator;
@@ -15,8 +14,7 @@ abstract public class AbstractController {
     protected GetDataFromConsole getDataFromConsole;
     protected ConsoleMenu consoleMenu;
     protected Display display;
-    protected StaxParser staxParser;
-    protected JaxbParser jaxbParser;
+    protected Parser parser;
 
     public AbstractController() {
         this.scanner = new Scanner(System.in);
@@ -24,8 +22,7 @@ abstract public class AbstractController {
         this.getDataFromConsole = new GetDataFromConsole();
         this.consoleMenu = new ConsoleMenu();
         this.display = new Display();
-        this.staxParser = new StaxParser();
-        this.jaxbParser = new JaxbParser();
+        this.parser = new Parser();
     }
     public abstract void moderate();
     public abstract void selectInsertMethod();

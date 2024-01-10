@@ -53,8 +53,9 @@ public class CompanyController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addCompany(); break;
-            case "2": jaxbParser.addCompany(); break;
+            case "1":
+            case "2":
+                parser.addCompany(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

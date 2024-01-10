@@ -55,8 +55,9 @@ public class OrderController extends AbstractController {
         consoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": staxParser.addOrder(); break;
-            case "2": jaxbParser.addOrder(); break;
+            case "1":
+            case "2":
+                parser.addOrder(menu); break;
             case "0": selectInsertMethod(); break;
         }
         try {

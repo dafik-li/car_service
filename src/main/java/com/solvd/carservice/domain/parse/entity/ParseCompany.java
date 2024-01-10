@@ -1,6 +1,7 @@
-package com.solvd.carservice.domain.parse;
+package com.solvd.carservice.domain.parse.entity;
 
 import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.parse.StaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
