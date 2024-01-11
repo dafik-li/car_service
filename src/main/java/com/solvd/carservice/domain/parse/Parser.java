@@ -37,6 +37,8 @@ public class Parser {
             company = parseCompany.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             company = parseCompany.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            company = parseCompany.jacksonParse();
         }
         companyService.add(company);
         display.addedCompany(company);
@@ -48,6 +50,8 @@ public class Parser {
             department = parseDepartment.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             department = parseDepartment.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            department = parseDepartment.jacksonParse();
         }
         departmentService.add(department);
         display.addedDepartment(department);
@@ -59,6 +63,8 @@ public class Parser {
             employee = parseEmployee.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             employee = parseEmployee.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            employee = parseEmployee.jacksonParse();
         }
         employeeService.add(employee);
         display.addedEmployee(employee);
@@ -70,6 +76,8 @@ public class Parser {
             service = parseService.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             service = parseService.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            service = parseService.jacksonParse();
         }
         serviceService.add(service);
         display.addedService(service);
@@ -81,6 +89,8 @@ public class Parser {
             car = parseCar.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             car = parseCar.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            car = parseCar.jacksonParse();
         }
         carService.add(car);
         display.addedCar(car);
@@ -92,6 +102,8 @@ public class Parser {
             detail = parseDetail.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             detail = parseDetail.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            detail = parseDetail.jacksonParse();
         }
         detailService.add(detail);
         display.addedDetail(detail);
@@ -103,6 +115,8 @@ public class Parser {
             client = parseClient.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             client = parseClient.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            client = parseClient.jacksonParse();
         }
         clientService.add(client);
         display.addedClient(client);
@@ -114,6 +128,8 @@ public class Parser {
             cost = parseCost.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             cost = parseCost.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            cost = parseCost.jacksonParse();
         }
         costService.add(cost);
         display.addedCost(cost);
@@ -125,6 +141,8 @@ public class Parser {
             order = parseOrder.staxParse();
         } else if (Integer.parseInt(menu) == EnumParser.JAXB.getParseType()) {
             order = parseOrder.jaxbParse();
+        } else if (Integer.parseInt(menu) == EnumParser.JACKSON.getParseType()) {
+            order = parseOrder.jacksonParse();
         }
         orderService.add(order);
         display.addedOrder(order);

@@ -1,7 +1,8 @@
 package com.solvd.carservice.domain.parse.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.Company;
-import com.solvd.carservice.domain.parse.StaxValidator;
+import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -26,14 +27,24 @@ public class ParseCompany {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCompany.class);
-    private final StaxValidator staxValidator;
+    private final XmlStaxValidator xmlStaxValidator;
     private final File xmlFile = new File("src/main/resources/new_xml/new_company.xml");
     private final File xsdFile = new File("src/main/resources/new_xml/new_company.xsd");
+    private final File jsonFile = new File("src/main/resources/json/company.json");
     private Company company;
 
     public ParseCompany() {
-        this.staxValidator = new StaxValidator();
+        this.xmlStaxValidator = new XmlStaxValidator();
         this.company = new Company();
+    }
+    public Company jacksonParse() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            company = mapper.readValue(jsonFile, Company.class);
+        } catch (IOException e) {
+            LOGGER.error(e.toString());
+        }
+        return company;
     }
     public Company jaxbParse() {
         try {
@@ -51,7 +62,7 @@ public class ParseCompany {
     public Company staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            staxValidator.validate(xmlFile, xsdFile);
+            xmlStaxValidator.validate(xmlFile, xsdFile);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

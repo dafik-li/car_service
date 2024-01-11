@@ -10,10 +10,7 @@ public class Display {
     private final static org.apache.logging.log4j.core.Logger LOGGER = (org.apache.logging.log4j.core.Logger) LogManager.getLogger(Display.class);
 
     public void addedCompany(Company company) {
-        LOGGER.info(
-                "Company id - " + company.getId() + "|" +
-                "name - " + company.getName()  +
-                "address " + company.getAddress() + " - was added");
+        LOGGER.info(company.toString());
     }
     public void addedDepartment(Department department) {
         LOGGER.info(

@@ -15,11 +15,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class StaxValidator {
+public class XmlStaxValidator {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(StaxValidator.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(XmlStaxValidator.class);
 
     public void validate(File xmlFile, File xsdFile) {
         try {

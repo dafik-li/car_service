@@ -44,6 +44,7 @@ public class ServiceController extends AbstractController {
         switch (menu) {
             case "1": selectXmlParser(); break;
             case "2": add(); break;
+            case "3": parser.addService(menu);
             case "0": moderate(); break;
         }
         try {

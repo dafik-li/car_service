@@ -48,7 +48,7 @@
 
     <select id="getById" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
-        WHERE id = #{id}
+        WHERE details.id = #{id}
     </select>
 
     <select id="getByName" resultMap="DetailResultMap">

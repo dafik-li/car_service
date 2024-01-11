@@ -1,7 +1,8 @@
 package com.solvd.carservice.domain.parse.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.*;
-import com.solvd.carservice.domain.parse.StaxValidator;
+import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -29,9 +30,10 @@ public class ParseCost {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCost.class);
-    private final StaxValidator staxValidator;
+    private final XmlStaxValidator xmlStaxValidator;
     private final File xmlFile = new File("src/main/resources/new_xml/new_cost.xml");
     private final File xsdFile = new File("src/main/resources/new_xml/new_cost.xsd");
+    private final File jsonFile = new File("src/main/resources/json/cost.json");
     private Cost cost;
     private final Detail detail;
     private final Service service;
@@ -39,12 +41,21 @@ public class ParseCost {
     private final ParseDepartment parseDepartment;
 
     public ParseCost() {
-        this.staxValidator = new StaxValidator();
+        this.xmlStaxValidator = new XmlStaxValidator();
         this.cost = new Cost();
         this.detail = new Detail();
         this.service = new Service();
         this.parseCar = new ParseCar();
         this.parseDepartment = new ParseDepartment();
+    }
+    public Cost jacksonParse() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            cost = mapper.readValue(jsonFile, Cost.class);
+        } catch (IOException e) {
+            LOGGER.error(e.toString());
+        }
+        return cost;
     }
     public Cost jaxbParse() {
         try {
@@ -62,7 +73,7 @@ public class ParseCost {
     public Cost staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            staxValidator.validate(xmlFile, xsdFile);
+            xmlStaxValidator.validate(xmlFile, xsdFile);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

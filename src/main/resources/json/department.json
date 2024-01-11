@@ -1,0 +1,12 @@
+{
+  "id": 7,
+  "name": "Director",
+  "companyId": {
+    "id": 7,
+    "name": "Tony Montana Service - Minsk",
+    "address": "Minsk, av. F. Skaryny, 8",
+    "departments": []
+  },
+  "employees": [],
+  "services": []
+}

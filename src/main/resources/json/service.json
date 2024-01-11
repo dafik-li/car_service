@@ -1,0 +1,28 @@
+{
+  "id": 10,
+  "name": "Pump you up",
+  "price": 100000,
+  "hoursToDo": 1000,
+  "carId": {
+    "id": 8,
+    "brand": "audi",
+    "model": "a4",
+    "year": 2024,
+    "services": [],
+    "details": []
+  },
+  "departmentId": {
+    "id": 7,
+    "name": "Director",
+    "companyId": {
+      "id": 7,
+      "name": "Tony Montana Service - Minsk",
+      "address": "Minsk, av. F. Skaryny, 8",
+      "departments": []
+    },
+    "employees": [],
+    "services": []
+  },
+  "employees": [],
+  "costs": []
+}

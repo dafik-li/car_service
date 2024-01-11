@@ -1,0 +1,16 @@
+{
+  "id": 10,
+  "name": "new detail",
+  "price": 100,
+  "carId": {
+    "id": 8,
+    "brand": "audi",
+    "model": "a4",
+    "year": 2024,
+    "services": [],
+    "details": []
+  },
+  "inStock": true,
+  "deliveryDays": 0,
+  "costs": []
+}

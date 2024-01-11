@@ -44,6 +44,7 @@ public class EmployeeController extends AbstractController {
         switch (menu) {
             case "1": selectXmlParser(); break;
             case "2": add(); break;
+            case "3": parser.addEmployee(menu);
             case "0": moderate(); break;
         }
         try {

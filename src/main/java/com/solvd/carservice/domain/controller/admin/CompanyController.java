@@ -40,10 +40,11 @@ public class CompanyController extends AbstractController {
         switch (menu) {
             case "1": selectXmlParser(); break;
             case "2": add(); break;
+            case "3": parser.addCompany(menu);
             case "0": moderate(); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             selectInsertMethod();

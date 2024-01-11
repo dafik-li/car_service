@@ -1,8 +1,11 @@
 package com.solvd.carservice.domain.entity;
 
-import com.solvd.carservice.domain.parse.DateAdapter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solvd.carservice.domain.parse.JsonDateAdapter;
+import com.solvd.carservice.domain.parse.XmlDateAdapter;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +20,8 @@ public class Client {
     private String surname;
     private String phoneNumber;
 
-    @XmlJavaTypeAdapter(DateAdapter.class)
+    @JsonDeserialize(using = JsonDateAdapter.class)
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
     private java.util.Date birthday;
 
     @XmlElementWrapper(name = "orders")

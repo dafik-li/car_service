@@ -1,8 +1,10 @@
 package com.solvd.carservice.domain.parse.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.parse.StaxValidator;
+import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -28,14 +30,24 @@ public class ParseClient {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseClient.class);
-    private final StaxValidator staxValidator;
+    private final XmlStaxValidator xmlStaxValidator;
     private final File xmlFile = new File("src/main/resources/new_xml/new_client.xml");
     private final File xsdFile = new File("src/main/resources/new_xml/new_client.xsd");
+    private final File jsonFile = new File("src/main/resources/json/client.json");
     private Client client;
 
     public ParseClient() {
-        this.staxValidator = new StaxValidator();
+        this.xmlStaxValidator = new XmlStaxValidator();
         this.client = new Client();
+    }
+    public Client jacksonParse() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            client = mapper.readValue(jsonFile, Client.class);
+        } catch (IOException e) {
+            LOGGER.error(e.toString());
+        }
+        return client;
     }
     public Client jaxbParse() {
         try {
@@ -53,7 +65,7 @@ public class ParseClient {
     public Client staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            staxValidator.validate(xmlFile, xsdFile);
+            xmlStaxValidator.validate(xmlFile, xsdFile);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

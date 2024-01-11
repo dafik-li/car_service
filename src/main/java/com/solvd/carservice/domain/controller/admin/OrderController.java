@@ -42,6 +42,7 @@ public class OrderController extends AbstractController {
         switch (menu) {
             case "1": selectXmlParser(); break;
             case "2": add(); break;
+            case "3": parser.addOrder(menu);
             case "0": moderate(); break;
         }
         try {

@@ -40,6 +40,7 @@ public class ClientController extends AbstractController {
         switch (menu) {
             case "1": selectXmlParser(); break;
             case "2": add(); break;
+            case "3": parser.addClient(menu);
             case "0": moderate(); break;
         }
         try {

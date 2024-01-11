@@ -27,6 +27,7 @@ public class ConsoleMenu {
         LOGGER.info("Please, choose a desire method to insert in db" + "\n" +
                 "xml - press 1" + "\n" +
                 "console - press 2" + "\n" +
+                "json - press 3" + "\n" +
                 "return - press 0");
     }
     public void chooseXmlParser() {

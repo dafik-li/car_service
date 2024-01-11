@@ -1,7 +1,8 @@
 package com.solvd.carservice.domain.parse.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.*;
-import com.solvd.carservice.domain.parse.StaxValidator;
+import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -29,16 +30,26 @@ public class ParseDepartment {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseDepartment.class);
-    private final StaxValidator staxValidator;
+    private final XmlStaxValidator xmlStaxValidator;
     private final File xmlFile = new File("src/main/resources/new_xml/new_department.xml");
     private final File xsdFile = new File("src/main/resources/new_xml/new_department.xsd");
+    private final File jsonFile = new File("src/main/resources/json/department.json");
     private Department department;
     private final Company company;
 
     public ParseDepartment() {
-        this.staxValidator = new StaxValidator();
+        this.xmlStaxValidator = new XmlStaxValidator();
         this.department = new Department();
         this.company = new Company();
+    }
+    public Department jacksonParse() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            department = mapper.readValue(jsonFile, Department.class);
+        } catch (IOException e) {
+            LOGGER.error(e.toString());
+        }
+        return department;
     }
     public Department jaxbParse() {
         try {
@@ -56,7 +67,7 @@ public class ParseDepartment {
     public Department staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            staxValidator.validate(xmlFile, xsdFile);
+            xmlStaxValidator.validate(xmlFile, xsdFile);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();
@@ -71,6 +82,7 @@ public class ParseDepartment {
                                     case "name":
                                         nextEvent = reader.nextEvent();
                                         department.setName(nextEvent.asCharacters().getData());
+                                        break;
                                     case "companyId":
                                         Iterator<Attribute> iterator = startElement.getAttributes();
                                         while (iterator.hasNext()) {
@@ -103,6 +115,12 @@ public class ParseDepartment {
                                                 }
                                             }
                                         }
+                                }
+                            }
+                            if (nextEvent.isEndElement()) {
+                                EndElement endElement = nextEvent.asEndElement();
+                                if (endElement.getName().getLocalPart().equals("department")) {
+                                    break;
                                 }
                             }
                         }

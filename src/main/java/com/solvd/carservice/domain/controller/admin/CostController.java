@@ -41,6 +41,7 @@ public class CostController extends AbstractController {
         switch (menu) {
             case "1": selectXmlParser(); break;
             case "2": add(); break;
+            case "3": parser.addCost(menu);
             case "0": moderate(); break;
         }
         try {
