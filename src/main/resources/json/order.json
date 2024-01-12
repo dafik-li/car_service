@@ -10,7 +10,7 @@
     "orders": []
   },
   "costId": {
-    "id": 10,
+    "id": 7,
     "cost": 50.0,
     "serviceId": {
       "id": 10,

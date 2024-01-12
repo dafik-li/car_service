@@ -1,6 +1,8 @@
 package com.solvd.carservice.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solvd.carservice.domain.parse.JsonDateAdapter;
 import com.solvd.carservice.domain.parse.XmlDateAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -18,8 +20,8 @@ public class Order {
     @XmlAttribute(name = "id")
     private Long id;
 
-    //@JsonDeserialize(using = JsonDateAdapter.class)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = JsonDateAdapter.class)
+    //@JsonFormat(pattern = "yyyy-MM-dd")
     @XmlJavaTypeAdapter(XmlDateAdapter.class)
     private java.util.Date date;
     private Client clientId;

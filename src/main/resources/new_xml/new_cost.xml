@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cost id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_cost.xsd">
+<cost id="7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_cost.xsd">
     <cost>50.0</cost>
     <serviceId id="14">
         <name>Pump you up</name>
