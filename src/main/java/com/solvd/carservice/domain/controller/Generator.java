@@ -48,7 +48,7 @@ public class Generator {
         consoleMenu.chooseAuthorization();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": userController.clientFormBuilder(); break;
+            case "1": userController.userMenu(); break;
             case "2": moderateController(); break;
             case "3": selectDBRepository(); break;
             case "0": System.exit(0); break;

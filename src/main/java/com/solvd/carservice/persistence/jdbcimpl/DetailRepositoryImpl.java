@@ -21,7 +21,7 @@ public class DetailRepositoryImpl implements DetailRepository {
     private static final String GET_ALL_QUERY =
             "SELECT details.id, details.name, details.price, cars.id, cars.brand, cars.model, cars.year, details.in_stock, details.delivery_days " +
             "FROM details " +
-            "LEFT JOIN cars ON details.car_id = cars.id;";
+            "LEFT JOIN cars ON details.car_id = cars.id ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE details.id = ? ");
     private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
     private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");

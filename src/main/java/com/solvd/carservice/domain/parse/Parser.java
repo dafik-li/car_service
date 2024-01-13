@@ -4,7 +4,7 @@ import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.domain.parse.entity.*;
 import com.solvd.carservice.service.*;
 import com.solvd.carservice.service.impl.*;
-import com.solvd.carservice.util.Display;
+import com.solvd.carservice.domain.view.Display;
 
 public class Parser {
     private final Display display;

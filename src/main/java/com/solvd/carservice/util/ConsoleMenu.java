@@ -67,7 +67,8 @@ public class ConsoleMenu {
                 "5 - removeById" + "\n" +
                 "6 - addService" + "\n" +
                 "0 - return");
-    }public void chooseModerateService() {
+    }
+    public void chooseModerateService() {
         LOGGER.info("What operation you want to do?" + "\n" +
                 "1 - add" + "\n" +
                 "2 - retrieveAll" + "\n" +

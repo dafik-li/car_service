@@ -4,7 +4,7 @@ import com.solvd.carservice.domain.parse.Parser;
 import com.solvd.carservice.util.ConsoleMenu;
 import com.solvd.carservice.util.GetDataFromConsole;
 import com.solvd.carservice.domain.controller.Validator;
-import com.solvd.carservice.util.Display;
+import com.solvd.carservice.domain.view.Display;
 import java.util.Optional;
 import java.util.Scanner;
 

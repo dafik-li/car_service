@@ -1,4 +1,4 @@
-package com.solvd.carservice.util;
+package com.solvd.carservice.domain.view;
 
 import com.solvd.carservice.domain.entity.*;
 import org.apache.logging.log4j.LogManager;
