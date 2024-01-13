@@ -69,10 +69,8 @@ public class Company {
     }
     @Override
     public String toString() {
-        return "Company{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+        return  "Company id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "address - " + getAddress();
     }
 }

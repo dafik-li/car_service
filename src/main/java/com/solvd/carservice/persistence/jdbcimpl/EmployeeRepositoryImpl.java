@@ -1,5 +1,7 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
+import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.ConnectionPool;
@@ -24,8 +26,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "services.id, services.name, services.price, services.hours_to_do, d.id, d.name, c.id, c.name, c.address " +
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address, " +
+                    "services.id, services.name, services.price, services.hours_to_do " +
             "FROM employees e " +
             "LEFT JOIN employee_services es ON es.employee_id = e.id " +
             "LEFT JOIN services ON es.service_id = services.id " +
@@ -269,7 +271,14 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                             resultSet.getString(5),
                             resultSet.getInt(6),
                             resultSet.getInt(7),
-                            resultSet.getString(8)));
+                            resultSet.getString(8),
+                            new Department(
+                                    resultSet.getLong(9),
+                                    resultSet.getString(10),
+                                    new Company(
+                                            resultSet.getLong(11),
+                                            resultSet.getString(12),
+                                            resultSet.getString(13)))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {

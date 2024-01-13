@@ -4,6 +4,7 @@ import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.view.ViewClient;
 import com.solvd.carservice.service.ClientService;
 import com.solvd.carservice.service.impl.ClientServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,11 @@ public class ClientController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ClientController.class);
+    private final ViewClient viewClient;
+
+    public ClientController() {
+        this.viewClient = new ViewClient();
+    }
 
     public void moderate() {
         consoleMenu.chooseModerateMenu();
@@ -75,21 +81,16 @@ public class ClientController extends AbstractController {
                         getDataFromConsole.getDateFromConsole("birthday"));
         ClientService clientService = new ClientServiceImpl();
         clientService.add(client);
-        display.addedClient(client);
+        viewClient.added(client);
     }
     public void retrieveAll() {
-        LOGGER.info("List of clients");
+        viewClient.showAll();
         for (Client client : new ClientServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Client id - " + client.getId() + "|" +
-                    "name - " + client.getName() + "|" +
-                    "surname - " + client.getSurname() + "|" +
-                    "phone number - " + client.getPhoneNumber() + "|" +
-                    "birthday - " + client.getBirthday());
+            viewClient.show(client);
         }
     }
     public void change() {
-        LOGGER.info("Update client");
+        viewClient.update();
         Optional<Client> client = retrieveById();
         ClientService clientService = new ClientServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
@@ -108,24 +109,19 @@ public class ClientController extends AbstractController {
                 break;
         }
         clientService.change(client, field);
-        LOGGER.info("Client " + field + " was changed");
+        viewClient.updated(field);
     }
     public Optional<Client> retrieveById() {
         Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("|" +
-                "Client id - " + clientOptional.get().getId() + "|" +
-                "name - " + clientOptional.get().getName() + "|" +
-                "surname - " + clientOptional.get().getSurname() + "|" +
-                "phone number - " + clientOptional.get().getPhoneNumber() + "|" +
-                "birthday - " + clientOptional.get().getBirthday() + "|");
+        viewClient.showById(clientOptional);
         return clientOptional;
     }
     public void removeById() {
-        LOGGER.info("Following car will be deleted");
+        viewClient.delete();
         ClientService clientService = new ClientServiceImpl();
         clientService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
+        viewClient.successfulDeleted();
     }
 }

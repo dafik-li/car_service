@@ -5,6 +5,7 @@ import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.view.ViewDepartment;
 import com.solvd.carservice.service.DepartmentService;
 import com.solvd.carservice.service.impl.DepartmentServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,11 @@ public class DepartmentController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(DepartmentController.class);
+    private final ViewDepartment viewDepartment;
+
+    public DepartmentController() {
+        this.viewDepartment = new ViewDepartment();
+    }
 
     public void moderate() {
         consoleMenu.chooseModerateMenu();
@@ -75,21 +81,16 @@ public class DepartmentController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("company")));
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.add(department);
-        display.addedDepartment(department);
+        viewDepartment.added(department);
     }
     public void retrieveAll() {
-        LOGGER.info("List of departments");
+        viewDepartment.showAll();
         for (Department department : new DepartmentServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Department id - " + department.getId() + "|" +
-                    "name - " + department.getName() + "[" +
-                    "company id - " + department.getCompanyId().getId() + "|" +
-                    "name - " + department.getCompanyId().getName() + "|" +
-                    "address - " + department.getCompanyId().getAddress() + "]");
+            viewDepartment.show(department);
         }
     }
     public void change() {
-        LOGGER.info("Update department");
+        viewDepartment.update();
         Optional<Department> department = retrieveById();
         DepartmentService departmentService = new DepartmentServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
@@ -99,25 +100,20 @@ public class DepartmentController extends AbstractController {
                 break;
         }
         departmentService.change(department, field);
-        LOGGER.info("Cost " + field + " was changed");
+        viewDepartment.updated(field);
     }
     public Optional<Department> retrieveById() {
         Optional<Department> departmentOptional =
                 new DepartmentServiceImpl().retrieveById(
                         (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("\n|" +
-                "Department id - " + departmentOptional.get().getId() + "|" +
-                "name - " + departmentOptional.get().getName() + "\n[" +
-                "company id - " + departmentOptional.get().getCompanyId().getId() + "|" +
-                "name - " + departmentOptional.get().getCompanyId().getName() + "|" +
-                "address - " + departmentOptional.get().getCompanyId().getAddress() + "]");
+        viewDepartment.showById(departmentOptional);
         return departmentOptional;
     }
     public void removeById() {
-        LOGGER.info("Following department will be redundant");
+        viewDepartment.delete();
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
+        viewDepartment.successfulDeleted();
     }
 }

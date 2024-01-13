@@ -92,11 +92,9 @@ public class Car {
     }
     @Override
     public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", year=" + year +
-                '}';
+        return  "Car id - " + getId() + "|" +
+                "brand - " + getBrand() + "|" +
+                "model - " + getModel() + "|" +
+                "year - " + getYear();
     }
 }

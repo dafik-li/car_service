@@ -4,6 +4,7 @@ import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.view.ViewCar;
 import com.solvd.carservice.service.CarService;
 import com.solvd.carservice.service.impl.CarServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -15,10 +16,12 @@ public class CarController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
+    private final ViewCar viewCar;
     private final CarServiceImpl carServiceImpl;
 
     public CarController() {
         this.carServiceImpl = new CarServiceImpl();
+        this.viewCar = new ViewCar();
     }
     public void moderate() {
         consoleMenu.chooseModerateMenu();
@@ -76,20 +79,16 @@ public class CarController extends AbstractController {
                 getDataFromConsole.getStringFromConsole("model"),
                 getDataFromConsole.getIntegerFromConsole("year"));
         ((CarService) carServiceImpl).add(car);
-        display.addedCar(car);
+        viewCar.added(car);
     }
     public void retrieveAll() {
-        LOGGER.info("List of cars");
+        viewCar.showAll();
         for (Car car : carServiceImpl.retrieveAll()) {
-            LOGGER.info(
-                    "Car id - " + car.getId() + "|" +
-                    "brand - " + car.getBrand() + "|" +
-                    "model - " + car.getModel() + "|" +
-                    "year - " + car.getYear());
+            viewCar.show(car);
         }
     }
     public void change() {
-        LOGGER.info("Update car");
+        viewCar.update();
         Optional<Car> car = retrieveById();
         String field = getDataFromConsole.getStringFromConsole("select field");
         switch (field) {
@@ -104,22 +103,18 @@ public class CarController extends AbstractController {
                 break;
         }
         ((CarService) carServiceImpl).change(car, field);
-        LOGGER.info("Car " + field + " was changed");
+        viewCar.updated(field);
     }
     public Optional<Car> retrieveById() {
         Optional<Car> carOptional = carServiceImpl.retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("|" +
-                "Car id - " + carOptional.get().getId() + "|" +
-                "brand - " + carOptional.get().getBrand() + "|" +
-                "model - " + carOptional.get().getModel() + "|" +
-                "year - " + carOptional.get().getYear()+ "|");
+        viewCar.showById(carOptional);
         return carOptional;
     }
     public void removeById() {
-        LOGGER.info("Following car will be deleted");
+        viewCar.delete();
         ((CarService) carServiceImpl).removeById(
                 getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
+        viewCar.successfulDeleted();
     }
 }

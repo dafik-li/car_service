@@ -100,12 +100,10 @@ public class Client {
     }
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phone_number='" + phoneNumber + '\'' +
-                ", birthday=" + birthday +
-                '}';
+        return  "Client id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "surname - " + getSurname() + "|" +
+                "phone number - " + getPhoneNumber() + "|" +
+                "birthday - " + getBirthday();
     }
 }

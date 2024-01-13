@@ -9,7 +9,6 @@ public class ConsoleMenu {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ConsoleMenu.class);
 
-
     public void chooseRepository() {
         LOGGER.info("Please, choose a desire repository" + "\n" +
                 "jdbc - press 1" + "\n" +

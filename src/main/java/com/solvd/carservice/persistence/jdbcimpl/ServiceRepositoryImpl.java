@@ -187,7 +187,14 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                                     resultSet.getLong(5),
                                     resultSet.getString(6),
                                     resultSet.getString(7),
-                                    resultSet.getInt(8))));
+                                    resultSet.getInt(8)),
+                            new Department(
+                                    resultSet.getLong(17),
+                                    resultSet.getString(18),
+                                    new Company(
+                                            resultSet.getLong(19),
+                                            resultSet.getString(20),
+                                            resultSet.getString(21)))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {

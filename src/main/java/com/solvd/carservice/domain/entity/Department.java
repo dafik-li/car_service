@@ -82,10 +82,8 @@ public class Department {
     }
     @Override
     public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", company_id=" + companyId +
-                '}';
+        return "Department id - " + getId() + "|" +
+                "name - " + getName() + " - [" +
+                getCompanyId() + "]";
     }
 }

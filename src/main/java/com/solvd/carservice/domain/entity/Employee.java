@@ -36,7 +36,7 @@ public class Employee {
         this.phoneNumber = phoneNumber;
         this.departmentId = departmentId;
     }
-    public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber) {
+    public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber, Department departmentId) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -45,6 +45,7 @@ public class Employee {
         this.level = level;
         this.salary = salary;
         this.phoneNumber = phoneNumber;
+        this.departmentId = departmentId;
     }
     public Long getId() {
         return id;
@@ -128,16 +129,14 @@ public class Employee {
     }
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", position='" + position + '\'' +
-                ", level=" + level +
-                ", salary=" + salary +
-                ", phone_number='" + phoneNumber + '\'' +
-                ", department_id=" + departmentId +
-                '}';
+        return  "Employee id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "surname - " + getSurname() + "|" +
+                "age - " + getAge() + "|" +
+                "position - " + getPosition() + "|" +
+                "level - " + getLevel() + "|" +
+                "salary - " + getSalary() + "|" +
+                "phone - " + getPhoneNumber() + " - [" +
+                getDepartmentId() + "]";
     }
 }

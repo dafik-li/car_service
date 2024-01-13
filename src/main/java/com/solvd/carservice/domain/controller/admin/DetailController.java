@@ -5,6 +5,7 @@ import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.view.ViewDetail;
 import com.solvd.carservice.service.DetailService;
 import com.solvd.carservice.service.impl.DetailServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,11 @@ public class DetailController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
+    private final ViewDetail viewDetail;
+
+    public DetailController() {
+        this.viewDetail = new ViewDetail();
+    }
 
     public void moderate() {
         consoleMenu.chooseModerateMenu();
@@ -77,25 +83,16 @@ public class DetailController extends AbstractController {
                 getDataFromConsole.getIntegerFromConsole("delivery days"));
         DetailService detailService = new DetailServiceImpl();
         detailService.add(detail);
-        display.addedDetail(detail);
+        viewDetail.added(detail);
     }
     public void retrieveAll() {
-        LOGGER.info("List of details");
+        viewDetail.showAll();
         for (Detail detail : new DetailServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Detail id - " + detail.getId() + "|" +
-                    "name - " + detail.getName() + "|" +
-                    "price - " + detail.getPrice() + "[" +
-                    "car id - " + detail.getCarId().getId() + "|" +
-                    "brand - " + detail.getCarId().getBrand() + "|" +
-                    "model - " + detail.getCarId().getModel() + "|" +
-                    "year - " + detail.getCarId().getYear() + "]" +
-                    "in stock - " + detail.getInStock() + "|" +
-                    "delivery days - " + detail.getDeliveryDays());
+            viewDetail.show(detail);
         }
     }
     public void change() {
-        LOGGER.info("Update detail");
+        viewDetail.update();
         Optional<Detail> detail = retrieveById();
         DetailService detailService = new DetailServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
@@ -114,28 +111,19 @@ public class DetailController extends AbstractController {
                 break;
         }
         detailService.change(detail, field);
-        LOGGER.info("Client " + field + " was changed");
+        viewDetail.updated(field);
     }
     public Optional<Detail> retrieveById() {
         Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("\n|" +
-                "Detail id - " + detailOptional.get().getId() + "|" +
-                "name - " + detailOptional.get().getName() + "|" +
-                "price - " + detailOptional.get().getPrice() + "\n[" +
-                "car id - " + detailOptional.get().getCarId().getId() + "|" +
-                "brand - " + detailOptional.get().getCarId().getBrand() + "|" +
-                "model - " + detailOptional.get().getCarId().getModel() + "|" +
-                "year - " + detailOptional.get().getCarId().getYear() + "]\n" +
-                "in stock - " + detailOptional.get().getInStock() + "|" +
-                "delivery days - " + detailOptional.get().getDeliveryDays() + "|");
+        viewDetail.showById(detailOptional);
         return detailOptional;
     }
     public void removeById() {
-        LOGGER.info("Following detail will be deleted");
+        viewDetail.delete();
         DetailService detailService = new DetailServiceImpl();
         detailService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
+        viewDetail.successfulDeleted();
     }
 }

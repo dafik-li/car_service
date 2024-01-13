@@ -80,11 +80,9 @@ public class Order {
     }
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", date=" + date +
-                ", client_id=" + clientId +
-                ", cost_id=" + costId +
-                '}';
+        return  "Order id - " + getId() + "|" +
+                "date - " + getDate() + " - [" +
+                getClientId() + "] - [" +
+                getCostId() + "]";
     }
 }

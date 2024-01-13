@@ -124,6 +124,11 @@ public class OrderRepositoryImpl implements OrderRepository{
                                             resultSet.getLong(23),
                                             resultSet.getString(24),
                                             resultSet.getInt(25),
+                                            new Car(
+                                                    resultSet.getLong(14),
+                                                    resultSet.getString(15),
+                                                    resultSet.getString(16),
+                                                    resultSet.getInt(17)),
                                             resultSet.getBoolean(26),
                                             resultSet.getInt(27)))));
         } catch (SQLException e) {
@@ -208,6 +213,11 @@ public class OrderRepositoryImpl implements OrderRepository{
                                         resultSet.getLong(23),
                                         resultSet.getString(24),
                                         resultSet.getInt(25),
+                                        new Car(
+                                                resultSet.getLong(14),
+                                                resultSet.getString(15),
+                                                resultSet.getString(16),
+                                                resultSet.getInt(17)),
                                         resultSet.getBoolean(26),
                                         resultSet.getInt(27))));
                 orders.add(order);

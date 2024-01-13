@@ -6,7 +6,8 @@ import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-
+import com.solvd.carservice.domain.view.ViewEmployee;
+import com.solvd.carservice.domain.view.ViewService;
 import com.solvd.carservice.service.EmployeeService;
 import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +19,13 @@ public class EmployeeController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(EmployeeController.class);
+    private final ViewEmployee viewEmployee;
+    private final ViewService viewService;
 
+    public EmployeeController() {
+        this.viewEmployee = new ViewEmployee();
+        this.viewService = new ViewService();
+    }
     public void moderate() {
         consoleMenu.chooseModerateEmployee();
         String menu = scanner.nextLine();
@@ -83,7 +90,7 @@ public class EmployeeController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("department")));
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.add(employee);
-        display.addedEmployee(employee);
+        viewEmployee.added(employee);
     }
     public void addService() {
         LOGGER.info("Add service to employee");
@@ -94,33 +101,16 @@ public class EmployeeController extends AbstractController {
         LOGGER.info("Service id - " + serviceId + " was assigned to the employee id - " + employeeId);
     }
     public void retrieveAll() {
-        LOGGER.info("List of employees");
+        viewEmployee.showAll();
         for (Employee employee : new EmployeeServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Employee id - " + employee.getId() + "|" +
-                    "name - " + employee.getName() + "|" +
-                    "surname - " + employee.getSurname() + "|" +
-                    "age - " + employee.getAge() + "|" +
-                    "position - " + employee.getPosition() + "|" +
-                    "level - " + employee.getLevel() + "|" +
-                    "salary - " + employee.getSalary() + "|" +
-                    "phone - " + employee.getPhoneNumber() + "[");
+            viewEmployee.show(employee);
             for (Service service : employee.getServices()) {
-                LOGGER.info(
-                        "service id - " + service.getId() + "|" +
-                        "name - " + service.getName() + "|" +
-                        "price - " + service.getPrice() + "|" +
-                        "hours to do - " + service.getHoursToDo() + "[" +
-                        "department id - " + service.getDepartmentId().getId() + "|" +
-                        "name - " + service.getDepartmentId().getName() + "][" +
-                        "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
-                        "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
-                        "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+                viewService.show(service);
             }
         }
     }
     public void change() {
-        LOGGER.info("Update employee");
+        viewEmployee.update();
         Optional<Employee> employee = retrieveById();
         EmployeeService employeeService = new EmployeeServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
@@ -148,39 +138,22 @@ public class EmployeeController extends AbstractController {
                 break;
         }
         employeeService.change(employee, field);
-        LOGGER.info("Employee " + field + " was changed");
+        viewEmployee.updated(field);
     }
     public Optional<Employee> retrieveById() {
         Optional<Employee> employeeOptional = new EmployeeServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("\n|" +
-                "Employee id - " + employeeOptional.get().getId() + "|" +
-                "name - " + employeeOptional.get().getName() + "|" +
-                "surname - " + employeeOptional.get().getSurname() + "|" +
-                "age - " + employeeOptional.get().getAge() + "|" +
-                "position - " + employeeOptional.get().getPosition() + "|" +
-                "level - " + employeeOptional.get().getLevel() + "|" +
-                "salary - " + employeeOptional.get().getSalary() + "|" +
-                "phone - " + employeeOptional.get().getPhoneNumber() + "[");
+        viewEmployee.showById(employeeOptional);
         for (Service service : employeeOptional.get().getServices()) {
-            LOGGER.info(
-                    "service id - " + service.getId() + "|" +
-                    "name - " + service.getName() + "|" +
-                    "price - " + service.getPrice() + "|" +
-                    "hours to do - " + service.getHoursToDo() + "[" +
-                    "department id - " + service.getDepartmentId().getId() + "|" +
-                    "name - " + service.getDepartmentId().getName() + "][" +
-                    "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
-                    "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
-                    "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+            viewService.showById(Optional.ofNullable(service));
         }
         return employeeOptional;
     }
     public void removeById() {
-        LOGGER.info("Following employee will be fired");
+        viewEmployee.delete();
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
+        viewEmployee.successfulDeleted();
     }
 }

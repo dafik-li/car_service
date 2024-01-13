@@ -108,13 +108,11 @@ public class Detail {
     }
     @Override
     public String toString() {
-        return "Detail{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", carId=" + carId +
-                ", inStock=" + inStock +
-                ", deliveryDays=" + deliveryDays +
-                '}';
+        return  "Detail id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "price - " + getPrice() + " - [" +
+                getCarId() + "] - " +
+                "in stock - " + getInStock() + "|" +
+                "delivery days - " + getDeliveryDays();
     }
 }

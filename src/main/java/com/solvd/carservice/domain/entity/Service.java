@@ -119,13 +119,11 @@ public class Service {
     }
     @Override
     public String toString() {
-        return "Service{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", hoursToDo=" + hoursToDo +
-                ", carId=" + carId +
-                ", departmentId=" + departmentId +
-                '}';
+        return  "Service id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "price - " + getPrice() + "|" +
+                "hours to do - " + getHoursToDo() + " - [" +
+                getCarId() + "] - [" +
+                getDepartmentId() + "]";
     }
 }

@@ -7,6 +7,8 @@ import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.view.ViewEmployee;
+import com.solvd.carservice.domain.view.ViewService;
 import com.solvd.carservice.service.ServiceService;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +20,13 @@ public class ServiceController extends AbstractController {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ServiceController.class);
+    private final ViewService viewService;
+    private final ViewEmployee viewEmployee;
+
+    public ServiceController() {
+        this.viewService = new ViewService();
+        this.viewEmployee = new ViewEmployee();
+    }
 
     public void moderate() {
         consoleMenu.chooseModerateService();
@@ -81,7 +90,7 @@ public class ServiceController extends AbstractController {
                         getDataFromConsole.getLongFromConsole("department")));
         ServiceService serviceService = new ServiceServiceImpl();
         serviceService.add(service);
-        display.addedService(service);
+        viewService.added(service);
     }
     public void addEmployee() {
         LOGGER.info("Add employee to service");
@@ -92,37 +101,16 @@ public class ServiceController extends AbstractController {
         LOGGER.info("Employee id - " + employeeId + " was assigned to the service id - " + serviceId);
     }
     public void retrieveAll() {
-        LOGGER.info("List of services");
+        viewService.showAll();
         for (Service service : new ServiceServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Service id - " + service.getId() + "|" +
-                    "name - " + service.getName() + "|" +
-                    "price - " + service.getPrice() + "|" +
-                    "hours to do - " + service.getHoursToDo() + "[" +
-                    "car id - " + service.getCarId().getId() + "|" +
-                    "brand - " + service.getCarId().getBrand() + "|" +
-                    "model - " + service.getCarId().getModel() + "|" +
-                    "year - " + service.getCarId().getYear() + "][");
+            viewService.show(service);
             for (Employee employee : service.getEmployees()) {
-                LOGGER.info(
-                        "employee id - " + employee.getId() + "|" +
-                        "name - " + employee.getName() + "|" +
-                        "surname - " + employee.getSurname() + "|" +
-                        "age - " + employee.getAge() + "|" +
-                        "position - " + employee.getPosition() + "|" +
-                        "level - " + employee.getLevel() + "|" +
-                        "salary - " + employee.getSalary() + "|" +
-                        "phone - " + employee.getPhoneNumber() + "][" +
-                        "department id - " + service.getDepartmentId().getId() + "|" +
-                        "name - " + service.getDepartmentId().getName() + "][" +
-                        "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
-                        "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
-                        "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+                viewEmployee.show(employee);
             }
         }
     }
     public void change() {
-        LOGGER.info("Update service");
+        viewService.update();
         Optional<Service> service = retrieveById();
         ServiceService serviceService = new ServiceServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
@@ -138,43 +126,22 @@ public class ServiceController extends AbstractController {
                 break;
         }
         serviceService.change(service, field);
-        LOGGER.info("Client " + field + " was changed");
+        viewService.updated(field);
     }
     public Optional<Service> retrieveById() {
         Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("\n|" +
-                "Service id - " + serviceOptional.get().getId() + "|" +
-                "name - "  + serviceOptional.get().getName() + "|" +
-                "price - " + serviceOptional.get().getPrice() + "|" +
-                "hours to do - " + serviceOptional.get().getHoursToDo() + "[" +
-                "car id - " + serviceOptional.get().getCarId().getId() + "|" +
-                "brand - " + serviceOptional.get().getCarId().getBrand() + "|" +
-                "model - " + serviceOptional.get().getCarId().getModel() + "|" +
-                "year - " + serviceOptional.get().getCarId().getYear() + "][");
+        viewService.showById(serviceOptional);
         for (Employee employee : serviceOptional.get().getEmployees()) {
-            LOGGER.info(
-                    "employee id - " + employee.getId() + "|" +
-                    "name - " + employee.getName() + "|" +
-                    "surname - " + employee.getSurname() + "|" +
-                    "age - " + employee.getAge() + "|" +
-                    "position - " + employee.getPosition() + "|" +
-                    "level - " + employee.getLevel() + "|" +
-                    "salary - " + employee.getSalary() + "|" +
-                    "phone - " + employee.getPhoneNumber() + "][" +
-                    "department id - " + employee.getDepartmentId().getId() + "|" +
-                    "name - " + employee.getDepartmentId().getName() + "][" +
-                    "company id - " + employee.getDepartmentId().getCompanyId().getId() + "|" +
-                    "name - " + employee.getDepartmentId().getCompanyId().getName() + "|" +
-                    "address - " + employee.getDepartmentId().getCompanyId().getAddress() + "]");
+            viewEmployee.showById(Optional.ofNullable(employee));
         }
         return serviceOptional;
     }
     public void removeById() {
-        LOGGER.info("Following company will be deleted");
+        viewService.delete();
         ServiceService serviceService = new ServiceServiceImpl();
         serviceService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
+        viewService.successfulDeleted();
     }
 }

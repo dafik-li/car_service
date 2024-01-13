@@ -2,12 +2,20 @@ package com.solvd.carservice.domain.parse;
 
 import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.domain.parse.entity.*;
+import com.solvd.carservice.domain.view.*;
 import com.solvd.carservice.service.*;
 import com.solvd.carservice.service.impl.*;
-import com.solvd.carservice.domain.view.Display;
 
 public class Parser {
-    private final Display display;
+    private final ViewCar viewCar;
+    private final ViewClient viewClient;
+    private final ViewCompany viewCompany;
+    private final ViewDepartment viewDepartment;
+    private final ViewDetail viewDetail;
+    private final ViewEmployee viewEmployee;
+    private final ViewService viewService;
+    private final ViewCost viewCost;
+    private final ViewOrder viewOrder;
     private final ParseCompany parseCompany;
     private final ParseDepartment parseDepartment;
     private final ParseEmployee parseEmployee;
@@ -19,7 +27,15 @@ public class Parser {
     private final ParseOrder parseOrder;
 
     public Parser() {
-        this.display = new Display();
+        this.viewCar = new ViewCar();
+        this.viewClient = new ViewClient();
+        this.viewCompany = new ViewCompany();
+        this.viewDepartment = new ViewDepartment();
+        this.viewDetail = new ViewDetail();
+        this.viewEmployee = new ViewEmployee();
+        this.viewService = new ViewService();
+        this.viewCost = new ViewCost();
+        this.viewOrder = new ViewOrder();
         this.parseCompany = new ParseCompany();
         this.parseDepartment = new ParseDepartment();
         this.parseEmployee = new ParseEmployee();
@@ -41,7 +57,7 @@ public class Parser {
             company = parseCompany.jacksonParse();
         }
         companyService.add(company);
-        display.addedCompany(company);
+        viewCompany.added(company);
     }
     public void addDepartment(String menu) {
         DepartmentService departmentService = new DepartmentServiceImpl();
@@ -54,7 +70,7 @@ public class Parser {
             department = parseDepartment.jacksonParse();
         }
         departmentService.add(department);
-        display.addedDepartment(department);
+        viewDepartment.added(department);
     }
     public void addEmployee(String menu) {
         EmployeeService employeeService = new EmployeeServiceImpl();
@@ -67,7 +83,7 @@ public class Parser {
             employee = parseEmployee.jacksonParse();
         }
         employeeService.add(employee);
-        display.addedEmployee(employee);
+        viewEmployee.added(employee);
     }
     public void addService(String menu) {
         ServiceService serviceService = new ServiceServiceImpl();
@@ -80,7 +96,7 @@ public class Parser {
             service = parseService.jacksonParse();
         }
         serviceService.add(service);
-        display.addedService(service);
+        viewService.added(service);
     }
     public void addCar(String menu) {
         CarService carService = new CarServiceImpl();
@@ -93,7 +109,7 @@ public class Parser {
             car = parseCar.jacksonParse();
         }
         carService.add(car);
-        display.addedCar(car);
+        viewCar.added(car);
     }
     public void addDetail(String menu) {
         DetailService detailService = new DetailServiceImpl();
@@ -106,7 +122,7 @@ public class Parser {
             detail = parseDetail.jacksonParse();
         }
         detailService.add(detail);
-        display.addedDetail(detail);
+        viewDetail.added(detail);
     }
     public void addClient(String menu) {
         ClientService clientService = new ClientServiceImpl();
@@ -119,7 +135,7 @@ public class Parser {
             client = parseClient.jacksonParse();
         }
         clientService.add(client);
-        display.addedClient(client);
+        viewClient.added(client);
     }
     public void addCost(String menu) {
         CostService costService = new CostServiceImpl();
@@ -132,7 +148,7 @@ public class Parser {
             cost = parseCost.jacksonParse();
         }
         costService.add(cost);
-        display.addedCost(cost);
+        viewCost.added(cost);
     }
     public void addOrder(String menu) {
         OrderService orderService = new OrderServiceImpl();
@@ -145,6 +161,6 @@ public class Parser {
             order = parseOrder.jacksonParse();
         }
         orderService.add(order);
-        display.addedOrder(order);
+        viewOrder.added(order);
     }
 }

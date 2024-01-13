@@ -81,11 +81,9 @@ public class Cost {
     }
     @Override
     public String toString() {
-        return "Cost{" +
-                "id=" + id +
-                ", cost=" + cost +
-                ", service_id=" + serviceId +
-                ", detail_id=" + detailId +
-                '}';
+        return  "Cost id - " + getId() + "|" +
+                "cost - " + getCost() + " - [" +
+                getServiceId() + "] - [" +
+                getDetailId() + "]";
     }
 }

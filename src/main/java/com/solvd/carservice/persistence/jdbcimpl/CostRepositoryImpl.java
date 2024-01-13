@@ -111,6 +111,11 @@ public class CostRepositoryImpl implements CostRepository {
                                     resultSet.getLong(16),
                                     resultSet.getString(17),
                                     resultSet.getInt(18),
+                                    new Car(
+                                            resultSet.getLong(7),
+                                            resultSet.getString(8),
+                                            resultSet.getString(9),
+                                            resultSet.getInt(10)),
                                     resultSet.getBoolean(19),
                                     resultSet.getInt(20))));
         } catch (SQLException e) {
@@ -181,10 +186,16 @@ public class CostRepositoryImpl implements CostRepository {
                                                 resultSet.getLong(13),
                                                 resultSet.getString(14),
                                                 resultSet.getString(15)))));
-                cost.setDetailId(new Detail(
+                cost.setDetailId(
+                        new Detail(
                         resultSet.getLong(16),
                         resultSet.getString(17),
                         resultSet.getInt(18),
+                                new Car(
+                                        resultSet.getLong(7),
+                                        resultSet.getString(8),
+                                        resultSet.getString(9),
+                                        resultSet.getInt(10)),
                         resultSet.getBoolean(19),
                         resultSet.getInt(20)));
                 costs.add(cost);
