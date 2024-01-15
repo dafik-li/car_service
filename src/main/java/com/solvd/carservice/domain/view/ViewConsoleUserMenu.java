@@ -1,4 +1,4 @@
-package com.solvd.carservice.util;
+package com.solvd.carservice.domain.view;
 
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Client;
@@ -6,11 +6,11 @@ import com.solvd.carservice.domain.entity.Service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
-public class ConsoleUserMenu {
+public class ViewConsoleUserMenu {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(ConsoleUserMenu.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(ViewConsoleUserMenu.class);
 
     public void userMenu() {
         LOGGER.info("Hallo in Tony Montana Car Service!" + "\n" +

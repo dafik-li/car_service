@@ -79,6 +79,8 @@
         <result column="delivery_days" property="deliveryDays"/>
         <association property="carId"
                     resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
+        <collection property="costs"
+                     resultMap="com.solvd.carservice.persistence.CostRepository.CostResultMap"/>
     </resultMap>
 
 </mapper>

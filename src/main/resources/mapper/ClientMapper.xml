@@ -71,6 +71,8 @@
         <result column="surname" property="surname"/>
         <result column="phone_number" property="phoneNumber"/>
         <result column="birthday" property="birthday"/>
+        <collection property="orders"
+                    resultMap="com.solvd.carservice.persistence.OrderRepository.OrderResultMap"/>
     </resultMap>
 
 </mapper>

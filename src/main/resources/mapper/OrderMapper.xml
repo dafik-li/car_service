@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.solvd.carservice.persistence.CostRepository">
+<mapper namespace="com.solvd.carservice.persistence.OrderRepository">
 
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO
@@ -42,21 +42,21 @@
         details det ON c.detail_id = det.id
     </sql>
 
-    <select id="getAll" resultMap="CostResultMap">
+    <select id="getAll" resultMap="OrderResultMap">
         <include refid="costSelect"/>
     </select>
 
-    <select id="getById" resultMap="CostResultMap">
+    <select id="getById" resultMap="OrderResultMap">
         <include refid="costSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByDate" resultMap="CostResultMap">
+    <select id="getByDate" resultMap="OrderResultMap">
         <include refid="costSelect"/>
         WHERE date = #{date}
     </select>
 
-    <resultMap id="CostResultMap" type="com.solvd.carservice.domain.entity.Cost" autoMapping="false">
+    <resultMap id="OrderResultMap" type="com.solvd.carservice.domain.entity.Order" autoMapping="false">
         <id column="id" property="id"/>
         <result column="date" property="date"/>
         <association property="clientId"

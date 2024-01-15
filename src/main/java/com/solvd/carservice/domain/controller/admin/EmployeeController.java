@@ -27,7 +27,7 @@ public class EmployeeController extends AbstractController {
         this.viewService = new ViewService();
     }
     public void moderate() {
-        consoleMenu.chooseModerateEmployee();
+        viewConsoleMenu.chooseModerateEmployee();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -46,7 +46,7 @@ public class EmployeeController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        consoleMenu.chooseInsertMethod();
+        viewConsoleMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -62,7 +62,7 @@ public class EmployeeController extends AbstractController {
         }
     }
     public void selectXmlParser() {
-        consoleMenu.chooseXmlParser();
+        viewConsoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

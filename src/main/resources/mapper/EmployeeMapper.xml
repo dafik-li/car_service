@@ -52,8 +52,8 @@
 
     <sql id="employeeSelect">
         SELECT
-        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
-        services.id, services.name, services.price, services.hours_to_do, d.id, d.name, c.id, c.name, c.address
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address,
+        services.id, services.name, services.price, services.hours_to_do,
         FROM
         employees e
         LEFT JOIN
@@ -144,6 +144,7 @@
                      resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
         <collection property="services"
                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
+
     </resultMap>
 
 </mapper>

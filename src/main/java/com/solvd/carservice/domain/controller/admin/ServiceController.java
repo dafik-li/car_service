@@ -29,7 +29,7 @@ public class ServiceController extends AbstractController {
     }
 
     public void moderate() {
-        consoleMenu.chooseModerateService();
+        viewConsoleMenu.chooseModerateService();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -48,7 +48,7 @@ public class ServiceController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        consoleMenu.chooseInsertMethod();
+        viewConsoleMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -64,7 +64,7 @@ public class ServiceController extends AbstractController {
         }
     }
     public void selectXmlParser() {
-        consoleMenu.chooseXmlParser();
+        viewConsoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

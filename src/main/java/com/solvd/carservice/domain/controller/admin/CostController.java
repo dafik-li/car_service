@@ -25,7 +25,7 @@ public class CostController extends AbstractController {
     }
 
     public void moderate() {
-        consoleMenu.chooseModerateMenu();
+        viewConsoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -42,7 +42,7 @@ public class CostController extends AbstractController {
             moderate();
         }
     }public void selectInsertMethod() {
-        consoleMenu.chooseInsertMethod();
+        viewConsoleMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -58,7 +58,7 @@ public class CostController extends AbstractController {
         }
     }
     public void selectXmlParser() {
-        consoleMenu.chooseXmlParser();
+        viewConsoleMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

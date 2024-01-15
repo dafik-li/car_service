@@ -47,6 +47,8 @@
         <result column="name" property="name"/>
         <association property="companyId"
                     resultMap="com.solvd.carservice.persistence.CompanyRepository.CompanyResultMap"/>
+        <collection property="services"
+                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
     </resultMap>
 
 </mapper>

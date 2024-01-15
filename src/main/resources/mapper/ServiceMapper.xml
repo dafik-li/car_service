@@ -112,6 +112,8 @@
                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
         <collection property="employees"
                     resultMap="com.solvd.carservice.persistence.EmployeeRepository.EmployeeResultMap"/>
+        <collection property="costs"
+                     resultMap="com.solvd.carservice.persistence.CostRepository.CostResultMap"/>
     </resultMap>
 
 </mapper>

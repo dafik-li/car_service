@@ -7,7 +7,7 @@ import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
-import com.solvd.carservice.util.ConsoleUserMenu;
+import com.solvd.carservice.domain.view.ViewConsoleUserMenu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
@@ -21,7 +21,7 @@ public class UserController {
     private final static Logger LOGGER = (Logger) LogManager.getLogger(Generator.class);
     private final Scanner scanner;
     private final Validator validator;
-    private final ConsoleUserMenu consoleUserMenu;
+    private final ViewConsoleUserMenu viewConsoleUserMenu;
     private final ClientController clientController;
     private final CarController carController;
     private final ServiceController serviceController;
@@ -31,7 +31,7 @@ public class UserController {
     public UserController() {
         this.scanner = new Scanner(System.in);
         this.validator = new Validator();
-        this.consoleUserMenu = new ConsoleUserMenu();
+        this.viewConsoleUserMenu = new ViewConsoleUserMenu();
         this.clientController = new ClientController();
         this.carController = new CarController();
         this.serviceController = new ServiceController();
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     public void userMenu() {
-        consoleUserMenu.userMenu();
+        viewConsoleUserMenu.userMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": clientMenu(); break;
@@ -63,10 +63,10 @@ public class UserController {
         calculationOrder();
     }
     public void calculationOrder() {
-        consoleUserMenu.chooseCar();
+        viewConsoleUserMenu.chooseCar();
         carController.retrieveAll();
         carController.retrieveById();
-        consoleUserMenu.chooseService();
+        viewConsoleUserMenu.chooseService();
         serviceController.retrieveAll();
         serviceController.retrieveById();
         double totalTime = calculateHoursToDo(employeeController.retrieveById(), serviceController.retrieveById(), detailController.retrieveById());
@@ -74,7 +74,7 @@ public class UserController {
         LOGGER.info(totalTime + " " + totalPrice);
     }
     public void carMenu() {
-        consoleUserMenu.chooseCar();
+        viewConsoleUserMenu.chooseCar();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": new ClientController().retrieveById(); break;

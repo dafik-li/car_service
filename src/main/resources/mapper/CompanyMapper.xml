@@ -53,6 +53,8 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="address" property="address"/>
+        <collection property="departments"
+                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
     </resultMap>
 
 </mapper>

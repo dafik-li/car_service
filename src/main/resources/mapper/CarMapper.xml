@@ -62,6 +62,10 @@
         <result column="brand" property="brand"/>
         <result column="model" property="model"/>
         <result column="year" property="year"/>
+        <collection property="services"
+                    resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
+        <collection property="details"
+                    resultMap="com.solvd.carservice.persistence.DetailRepository.DetailResultMap"/>
     </resultMap>
 
 </mapper>

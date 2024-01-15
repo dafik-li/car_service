@@ -34,9 +34,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             "LEFT JOIN departments d ON e.department_id = d.id " +
             "LEFT JOIN companies c ON d.company_id = c.id ";
     private static final String GET_SERVICES_BY_EMPLOYEE_ID =
-            "SELECT services.id, services.name, services.price, services.hours_to_do, " +
+            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year," +
                     "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
+                    "d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
             "LEFT JOIN employee_services es ON es.service_id = services.id " +
             "LEFT JOIN employees e ON es.employee_id = e.id " +

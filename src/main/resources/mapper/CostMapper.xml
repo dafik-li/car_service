@@ -58,6 +58,8 @@
                     resultMap="com.solvd.carservice.persistence.ServiceRepository.ServiceResultMap"/>
         <association property="detailId"
                     resultMap="com.solvd.carservice.persistence.DetailRepository.DetailResultMap"/>
+        <collection property="orders"
+                    resultMap="com.solvd.carservice.persistence.OrderRepository.OrderResultMap"/>
     </resultMap>
 
 </mapper>

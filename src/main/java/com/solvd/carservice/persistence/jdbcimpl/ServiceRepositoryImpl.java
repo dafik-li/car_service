@@ -19,9 +19,9 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private static final String UPDATE_SERVICE_PRICE_QUERY = "UPDATE services SET price = ? WHERE id = ?;";
     private static final String UPDATE_SERVICE_HOURS_TO_DO_QUERY = "UPDATE services SET hours_to_do = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT services.id, services.name, services.price, services.hours_to_do, " +
+            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
                     "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
+                    "d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
             "LEFT JOIN employee_services es ON es.service_id = services.id " +
             "LEFT JOIN employees e ON es.employee_id = e.id " +
@@ -29,9 +29,8 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id ";
     private static final String GET_EMPLOYEES_BY_SERVICES_ID =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "services.id, services.name, services.price, services.hours_to_do, " +
-                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address, " +
+                    "services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year " +
             "FROM employees e " +
             "LEFT JOIN employee_services es ON es.employee_id = e.id " +
             "LEFT JOIN services ON es.service_id = services.id " +
