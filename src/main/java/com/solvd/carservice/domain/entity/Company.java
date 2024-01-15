@@ -53,6 +53,9 @@ public class Company {
     public List<Department> getDepartments() {
         return departments;
     }
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

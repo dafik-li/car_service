@@ -2,9 +2,12 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
+import com.solvd.carservice.domain.entity.Cost;
+import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.domain.view.ViewClient;
+import com.solvd.carservice.domain.view.ViewOrder;
 import com.solvd.carservice.service.ClientService;
 import com.solvd.carservice.service.impl.ClientServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -17,11 +20,12 @@ public class ClientController extends AbstractController {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ClientController.class);
     private final ViewClient viewClient;
+    private final ViewOrder viewOrder;
 
     public ClientController() {
         this.viewClient = new ViewClient();
+        this.viewOrder = new ViewOrder();
     }
-
     public void moderate() {
         viewConsoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
@@ -87,6 +91,9 @@ public class ClientController extends AbstractController {
         viewClient.showAll();
         for (Client client : new ClientServiceImpl().retrieveAll()) {
             viewClient.show(client);
+            for (Order order : client.getOrders()) {
+                viewOrder.show(order);
+            }
         }
     }
     public void change() {
@@ -115,6 +122,9 @@ public class ClientController extends AbstractController {
         Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
         viewClient.showById(clientOptional);
+        for (Order order : clientOptional.get().getOrders()) {
+            viewOrder.showById(Optional.ofNullable(order));
+        }
         return clientOptional;
     }
     public void removeById() {

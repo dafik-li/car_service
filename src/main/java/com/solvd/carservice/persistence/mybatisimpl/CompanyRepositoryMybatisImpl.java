@@ -1,6 +1,7 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
 import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.persistence.CompanyRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import org.apache.ibatis.session.SqlSession;
@@ -21,6 +22,12 @@ public class CompanyRepositoryMybatisImpl implements CompanyRepository {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             CompanyRepository companyRepository = sqlSession.getMapper(CompanyRepository.class);
             return companyRepository.getByAddress(address);
+        }
+    }
+    public List<Department> getDepartmentsByCompanyId(Company company) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            CompanyRepository companyRepository = sqlSession.getMapper(CompanyRepository.class);
+            return companyRepository.getDepartmentsByCompanyId(company);
         }
     }
     @Override

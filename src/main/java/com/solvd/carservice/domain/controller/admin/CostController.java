@@ -3,10 +3,12 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Detail;
+import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.domain.view.ViewCost;
+import com.solvd.carservice.domain.view.ViewOrder;
 import com.solvd.carservice.service.CostService;
 import com.solvd.carservice.service.impl.CostServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -19,11 +21,12 @@ public class CostController extends AbstractController {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
     private final ViewCost viewCost;
+    private final ViewOrder viewOrder;
 
     public CostController() {
         this.viewCost = new ViewCost();
+        this.viewOrder = new ViewOrder();
     }
-
     public void moderate() {
         viewConsoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
@@ -88,6 +91,9 @@ public class CostController extends AbstractController {
         viewCost.showAll();
         for (Cost cost : new CostServiceImpl().retrieveAll()) {
             viewCost.show(cost);
+            for (Order order : cost.getOrders()) {
+                viewOrder.show(order);
+            }
         }
     }
     public void change() {
@@ -107,6 +113,9 @@ public class CostController extends AbstractController {
         Optional<Cost> costOptional = new CostServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
         viewCost.showById(costOptional);
+        for (Order order : costOptional.get().getOrders()) {
+            viewOrder.showById(Optional.ofNullable(order));
+        }
         return costOptional;
     }
     public void removeById() {

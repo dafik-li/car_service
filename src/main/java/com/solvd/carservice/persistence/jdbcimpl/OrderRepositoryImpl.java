@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public class OrderRepositoryImpl implements OrderRepository{
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private final MapperOrder mapperOrder;
     private static final String INSERT_ORDER_QUERY = "INSERT INTO orders (date, client_id, cost_id) VALUES (?, ?, ?);";
     private static final String DELETE_ORDER_QUERY = "DELETE FROM orders WHERE id = ?;";
     private static final String UPDATE_ORDER_QUERY = "UPDATE orders SET date = ? WHERE id = ?;";
@@ -29,6 +30,10 @@ public class OrderRepositoryImpl implements OrderRepository{
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE o.id = ? ");
     private static final String GET_BY_ORDER_DATE_QUERY = GET_ALL_QUERY.concat("WHERE date = ? ");
 
+    public OrderRepositoryImpl() {
+        this.mapperOrder = new MapperOrder();
+    }
+
     @Override
     public List<Order> getByDate(Date date) {
         List<Order> orders;
@@ -36,7 +41,7 @@ public class OrderRepositoryImpl implements OrderRepository{
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ORDER_DATE_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            orders = mapOrders(resultSet);
+            orders = mapperOrder.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("date");
             }
@@ -73,7 +78,7 @@ public class OrderRepositoryImpl implements OrderRepository{
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            orders = mapOrders(resultSet);
+            orders = mapperOrder.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {
@@ -173,58 +178,5 @@ public class OrderRepositoryImpl implements OrderRepository{
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-    }
-    public List<Order> mapOrders(ResultSet resultSet) {
-        List<Order> orders = new ArrayList<>();
-        try {
-            while (resultSet.next()) {
-                Order order = new Order();
-                order.setId(resultSet.getLong(1));
-                order.setDate(resultSet.getDate(2));
-                order.setClientId(
-                        new Client(
-                                resultSet.getLong(3),
-                                resultSet.getString(4),
-                                resultSet.getString(5),
-                                resultSet.getString(6),
-                                resultSet.getDate(7)));
-                order.setCostId(
-                        new Cost(
-                                resultSet.getLong(8),
-                                resultSet.getDouble(9),
-                                new Service(
-                                        resultSet.getLong(10),
-                                        resultSet.getString(11),
-                                        resultSet.getDouble(12),
-                                        resultSet.getInt(13),
-                                        new Car(
-                                                resultSet.getLong(14),
-                                                resultSet.getString(15),
-                                                resultSet.getString(16),
-                                                resultSet.getInt(17)),
-                                        new Department(
-                                                resultSet.getLong(18),
-                                                resultSet.getString(19),
-                                                new Company(
-                                                        resultSet.getLong(20),
-                                                        resultSet.getString(21),
-                                                        resultSet.getString(22)))),
-                                new Detail(
-                                        resultSet.getLong(23),
-                                        resultSet.getString(24),
-                                        resultSet.getInt(25),
-                                        new Car(
-                                                resultSet.getLong(14),
-                                                resultSet.getString(15),
-                                                resultSet.getString(16),
-                                                resultSet.getInt(17)),
-                                        resultSet.getBoolean(26),
-                                        resultSet.getInt(27))));
-                orders.add(order);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to map orders", e);
-        }
-        return orders;
     }
 }

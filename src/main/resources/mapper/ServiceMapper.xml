@@ -39,9 +39,9 @@
 
     <sql id="serviceSelect">
         SELECT
-        services.id, services.name, services.price, services.hours_to_do,
+        services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
         e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
-        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        d.id, d.name, com.id, com.name, com.address
         FROM
         services
         LEFT JOIN
@@ -58,9 +58,8 @@
 
     <select id="getEmployeesByServiceId" resultMap="ServiceResultMap">
         SELECT
-        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
-        services.id, services.name, services.price, services.hours_to_do,
-        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address,
+        services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year
         FROM
         employees e
         LEFT JOIN

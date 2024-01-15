@@ -1,6 +1,7 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Client;
+import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.persistence.ClientRepository;
 import com.solvd.carservice.persistence.ConnectionPool;
 import java.sql.*;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 public class ClientRepositoryImpl implements ClientRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private final MapperOrder mapperOrder;
     private static final String INSERT_CLIENT_QUERY = "INSERT INTO clients (name, surname, phone_number, birthday) VALUES (?, ?, ?, ?);";
     private static final String DELETE_CLIENT_QUERY = "DELETE FROM clients WHERE id = ?;";
     private static final String UPDATE_CLIENT_NAME_QUERY = "UPDATE clients SET name = ? WHERE id = ?;";
@@ -17,12 +19,28 @@ public class ClientRepositoryImpl implements ClientRepository {
     private static final String UPDATE_CLIENT_PHONE_NUMBER_QUERY = "UPDATE clients SET phone_number = ? WHERE id = ?;";
     private static final String UPDATE_CLIENT_BIRTHDAY_QUERY = "UPDATE clients SET birthday = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY = "SELECT * FROM clients";
+    private static final String GET_CLIENTS_BY_ORDER_ID =
+            "SELECT o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday, " +
+                    "c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
+                    "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
+            "FROM orders o " +
+            "LEFT JOIN clients cl ON o.client_id = cl.id " +
+            "LEFT JOIN costs c ON o.cost_id = c.id " +
+            "LEFT JOIN services s ON c.service_id = s.id " +
+            "LEFT JOIN cars ON s.car_id = cars.id " +
+            "LEFT JOIN departments d ON s.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = c.id " +
+            "LEFT JOIN details det ON c.detail_id = det.id " +
+            "WHERE cl.id = ? ";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM clients WHERE id = ?;";
     private static final String GET_BY_CLIENT_NAME_QUERY = "SELECT * FROM clients WHERE name = ?;";
     private static final String GET_BY_CLIENT_SURNAME_QUERY = "SELECT * FROM clients WHERE surname = ?;";
     private static final String GET_BY_CLIENT_PHONE_NUMBER_QUERY = "SELECT * FROM clients WHERE phone_number = ?;";
     private static final String GET_BY_CLIENT_BIRTHDAY_QUERY = "SELECT * FROM clients WHERE birthday = ?;";
 
+    public ClientRepositoryImpl() {
+        this.mapperOrder = new MapperOrder();
+    }
     @Override
     public List<Client> getByName(String name) {
         List<Client> clients;
@@ -116,6 +134,21 @@ public class ClientRepositoryImpl implements ClientRepository {
         }
     }
     @Override
+    public List<Order> getOrdersByClientId(Client client) {
+        List<Order> orders;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_CLIENTS_BY_ORDER_ID)) {
+            preparedStatement.setLong(1, client.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            orders = mapperOrder.map(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get employee services", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return orders;
+    }
+    @Override
     public List<Client> getAll() {
         List<Client> clients;
         Connection connection = CONNECTION_POOL.getConnection();
@@ -127,6 +160,9 @@ public class ClientRepositoryImpl implements ClientRepository {
             throw new RuntimeException("Unable to get all", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
+        }
+        for (Client client : clients) {
+            client.setOrders(getOrdersByClientId(client));
         }
         return clients;
     }
@@ -151,6 +187,7 @@ public class ClientRepositoryImpl implements ClientRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+        clientOptional.get().setOrders(getOrdersByClientId(clientOptional.get()));
         return clientOptional;
     }
     @Override

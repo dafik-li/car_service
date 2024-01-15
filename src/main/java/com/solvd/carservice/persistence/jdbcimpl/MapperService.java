@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapperService {
-    public List<Service> mapServices(ResultSet resultSet) {
+    public List<Service> map(ResultSet resultSet) {
         List<Service> services = new ArrayList<>();
         try {
             while (resultSet.next()) {

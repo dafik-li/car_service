@@ -19,7 +19,7 @@
         UPDATE orders SET date = #{order.date} WHERE id = #{id};
     </update>
 
-    <sql id="costSelect">
+    <sql id="orderSelect">
         SELECT
         o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday,
         c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
@@ -43,16 +43,16 @@
     </sql>
 
     <select id="getAll" resultMap="OrderResultMap">
-        <include refid="costSelect"/>
+        <include refid="orderSelect"/>
     </select>
 
     <select id="getById" resultMap="OrderResultMap">
-        <include refid="costSelect"/>
+        <include refid="orderSelect"/>
         WHERE id = #{id}
     </select>
 
     <select id="getByDate" resultMap="OrderResultMap">
-        <include refid="costSelect"/>
+        <include refid="orderSelect"/>
         WHERE date = #{date}
     </select>
 

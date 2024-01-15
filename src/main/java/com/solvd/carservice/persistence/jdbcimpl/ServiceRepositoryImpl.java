@@ -28,7 +28,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id ";
-    private static final String GET_EMPLOYEES_BY_SERVICES_ID =
+    private static final String GET_EMPLOYEES_BY_SERVICE_ID =
             "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address, " +
                     "services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year " +
             "FROM employees e " +
@@ -54,7 +54,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_NAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapperService.mapServices(resultSet);
+            services = mapperService.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("name");
             }
@@ -72,7 +72,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_PRICE_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapperService.mapServices(resultSet);
+            services = mapperService.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("price");
             }
@@ -90,7 +90,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_SERVICE_HOURS_TODO_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapperService.mapServices(resultSet);
+            services = mapperService.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("hours_to_do");
             }
@@ -138,10 +138,10 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public List<Employee> getEmployeesByServiceId(Service service) {
         List<Employee> employees;
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_EMPLOYEES_BY_SERVICES_ID)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_EMPLOYEES_BY_SERVICE_ID)) {
             preparedStatement.setLong(1, service.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get service employees", e);
         } finally {
@@ -156,7 +156,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapperService.mapServices(resultSet);
+            services = mapperService.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {

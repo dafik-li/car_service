@@ -1,6 +1,8 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.CompanyRepository;
 import com.solvd.carservice.persistence.ConnectionPool;
 import java.sql.*;
@@ -10,15 +12,24 @@ import java.util.Optional;
 
 public class CompanyRepositoryImpl implements CompanyRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
+    private final MapperDepartment mapperDepartment;
     private static final String INSERT_COMPANY_QUERY = "INSERT INTO companies (name, address) VALUES (?, ?);";
     private static final String DELETE_COMPANY_QUERY = "DELETE FROM companies WHERE id = ?;";
     private static final String UPDATE_COMPANY_NAME_QUERY = "UPDATE companies SET name = ? WHERE id = ?";
     private static final String UPDATE_COMPANY_ADDRESS_QUERY = "UPDATE companies SET address = ? WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM companies;";
+    private static final String GET_DEPARTMENTS_BY_COMPANY_ID =
+            "SELECT d.id, d.name, com.id, com.name, com.address " +
+            "FROM departments d " +
+            "LEFT JOIN companies com ON d.company_id = com.id " +
+            "WHERE com.id = ? ";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM companies WHERE id = ?;";
     private static final String GET_BY_COMPANY_NAME_QUERY = "SELECT * FROM companies WHERE name = ?;";
     private static final String GET_BY_COMPANY_ADDRESS_QUERY = "SELECT * FROM companies WHERE address = ?;";
 
+    public CompanyRepositoryImpl() {
+        this.mapperDepartment = new MapperDepartment();
+    }
     @Override
     public List<Company> getByName(String name) {
         List<Company> companies;
@@ -73,6 +84,20 @@ public class CompanyRepositoryImpl implements CompanyRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
+    public List<Department> getDepartmentsByCompanyId(Company company) {
+        List<Department> departments;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_DEPARTMENTS_BY_COMPANY_ID)) {
+            preparedStatement.setLong(1, company.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            departments = mapperDepartment.map(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get employee services", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return departments;
+    }
     @Override
     public List<Company> getAll() {
         List<Company> companies;
@@ -85,6 +110,9 @@ public class CompanyRepositoryImpl implements CompanyRepository {
             throw new RuntimeException("Unable to get all", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
+        }
+        for (Company company : companies) {
+            company.setDepartments(getDepartmentsByCompanyId(company));
         }
         return companies;
     }
@@ -107,6 +135,7 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+        companyOptional.get().setDepartments(getDepartmentsByCompanyId(companyOptional.get()));
         return companyOptional;
     }
     @Override

@@ -3,9 +3,13 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.entity.Employee;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.domain.view.ViewDepartment;
+import com.solvd.carservice.domain.view.ViewEmployee;
+import com.solvd.carservice.domain.view.ViewService;
 import com.solvd.carservice.service.DepartmentService;
 import com.solvd.carservice.service.impl.DepartmentServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -18,11 +22,14 @@ public class DepartmentController extends AbstractController {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(DepartmentController.class);
     private final ViewDepartment viewDepartment;
+    private final ViewEmployee viewEmployee;
+    private final ViewService viewService;
 
     public DepartmentController() {
         this.viewDepartment = new ViewDepartment();
+        this.viewEmployee = new ViewEmployee();
+        this.viewService = new ViewService();
     }
-
     public void moderate() {
         viewConsoleMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
@@ -87,6 +94,12 @@ public class DepartmentController extends AbstractController {
         viewDepartment.showAll();
         for (Department department : new DepartmentServiceImpl().retrieveAll()) {
             viewDepartment.show(department);
+            for (Service service : department.getServices()) {
+                viewService.show(service);
+            }
+            for (Employee employee : department.getEmployees()) {
+                viewEmployee.show(employee);
+            }
         }
     }
     public void change() {
@@ -107,6 +120,12 @@ public class DepartmentController extends AbstractController {
                 new DepartmentServiceImpl().retrieveById(
                         (getDataFromConsole.getLongFromConsole("id")));
         viewDepartment.showById(departmentOptional);
+        for (Service service : departmentOptional.get().getServices()) {
+            viewService.showById(Optional.ofNullable(service));
+        }
+        for (Employee employee : departmentOptional.get().getEmployees()) {
+            viewEmployee.showById(Optional.ofNullable(employee));
+        }
         return departmentOptional;
     }
     public void removeById() {

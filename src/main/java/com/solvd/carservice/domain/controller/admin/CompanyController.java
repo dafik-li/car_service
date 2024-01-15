@@ -2,9 +2,12 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.domain.view.ViewCompany;
+import com.solvd.carservice.domain.view.ViewDepartment;
 import com.solvd.carservice.service.CompanyService;
 import com.solvd.carservice.service.impl.CompanyServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -17,9 +20,11 @@ public class CompanyController extends AbstractController {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CompanyController.class);
     private final ViewCompany viewCompany;
+    private final ViewDepartment viewDepartment;
 
     public CompanyController() {
         this.viewCompany = new ViewCompany();
+        this.viewDepartment = new ViewDepartment();
     }
     public void moderate() {
         viewConsoleMenu.chooseModerateMenu();
@@ -83,6 +88,9 @@ public class CompanyController extends AbstractController {
         viewCompany.showAll();
         for (Company company : new CompanyServiceImpl().retrieveAll()) {
             viewCompany.show(company);
+            for (Department department : company.getDepartments()) {
+                viewDepartment.show(department);
+            }
         }
     }
     @Override
@@ -106,6 +114,9 @@ public class CompanyController extends AbstractController {
         Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
         viewCompany.showById(companyOptional);
+        for (Department department : companyOptional.get().getDepartments()) {
+            viewDepartment.showById(Optional.ofNullable(department));
+        }
         return companyOptional;
     }
     public void removeById() {

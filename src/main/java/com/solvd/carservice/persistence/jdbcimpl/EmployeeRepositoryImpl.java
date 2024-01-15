@@ -64,7 +64,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_NAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("name");
             }
@@ -82,7 +82,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_SURNAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("surname");
             }
@@ -100,7 +100,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_AGE_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("age");
             }
@@ -118,7 +118,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_POSITION_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("position");
             }
@@ -136,7 +136,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_LEVEL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("level");
             }
@@ -154,7 +154,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_SALARY_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("salary");
             }
@@ -172,7 +172,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("phone_number");
             }
@@ -227,7 +227,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_SERVICES_BY_EMPLOYEE_ID)) {
             preparedStatement.setLong(1, employee.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapperService.mapServices(resultSet);
+            services = mapperService.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get employee services", e);
         } finally {
@@ -242,7 +242,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {

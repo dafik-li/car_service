@@ -2,9 +2,13 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Car;
+import com.solvd.carservice.domain.entity.Detail;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
 import com.solvd.carservice.domain.view.ViewCar;
+import com.solvd.carservice.domain.view.ViewDetail;
+import com.solvd.carservice.domain.view.ViewService;
 import com.solvd.carservice.service.CarService;
 import com.solvd.carservice.service.impl.CarServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -17,11 +21,15 @@ public class CarController extends AbstractController {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
     private final ViewCar viewCar;
+    private final ViewService viewService;
+    private final ViewDetail viewDetail;
     private final CarServiceImpl carServiceImpl;
 
     public CarController() {
         this.carServiceImpl = new CarServiceImpl();
         this.viewCar = new ViewCar();
+        this.viewService = new ViewService();
+        this.viewDetail = new ViewDetail();
     }
     public void moderate() {
         viewConsoleMenu.chooseModerateMenu();
@@ -85,6 +93,12 @@ public class CarController extends AbstractController {
         viewCar.showAll();
         for (Car car : carServiceImpl.retrieveAll()) {
             viewCar.show(car);
+            for (Service service : car.getServices()) {
+                viewService.show(service);
+            }
+            for (Detail detail : car.getDetails()) {
+                viewDetail.show(detail);
+            }
         }
     }
     public void change() {
@@ -109,6 +123,12 @@ public class CarController extends AbstractController {
         Optional<Car> carOptional = carServiceImpl.retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
         viewCar.showById(carOptional);
+        for (Service service : carOptional.get().getServices()) {
+            viewService.showById(Optional.ofNullable(service));
+        }
+        for (Detail detail : carOptional.get().getDetails()) {
+            viewDetail.showById(Optional.ofNullable(detail));
+        }
         return carOptional;
     }
     public void removeById() {
