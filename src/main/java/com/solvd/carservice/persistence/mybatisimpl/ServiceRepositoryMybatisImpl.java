@@ -11,6 +11,13 @@ import java.util.Optional;
 public class ServiceRepositoryMybatisImpl implements ServiceRepository {
 
     @Override
+    public List<Service> getByCar(Long carId) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            ServiceRepository serviceRepository = sqlSession.getMapper(ServiceRepository.class);
+            return serviceRepository.getByCar(carId);
+        }
+    }
+    @Override
     public List<Service> getByName(String name) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             ServiceRepository serviceRepository = sqlSession.getMapper(ServiceRepository.class);

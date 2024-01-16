@@ -12,32 +12,29 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private final MapperService mapperService;
     private final MapperEmployee mapperEmployee;
     private static final String INSERT_SERVICE_QUERY = "INSERT INTO services " +
-            "(name, price, hours_to_do, car_id, department_id) VALUES (?, ?, ?, ?, ?);";
-    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (service_id, employee_id) VALUES (?, ?);";
-    private static final String DELETE_SERVICE_QUERY = "DELETE FROM services WHERE id = ?;";
-    private static final String UPDATE_SERVICE_NAME_QUERY = "UPDATE services SET name = ? WHERE id = ?;";
-    private static final String UPDATE_SERVICE_PRICE_QUERY = "UPDATE services SET price = ? WHERE id = ?;";
-    private static final String UPDATE_SERVICE_HOURS_TO_DO_QUERY = "UPDATE services SET hours_to_do = ? WHERE id = ?;";
+            "(name, price, hours_to_do, car_id, department_id) VALUES (?, ?, ?, ?, ?) ";
+    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (service_id, employee_id) VALUES (?, ?) ";
+    private static final String DELETE_SERVICE_QUERY = "DELETE FROM services WHERE id = ? ";
+    private static final String UPDATE_SERVICE_NAME_QUERY = "UPDATE services SET name = ? WHERE id = ? ";
+    private static final String UPDATE_SERVICE_PRICE_QUERY = "UPDATE services SET price = ? WHERE id = ? ";
+    private static final String UPDATE_SERVICE_HOURS_TO_DO_QUERY = "UPDATE services SET hours_to_do = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
-            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
-                    "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "d.id, d.name, com.id, com.name, com.address " +
+            "SELECT services.id, services.name, services.price, services.hours_to_do, " +
+                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
-            "LEFT JOIN employee_services es ON es.service_id = services.id " +
-            "LEFT JOIN employees e ON es.employee_id = e.id " +
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id ";
     private static final String GET_EMPLOYEES_BY_SERVICE_ID =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address, " +
-                    "services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year " +
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address " +
             "FROM employees e " +
             "LEFT JOIN employee_services es ON es.employee_id = e.id " +
             "LEFT JOIN services ON es.service_id = services.id " +
-            "LEFT JOIN cars ON services.car_id = cars.id " +
-            "LEFT JOIN departments d ON services.department_id = d.id " +
+            "LEFT JOIN departments d ON e.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id " +
-            "WHERE service_id = ? ";
+            "WHERE services.id = ? ";
+    private static final String GET_BY_CAR_ID =
+            GET_ALL_QUERY.concat("WHERE car_id = ? ");
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE services.id = ? ");
     private static final String GET_BY_SERVICE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
     private static final String GET_BY_SERVICE_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
@@ -46,6 +43,24 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public ServiceRepositoryImpl() {
         this.mapperService = new MapperService();
         this.mapperEmployee = new MapperEmployee();
+    }
+    public List<Service> getByCar(Long carId) {
+        List<Service> services;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_CAR_ID);
+            preparedStatement.setLong(1, carId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            services = mapperService.map(resultSet);
+            while (resultSet.next()) {
+                resultSet.getLong("car_id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get service by car_id", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return services;
     }
     @Override
     public List<Service> getByName(String name) {
@@ -188,12 +203,12 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                                     resultSet.getString(7),
                                     resultSet.getInt(8)),
                             new Department(
-                                    resultSet.getLong(17),
-                                    resultSet.getString(18),
+                                    resultSet.getLong(9),
+                                    resultSet.getString(10),
                                     new Company(
-                                            resultSet.getLong(19),
-                                            resultSet.getString(20),
-                                            resultSet.getString(21)))));
+                                            resultSet.getLong(11),
+                                            resultSet.getString(12),
+                                            resultSet.getString(13)))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {

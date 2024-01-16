@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ServiceRepository extends InterfaceRepository<Service> {
+    List<Service> getByCar(Long carId);
     List<Service> getByName(String name);
     List<Service> getByPrice(Double price);
     List<Service> getByHoursToDo(Integer hoursToDo);

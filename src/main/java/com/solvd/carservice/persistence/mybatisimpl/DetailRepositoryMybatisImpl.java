@@ -11,6 +11,14 @@ import java.util.Optional;
 public class DetailRepositoryMybatisImpl implements DetailRepository {
 
     @Override
+    public List<Detail> getByCar(Long carId) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            DetailRepository detailRepository = sqlSession.getMapper(DetailRepository.class);
+            return detailRepository.getByCar(carId);
+        }
+    }
+
+    @Override
     public List<Detail> getByName(String name) {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             DetailRepository detailRepository = sqlSession.getMapper(DetailRepository.class);

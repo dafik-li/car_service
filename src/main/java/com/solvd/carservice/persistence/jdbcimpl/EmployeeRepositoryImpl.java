@@ -26,16 +26,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ?;";
     private static final String GET_ALL_QUERY =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address, " +
-                    "services.id, services.name, services.price, services.hours_to_do " +
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address " +
             "FROM employees e " +
-            "LEFT JOIN employee_services es ON es.employee_id = e.id " +
-            "LEFT JOIN services ON es.service_id = services.id " +
             "LEFT JOIN departments d ON e.department_id = d.id " +
             "LEFT JOIN companies c ON d.company_id = c.id ";
     private static final String GET_SERVICES_BY_EMPLOYEE_ID =
             "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year," +
-                    "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
                     "d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
             "LEFT JOIN employee_services es ON es.service_id = services.id " +
@@ -43,7 +39,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id " +
-            "WHERE employee_id = ? ";
+            "WHERE e.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE e.id = ? ");
     private static final String GET_BY_EMPLOYEE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
     private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE surname = ? ");

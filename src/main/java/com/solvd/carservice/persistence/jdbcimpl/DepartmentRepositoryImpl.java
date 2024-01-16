@@ -15,32 +15,25 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     private final MapperService mapperService;
     private final MapperEmployee mapperEmployee;
     private final MapperDepartment mapperDepartment;
-    private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments (name, company_id) VALUES (?, ?);";
-    private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ?;";
-    private static final String UPDATE_DEPARTMENT_NAME_QUERY = "UPDATE departments SET name = ? WHERE id = ?;";
+    private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments (name, company_id) VALUES (?, ?) ";
+    private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ? ";
+    private static final String UPDATE_DEPARTMENT_NAME_QUERY = "UPDATE departments SET name = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT d.id, d.name, c.id, c.name, c.address " +
             "FROM departments d " +
             "LEFT JOIN companies c ON d.company_id = c.id ";
     private static final String GET_SERVICES_BY_DEPARTMENT_ID =
             "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year," +
-                    "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
                     "d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
-            "LEFT JOIN employee_services es ON es.service_id = services.id " +
-            "LEFT JOIN employees e ON es.employee_id = e.id " +
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id " +
             "WHERE d.id = ? ";
     private static final String GET_EMPLOYEES_BY_DEPARTMENT_ID =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address, " +
-                    "services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year " +
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address " +
             "FROM employees e " +
-            "LEFT JOIN employee_services es ON es.employee_id = e.id " +
-            "LEFT JOIN services ON es.service_id = services.id " +
-            "LEFT JOIN cars ON services.car_id = cars.id " +
-            "LEFT JOIN departments d ON services.department_id = d.id " +
+            "LEFT JOIN departments d ON e.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id " +
             "WHERE d.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE d.id = ? ");

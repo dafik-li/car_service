@@ -24,6 +24,11 @@ public class DetailServiceImpl implements DetailService {
     public List<Detail> retrieveAll() {
         return detailRepository.getAll();
     }
+
+    @Override
+    public List<Detail> retrieveByCar(Long carId) {
+        return detailRepository.getByCar(carId);
+    }
     @Override
     public Optional<Detail> retrieveById(Long id) {
         return detailRepository.getById(id);

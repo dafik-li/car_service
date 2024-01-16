@@ -33,6 +33,8 @@ public class DetailRepositoryImpl implements DetailRepository {
             "LEFT JOIN companies com ON d.company_id = c.id " +
             "LEFT JOIN details det ON c.detail_id = det.id " +
             "WHERE det.id = ? ";
+    private static final String GET_BY_CAR_ID =
+            GET_ALL_QUERY.concat("WHERE car_id = ? ");
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE details.id = ? ");
     private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
     private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
@@ -42,6 +44,24 @@ public class DetailRepositoryImpl implements DetailRepository {
     public DetailRepositoryImpl() {
         this.mapperDetail = new MapperDetail();
         this.mapperCost = new MapperCost();
+    }
+    public List<Detail> getByCar(Long carId) {
+        List<Detail> details;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_CAR_ID);
+            preparedStatement.setLong(1, carId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            details = mapperDetail.map(resultSet);
+            while (resultSet.next()) {
+                resultSet.getLong("car_id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get service by car_id", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return details;
     }
     @Override
     public List<Detail> getByName(String name) {

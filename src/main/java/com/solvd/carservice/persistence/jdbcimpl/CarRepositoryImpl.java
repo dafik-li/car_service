@@ -22,11 +22,8 @@ public class CarRepositoryImpl implements CarRepository {
     private static final String GET_ALL_QUERY = "SELECT * FROM cars;";
     private static final String GET_SERVICES_BY_CAR_ID =
             "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
-                    "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
                     "d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
-            "LEFT JOIN employee_services es ON es.service_id = services.id " +
-            "LEFT JOIN employees e ON es.employee_id = e.id " +
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id " +

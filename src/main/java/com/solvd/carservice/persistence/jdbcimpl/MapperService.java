@@ -24,12 +24,12 @@ public class MapperService {
                                 resultSet.getInt(8)));
                 service.setDepartmentId(
                         new Department(
-                                resultSet.getLong(17),
-                                resultSet.getString(18),
+                                resultSet.getLong(9),
+                                resultSet.getString(10),
                                 new Company(
-                                        resultSet.getLong(19),
-                                        resultSet.getString(20),
-                                        resultSet.getString(21))));
+                                        resultSet.getLong(11),
+                                        resultSet.getString(12),
+                                        resultSet.getString(13))));
                 services.add(service);
             }
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package com.solvd.carservice.service.impl;
 
+import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.ServiceRepository;
 import com.solvd.carservice.service.ServiceService;
@@ -24,6 +25,14 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public List<Service> retrieveAll() {
         return serviceRepository.getAll();
+    }
+    @Override
+    public List<Service> retrieveByCar(Long carId) {
+        return serviceRepository.getByCar(carId);
+    }
+    @Override
+    public List<Employee> retrieveEmployeesByServiceId(Service service) {
+        return serviceRepository.getEmployeesByServiceId(service);
     }
     @Override
     public Optional<Service> retrieveById(Long id) {

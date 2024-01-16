@@ -23,10 +23,8 @@ public class CarController extends AbstractController {
     private final ViewCar viewCar;
     private final ViewService viewService;
     private final ViewDetail viewDetail;
-    private final CarServiceImpl carServiceImpl;
 
     public CarController() {
-        this.carServiceImpl = new CarServiceImpl();
         this.viewCar = new ViewCar();
         this.viewService = new ViewService();
         this.viewDetail = new ViewDetail();
@@ -86,17 +84,17 @@ public class CarController extends AbstractController {
                 getDataFromConsole.getStringFromConsole("brand"),
                 getDataFromConsole.getStringFromConsole("model"),
                 getDataFromConsole.getIntegerFromConsole("year"));
-        ((CarService) carServiceImpl).add(car);
+        CarService carService = new CarServiceImpl();
+        carService.add(car);
         viewCar.added(car);
     }
     public void retrieveAll() {
         viewCar.showAll();
-        for (Car car : carServiceImpl.retrieveAll()) {
+        for (Car car : new CarServiceImpl().retrieveAll()) {
             viewCar.show(car);
             for (Service service : car.getServices()) {
                 viewService.show(service);
-            }
-            for (Detail detail : car.getDetails()) {
+            }for (Detail detail : car.getDetails()) {
                 viewDetail.show(detail);
             }
         }
@@ -104,6 +102,7 @@ public class CarController extends AbstractController {
     public void change() {
         viewCar.update();
         Optional<Car> car = retrieveById();
+        CarService carService = new CarServiceImpl();
         String field = getDataFromConsole.getStringFromConsole("select field");
         switch (field) {
             case "brand":
@@ -116,11 +115,11 @@ public class CarController extends AbstractController {
                 car.get().setYear(getDataFromConsole.getIntegerFromConsole("year"));
                 break;
         }
-        ((CarService) carServiceImpl).change(car, field);
+        carService.change(car, field);
         viewCar.updated(field);
     }
     public Optional<Car> retrieveById() {
-        Optional<Car> carOptional = carServiceImpl.retrieveById(
+        Optional<Car> carOptional = new CarServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
         viewCar.showById(carOptional);
         for (Service service : carOptional.get().getServices()) {
@@ -133,7 +132,8 @@ public class CarController extends AbstractController {
     }
     public void removeById() {
         viewCar.delete();
-        ((CarService) carServiceImpl).removeById(
+        CarService carService = new CarServiceImpl();
+        carService.removeById(
                 getDataFromConsole.getLongFromConsole("id"));
         viewCar.successfulDeleted();
     }
