@@ -1,13 +1,12 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
-import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.ViewCompany;
-import com.solvd.carservice.domain.view.ViewDepartment;
+import com.solvd.carservice.domain.view.admin.ViewCompany;
+import com.solvd.carservice.domain.view.admin.ViewDepartment;
 import com.solvd.carservice.service.CompanyService;
 import com.solvd.carservice.service.impl.CompanyServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +26,7 @@ public class CompanyController extends AbstractController {
         this.viewDepartment = new ViewDepartment();
     }
     public void moderate() {
-        viewConsoleMenu.chooseModerateMenu();
+        viewConsoleAdminMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -45,7 +44,7 @@ public class CompanyController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        viewConsoleMenu.chooseInsertMethod();
+        viewConsoleAdminMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -61,7 +60,7 @@ public class CompanyController extends AbstractController {
         }
     }
     public void selectXmlParser() {
-        viewConsoleMenu.chooseXmlParser();
+        viewConsoleAdminMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

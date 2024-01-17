@@ -1,13 +1,13 @@
-package com.solvd.carservice.domain.view;
+package com.solvd.carservice.domain.view.admin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
-public class ViewConsoleMenu {
+public class ViewConsoleAdminMenu {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(ViewConsoleMenu.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(ViewConsoleAdminMenu.class);
 
     public void chooseRepository() {
         LOGGER.info("Please, choose a desire repository" + "\n" +

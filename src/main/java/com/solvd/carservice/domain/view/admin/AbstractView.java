@@ -1,9 +1,9 @@
-package com.solvd.carservice.domain.view;
+package com.solvd.carservice.domain.view.admin;
 
 import org.apache.logging.log4j.LogManager;
 import java.util.Optional;
 
-public abstract class AbstractView<E> implements InterfaceView<E>{
+public abstract class AbstractView<E> implements InterfaceView<E> {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }

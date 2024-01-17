@@ -7,8 +7,8 @@ import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.ViewEmployee;
-import com.solvd.carservice.domain.view.ViewService;
+import com.solvd.carservice.domain.view.admin.ViewEmployee;
+import com.solvd.carservice.domain.view.admin.ViewService;
 import com.solvd.carservice.service.ServiceService;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +29,7 @@ public class ServiceController extends AbstractController {
     }
 
     public void moderate() {
-        viewConsoleMenu.chooseModerateService();
+        viewConsoleAdminMenu.chooseModerateService();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -48,7 +48,7 @@ public class ServiceController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        viewConsoleMenu.chooseInsertMethod();
+        viewConsoleAdminMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -57,14 +57,14 @@ public class ServiceController extends AbstractController {
             case "0": moderate(); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             selectInsertMethod();
         }
     }
     public void selectXmlParser() {
-        viewConsoleMenu.chooseXmlParser();
+        viewConsoleAdminMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

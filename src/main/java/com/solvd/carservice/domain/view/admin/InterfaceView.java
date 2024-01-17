@@ -1,4 +1,4 @@
-package com.solvd.carservice.domain.view;
+package com.solvd.carservice.domain.view.admin;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package com.solvd.carservice.domain.view;
+package com.solvd.carservice.domain.view.admin;
 
 import com.solvd.carservice.domain.entity.Service;
 import org.apache.logging.log4j.LogManager;
@@ -42,30 +42,4 @@ public class ViewService extends AbstractView<Service> {
     public void successfulDeleted() {
         super.successfulDeleted();
     }
-    /*
-    public void showAll() {
-        LOGGER.info("List of services ");
-    }
-    public void show(Service service) {
-        LOGGER.info(service.toString());
-    }
-    public void added(Service service) {
-        LOGGER.info(service.toString() + " - was added");
-    }
-    public void update() {
-        LOGGER.info("Update service");
-    }
-    public void updated(String field) {
-        LOGGER.info("Service " + field + " was updated");
-    }
-    public void showById(Optional<Service> serviceOptional) {
-        LOGGER.info(serviceOptional.toString());
-    }
-    public void delete() {
-        LOGGER.info("Following service will be deleted");
-    }
-    public void successfulDeleted() {
-        LOGGER.info("Successful deleted");
-    }
-     */
 }

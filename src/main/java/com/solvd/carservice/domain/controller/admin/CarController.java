@@ -6,9 +6,9 @@ import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.ViewCar;
-import com.solvd.carservice.domain.view.ViewDetail;
-import com.solvd.carservice.domain.view.ViewService;
+import com.solvd.carservice.domain.view.admin.ViewCar;
+import com.solvd.carservice.domain.view.admin.ViewDetail;
+import com.solvd.carservice.domain.view.admin.ViewService;
 import com.solvd.carservice.service.CarService;
 import com.solvd.carservice.service.impl.CarServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,7 @@ public class CarController extends AbstractController {
         this.viewDetail = new ViewDetail();
     }
     public void moderate() {
-        viewConsoleMenu.chooseModerateMenu();
+        viewConsoleAdminMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -48,7 +48,7 @@ public class CarController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        viewConsoleMenu.chooseInsertMethod();
+        viewConsoleAdminMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -57,14 +57,14 @@ public class CarController extends AbstractController {
             case "0": moderate(); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             selectInsertMethod();
         }
     }
     public void selectXmlParser() {
-        viewConsoleMenu.chooseXmlParser();
+        viewConsoleAdminMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":
@@ -94,7 +94,8 @@ public class CarController extends AbstractController {
             viewCar.show(car);
             for (Service service : car.getServices()) {
                 viewService.show(service);
-            }for (Detail detail : car.getDetails()) {
+            }
+            for (Detail detail : car.getDetails()) {
                 viewDetail.show(detail);
             }
         }

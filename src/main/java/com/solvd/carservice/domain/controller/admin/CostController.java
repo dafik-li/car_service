@@ -7,8 +7,8 @@ import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.ViewCost;
-import com.solvd.carservice.domain.view.ViewOrder;
+import com.solvd.carservice.domain.view.admin.ViewCost;
+import com.solvd.carservice.domain.view.admin.ViewOrder;
 import com.solvd.carservice.service.CostService;
 import com.solvd.carservice.service.impl.CostServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +28,7 @@ public class CostController extends AbstractController {
         this.viewOrder = new ViewOrder();
     }
     public void moderate() {
-        viewConsoleMenu.chooseModerateMenu();
+        viewConsoleAdminMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -45,7 +45,7 @@ public class CostController extends AbstractController {
             moderate();
         }
     }public void selectInsertMethod() {
-        viewConsoleMenu.chooseInsertMethod();
+        viewConsoleAdminMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -54,14 +54,14 @@ public class CostController extends AbstractController {
             case "0": moderate(); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             selectInsertMethod();
         }
     }
     public void selectXmlParser() {
-        viewConsoleMenu.chooseXmlParser();
+        viewConsoleAdminMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

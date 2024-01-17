@@ -2,7 +2,7 @@ package com.solvd.carservice.domain.parse;
 
 import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.domain.parse.entity.*;
-import com.solvd.carservice.domain.view.*;
+import com.solvd.carservice.domain.view.admin.*;
 import com.solvd.carservice.service.*;
 import com.solvd.carservice.service.impl.*;
 

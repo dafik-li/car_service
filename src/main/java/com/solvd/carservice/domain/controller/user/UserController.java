@@ -3,23 +3,15 @@ package com.solvd.carservice.domain.controller.user;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.controller.Validator;
 import com.solvd.carservice.domain.controller.admin.*;
-import com.solvd.carservice.domain.entity.Car;
-import com.solvd.carservice.domain.entity.Detail;
-import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.entity.Service;
+import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.domain.exception.AuthorizationException;
-import com.solvd.carservice.domain.view.*;
-import com.solvd.carservice.persistence.jdbcimpl.EmployeeRepositoryImpl;
-import com.solvd.carservice.service.DetailService;
-import com.solvd.carservice.service.ServiceService;
+import com.solvd.carservice.domain.view.user.ViewConsoleUserMenu;
 import com.solvd.carservice.service.impl.CarServiceImpl;
 import com.solvd.carservice.service.impl.DetailServiceImpl;
 import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
-import com.solvd.carservice.util.GetDataFromConsole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,123 +24,126 @@ public class UserController extends CarController{
     private final static Logger LOGGER = (Logger) LogManager.getLogger(UserController.class);
     private final Scanner scanner;
     private final Validator validator;
-    private final ViewConsoleUserMenu viewConsoleUserMenu;
     private final ClientController clientController;
-    private final ViewCar viewCar;
-    private final ViewService viewService;
-    private final ViewDetail viewDetail;
-    private final ViewEmployee viewEmployee;
+    private final ViewConsoleUserMenu viewConsoleUserMenu;
 
     public UserController() {
         this.scanner = new Scanner(System.in);
         this.validator = new Validator();
-        this.viewConsoleUserMenu = new ViewConsoleUserMenu();
         this.clientController = new ClientController();
-        this.viewCar = new ViewCar();
-        this.viewService = new ViewService();
-        this.viewDetail = new ViewDetail();
-        this.viewEmployee = new ViewEmployee();
+        this.viewConsoleUserMenu = new ViewConsoleUserMenu();
     }
     public void userMenu() {
         viewConsoleUserMenu.userMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": clientMenu(); break;
-            case "2": newClientMenu(); break;
+            case "1": selectClient(); break;
+            case "2": addClient(); break;
+            case "3": new Generator().authorization(); break;
             case "0": System.exit(0); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             userMenu();
         }
     }
-    public void clientMenu() {
-        clientController.retrieveById();
+    public void selectClient() {
+        Optional<Client> client = clientController.retrieveById();
+        viewConsoleUserMenu.returnClient(client);
         calculationOrder();
     }
-    public void newClientMenu() {
-        clientController.add();userMenu();
+    public void addClient() {
+        clientController.add();
+        userMenu();
         calculationOrder();
     }
+    //retrieve cars list
     public void retrieveAll() {
-        viewCar.showAll();
+        viewConsoleUserMenu.displayTittleCars();
         for (Car car : new CarServiceImpl().retrieveAll()) {
-            viewCar.show(car);
+            viewConsoleUserMenu.displayCars(car);
         }
     }
-    public Optional<Car> retrieveCarById() {
+    //select desire car
+    public Optional<Car> retrieveById() {
         Optional<Car> carOptional = new CarServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        viewCar.showById(carOptional);
+        viewConsoleUserMenu.displayCar(carOptional);
         return carOptional;
     }
-    public List<Service> retrieveServicesById(Long id) {
+    //retrieve services list for chosen car
+    public List<Service> retrieveServicesByCarId(Long id) {
         List<Service> services = new ArrayList<>();
-        viewService.showAll();
+        viewConsoleUserMenu.displayTittleServices();
         for (Service service : new ServiceServiceImpl().retrieveByCar(id)) {
-            viewService.show(service);
+            viewConsoleUserMenu.displayServices(service);
         }
         return services;
     }
+    //select desire service
     public Optional<Service> retrieveServiceById() {
         Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        viewService.showById(serviceOptional);
+        viewConsoleUserMenu.displayService(serviceOptional);
         return serviceOptional;
     }
-    public List<Detail> retrieveDetailsById(Long id) {
+    //retrieve details list for chosen car
+    public List<Detail> retrieveDetailsByCarId(Long id) {
         List<Detail> details = new ArrayList<>();
-        viewDetail.showAll();
+        viewConsoleUserMenu.displayTittleDetails();
         for (Detail detail : new DetailServiceImpl().retrieveByCar(id)) {
-            viewDetail.show(detail);
+            viewConsoleUserMenu.displayDetails(detail);
         }
         return details;
     }
-    public List<Employee> retrieveEmployeesById(Service service) {
+    //retrieve employees available for chosen service
+    public List<Employee> retrieveEmployeesByServiceId(Service service) {
         List<Employee> employees = new ArrayList<>();
-        viewEmployee.showAll();
+        viewConsoleUserMenu.displayTittleEmployees();
         for (Employee employee : new ServiceServiceImpl().retrieveEmployeesByServiceId(service)) {
-            viewEmployee.show(employee);
+            viewConsoleUserMenu.displayEmployees(employee);
         }
         return employees;
     }
+    //select desire detail
     public Optional<Detail> retrieveDetailById() {
         Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        viewDetail.showById(detailOptional);
+        viewConsoleUserMenu.displayDetail(detailOptional);
         return detailOptional;
     }
+    //select desire employee
     public Optional<Employee> retrieveEmployeeById() {
         Optional<Employee> employeeOptional = new EmployeeServiceImpl().retrieveById(
                 (getDataFromConsole.getLongFromConsole("id")));
-        viewEmployee.showById(employeeOptional);
+        viewConsoleUserMenu.displayEmployee(employeeOptional);
         return employeeOptional;
     }
     public double calculateHoursToDo(Optional<Employee> employee, Optional<Service> service, Optional<Detail> detail) {
         double hoursToDo = scanner.nextInt();
         switch (employee.get().getLevel()) {
             case 1:
-                hoursToDo = service.get().getHoursToDo() * 1.7 + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() * 1.7 + detail.get().getDeliveryDays() * 24;
                 break;
             case 2:
-                hoursToDo = service.get().getHoursToDo() * 1.5 + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() * 1.5 + detail.get().getDeliveryDays() * 24;
                 break;
             case 3:
-                hoursToDo = service.get().getHoursToDo() * 1.3 + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() * 1.3 + detail.get().getDeliveryDays() * 24;
                 break;
             case 4:
-                hoursToDo = service.get().getHoursToDo() + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() + detail.get().getDeliveryDays() * 24;
                 break;
             case 5:
-                hoursToDo = service.get().getHoursToDo() * 0.7 + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() * 0.7 + detail.get().getDeliveryDays() * 24;
                 break;
             case 6:
-                hoursToDo = service.get().getHoursToDo() * 0.5 + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() * 0.5 + detail.get().getDeliveryDays() * 24;
                 break;
             case 7:
-                hoursToDo = service.get().getHoursToDo() * 0.3 + detail.get().getDeliveryDays()*24;
+                hoursToDo = service.get().getHoursToDo() * 0.3 + detail.get().getDeliveryDays() * 24;
                 break;
         }
         return hoursToDo;
@@ -159,38 +154,20 @@ public class UserController extends CarController{
     public void calculationOrder() {
         viewConsoleUserMenu.chooseCar();
         retrieveAll();
-        Long carId = retrieveCarById().get().getId();
+        Long carId = retrieveById().get().getId();
         viewConsoleUserMenu.chooseService();
-        List<Service> services = retrieveServicesById(carId);
-        //Optional<Service> serviceId = serviceController.retrieveById();
+        List<Service> services = retrieveServicesByCarId(carId);
         Optional<Service> serviceId = retrieveServiceById();
         viewConsoleUserMenu.chooseDetail();
-        List<Detail> details = retrieveDetailsById(carId);
-        //Optional<Detail> detailId = detailController.retrieveById();
+        List<Detail> details = retrieveDetailsByCarId(carId);
         Optional<Detail> detailId = retrieveDetailById();
         viewConsoleUserMenu.chooseEmployee();
-        List<Employee> employees = retrieveEmployeesById(serviceId.get());
-        //Optional<Employee> employeeId = employeeController.retrieveById();
+        List<Employee> employees = retrieveEmployeesByServiceId(serviceId.get());
         Optional<Employee> employeeId = retrieveEmployeeById();
 
         double totalPrice = calculatePrice(serviceId, detailId);
         double totalTime = calculateHoursToDo(employeeId, serviceId, detailId);
-        LOGGER.info(totalPrice + " - " + totalTime);
-    }
-    public void carMenu() {
-        viewConsoleUserMenu.chooseCar();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": new ClientController().retrieveById(); break;
-            case "2": new ClientController().add(); break;
-            case "0": System.exit(0); break;
-        }
-        try {
-            validator.validateStartPageMenu(menu);
-        } catch (AuthorizationException e) {
-            LOGGER.error(e.toString());
-            userMenu();
-        }
+        viewConsoleUserMenu.displayTotal(totalPrice, totalTime);
     }
 }
 

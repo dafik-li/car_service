@@ -1,10 +1,10 @@
-package com.solvd.carservice.domain.view;
+package com.solvd.carservice.domain.view.admin;
 
 import com.solvd.carservice.domain.entity.Department;
 import org.apache.logging.log4j.LogManager;
 import java.util.Optional;
 
-public class ViewDepartment extends AbstractView<Department>{
+public class ViewDepartment extends AbstractView<Department> {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
@@ -42,30 +42,4 @@ public class ViewDepartment extends AbstractView<Department>{
     public void successfulDeleted() {
         super.successfulDeleted();
     }
-    /*
-    public void showAll() {
-        LOGGER.info("List of departments ");
-    }
-    public void show(Department department) {
-        LOGGER.info(department.toString());
-    }
-    public void added(Department department) {
-        LOGGER.info(department.toString() + " - was added");
-    }
-    public void update() {
-        LOGGER.info("Update department");
-    }
-    public void updated(String field) {
-        LOGGER.info("Department " + field + " was updated");
-    }
-    public void showById(Optional<Department> departmentOptional) {
-        LOGGER.info(departmentOptional.toString());
-    }
-    public void delete() {
-        LOGGER.info("Following department will be deleted");
-    }
-    public void successfulDeleted() {
-        LOGGER.info("Successful deleted");
-    }
-     */
 }

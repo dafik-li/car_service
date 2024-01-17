@@ -1,10 +1,10 @@
-package com.solvd.carservice.domain.view;
+package com.solvd.carservice.domain.view.admin;
 
 import com.solvd.carservice.domain.entity.Employee;
 import org.apache.logging.log4j.LogManager;
 import java.util.Optional;
 
-public class ViewEmployee extends AbstractView<Employee>{
+public class ViewEmployee extends AbstractView<Employee> {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
@@ -42,30 +42,4 @@ public class ViewEmployee extends AbstractView<Employee>{
     public void successfulDeleted() {
         super.successfulDeleted();
     }
-    /*
-    public void showAll() {
-        LOGGER.info("List of employees ");
-    }
-    public void show(Employee employee) {
-        LOGGER.info(employee.toString());
-    }
-    public void added(Employee employee) {
-        LOGGER.info(employee.toString() + " - was added");
-    }
-    public void update() {
-        LOGGER.info("Update employee");
-    }
-    public void updated(String field) {
-        LOGGER.info("Employee " + field + " was updated");
-    }
-    public void showById(Optional<Employee> employeeOptional) {
-        LOGGER.info(employeeOptional.toString());
-    }
-    public void delete() {
-        LOGGER.info("Following employee will be deleted");
-    }
-    public void successfulDeleted() {
-        LOGGER.info("Successful deleted");
-    }
-     */
 }

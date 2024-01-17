@@ -3,12 +3,11 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Cost;
-import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.ViewCost;
-import com.solvd.carservice.domain.view.ViewDetail;
+import com.solvd.carservice.domain.view.admin.ViewCost;
+import com.solvd.carservice.domain.view.admin.ViewDetail;
 import com.solvd.carservice.service.DetailService;
 import com.solvd.carservice.service.impl.DetailServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +28,7 @@ public class DetailController extends AbstractController {
     }
 
     public void moderate() {
-        viewConsoleMenu.chooseModerateMenu();
+        viewConsoleAdminMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -47,7 +46,7 @@ public class DetailController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        viewConsoleMenu.chooseInsertMethod();
+        viewConsoleAdminMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -56,14 +55,14 @@ public class DetailController extends AbstractController {
             case "0": moderate(); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             selectInsertMethod();
         }
     }
     public void selectXmlParser() {
-        viewConsoleMenu.chooseXmlParser();
+        viewConsoleAdminMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

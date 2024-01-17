@@ -2,7 +2,6 @@ package com.solvd.carservice.domain.parse.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.Car;
-import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

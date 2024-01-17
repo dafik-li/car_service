@@ -6,7 +6,7 @@ import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.ViewOrder;
+import com.solvd.carservice.domain.view.admin.ViewOrder;
 import com.solvd.carservice.service.OrderService;
 import com.solvd.carservice.service.impl.OrderServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +25,7 @@ public class OrderController extends AbstractController {
     }
 
     public void moderate() {
-        viewConsoleMenu.chooseModerateMenu();
+        viewConsoleAdminMenu.chooseModerateMenu();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectInsertMethod(); break;
@@ -43,7 +43,7 @@ public class OrderController extends AbstractController {
         }
     }
     public void selectInsertMethod() {
-        viewConsoleMenu.chooseInsertMethod();
+        viewConsoleAdminMenu.chooseInsertMethod();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1": selectXmlParser(); break;
@@ -52,14 +52,14 @@ public class OrderController extends AbstractController {
             case "0": moderate(); break;
         }
         try {
-            validator.validateStartPageMenu(menu);
+            validator.validateAuthorization(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
             selectInsertMethod();
         }
     }
     public void selectXmlParser() {
-        viewConsoleMenu.chooseXmlParser();
+        viewConsoleAdminMenu.chooseXmlParser();
         String menu = scanner.nextLine();
         switch (menu) {
             case "1":

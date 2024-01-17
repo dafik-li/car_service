@@ -1,7 +1,6 @@
 package com.solvd.carservice.domain.parse.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.parse.XmlStaxValidator;
