@@ -43,7 +43,7 @@ public class MainMenuNavigate {
             validator.validateStartPageMenu(menu);
         } catch (AuthorizationException e) {
             LOGGER.error(e.toString());
-            authorization();
+            selectDBRepository();
         }
     }
     public void authorization() {

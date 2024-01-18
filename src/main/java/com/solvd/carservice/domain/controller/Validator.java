@@ -4,8 +4,6 @@ import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.ModerateException;
 import com.solvd.carservice.domain.exception.TableException;
 
-import java.util.Optional;
-
 public class Validator {
 
     public void validateStartPageMenu(String menu) throws AuthorizationException {
@@ -28,8 +26,27 @@ public class Validator {
             throw new AuthorizationException("What do you want, dude?");
         }
     }
-    public void validateDB(String menu, Optional<?> entity) throws AuthorizationException {
-        if (!menu.equals(entity.get())) {
+    public void validateIsNumber(String menu) throws AuthorizationException {
+        if (menu.equals("[0-9]+")) {
+            throw new AuthorizationException("What do you want, dude?");
+        }
+    }
+    public void validateIsDouble(String menu) throws AuthorizationException {
+        if (menu.equals("\\d+(\\.\\d+)?")) {
+            throw new AuthorizationException("What do you want, dude?");
+        }
+    }
+    public void validateIsBoolean(String menu) throws AuthorizationException {
+        if (menu.equals("1")) {
+            return;
+        }
+        if (menu.equals("0")) {
+            return;
+        }
+        throw new AuthorizationException("What do you want, dude?");
+    }
+    public void validateIsString(String menu) throws AuthorizationException {
+        if (menu.equals("[a-zA-Z]+")) {
             throw new AuthorizationException("What do you want, dude?");
         }
     }
