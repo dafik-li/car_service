@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class CarRepositoryMybatisImpl implements CarRepository {
+public class CarRepositoryMybatisImpl extends CarRepository {
 
     @Override
     public List<Car> getByBrand(String brand) {

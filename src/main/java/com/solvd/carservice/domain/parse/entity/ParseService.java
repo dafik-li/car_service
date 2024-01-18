@@ -2,7 +2,6 @@ package com.solvd.carservice.domain.parse.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.*;
-import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -20,27 +19,21 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class ParseService {
+public class ParseService extends AbstractParse<Service>{
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseService.class);
-    private final XmlStaxValidator xmlStaxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_service.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_service.xsd");
-    private final File jsonFile = new File("src/main/resources/json/service.json");
     private Service service;
     private final Department department;
     private final Car car;
     private final ParseCompany parseCompany;
 
     public ParseService() {
-        this.xmlStaxValidator = new XmlStaxValidator();
         this.service = new Service();
         this.department = new Department();
         this.car = new Car();
@@ -49,7 +42,7 @@ public class ParseService {
     public Service jacksonParse() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            service = mapper.readValue(jsonFile, Service.class);
+            service = mapper.readValue(jsonFileService, Service.class);
         } catch (IOException e) {
             LOGGER.error(e.toString());
         }
@@ -60,9 +53,9 @@ public class ParseService {
             JAXBContext context = JAXBContext.newInstance(Service.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(xsdFile);
+            Schema schema = factory.newSchema(xsdFileService);
             unmarshaller.setSchema(schema);
-            service = (Service) unmarshaller.unmarshal(xmlFile);
+            service = (Service) unmarshaller.unmarshal(xmlFileService);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
@@ -70,8 +63,8 @@ public class ParseService {
     }
     public Service staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            xmlStaxValidator.validate(xmlFile, xsdFile);
+        try (FileInputStream fileInputStream = new FileInputStream(xmlFileService)) {
+            xmlStaxValidator.validate(xmlFileService, xsdFileService);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

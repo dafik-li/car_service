@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderRepositoryMybatisImpl implements OrderRepository {
+public class OrderRepositoryMybatisImpl extends OrderRepository {
 
     @Override
     public List<Order> getByDate(Date date) {

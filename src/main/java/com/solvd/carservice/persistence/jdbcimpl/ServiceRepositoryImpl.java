@@ -7,10 +7,8 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class ServiceRepositoryImpl implements ServiceRepository {
+public class ServiceRepositoryImpl extends ServiceRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperService mapperService;
-    private final MapperEmployee mapperEmployee;
     private static final String INSERT_SERVICE_QUERY = "INSERT INTO services " +
             "(name, price, hours_to_do, car_id, department_id) VALUES (?, ?, ?, ?, ?) ";
     private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (service_id, employee_id) VALUES (?, ?) ";
@@ -36,14 +34,10 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private static final String GET_BY_CAR_ID =
             GET_ALL_QUERY.concat("WHERE car_id = ? ");
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE services.id = ? ");
-    private static final String GET_BY_SERVICE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
-    private static final String GET_BY_SERVICE_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
-    private static final String GET_BY_SERVICE_HOURS_TODO_QUERY = GET_ALL_QUERY.concat("WHERE hours_to_do = ? ");
+    private static final String GET_BY_SERVICE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE services.name = ? ");
+    private static final String GET_BY_SERVICE_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE services.price = ? ");
+    private static final String GET_BY_SERVICE_HOURS_TODO_QUERY = GET_ALL_QUERY.concat("WHERE services.hours_to_do = ? ");
 
-    public ServiceRepositoryImpl() {
-        this.mapperService = new MapperService();
-        this.mapperEmployee = new MapperEmployee();
-    }
     public List<Service> getByCar(Long carId) {
         List<Service> services;
         Connection connection = CONNECTION_POOL.getConnection();

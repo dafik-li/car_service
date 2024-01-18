@@ -10,21 +10,19 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepositoryImpl implements EmployeeRepository {
+public class EmployeeRepositoryImpl extends EmployeeRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperService mapperService;
-    private final MapperEmployee mapperEmployee;
     private static final String INSERT_EMPLOYEE_QUERY = "INSERT INTO employees " +
-            "(name, surname, age, position, level, salary, phone_number, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (employee_id, service_id) VALUES (?, ?);";
-    private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_NAME_QUERY = "UPDATE employees SET name = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_SURNAME_QUERY = "UPDATE employees SET surname = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_AGE_QUERY = "UPDATE employees SET age = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_POSITION_QUERY = "UPDATE employees SET position = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_LEVEL_QUERY = "UPDATE employees SET level = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ?;";
+            "(name, surname, age, position, level, salary, phone_number, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (employee_id, service_id) VALUES (?, ?) ";
+    private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_NAME_QUERY = "UPDATE employees SET name = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_SURNAME_QUERY = "UPDATE employees SET surname = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_AGE_QUERY = "UPDATE employees SET age = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_POSITION_QUERY = "UPDATE employees SET position = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_LEVEL_QUERY = "UPDATE employees SET level = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address " +
             "FROM employees e " +
@@ -41,18 +39,14 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             "LEFT JOIN companies com ON d.company_id = com.id " +
             "WHERE e.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE e.id = ? ");
-    private static final String GET_BY_EMPLOYEE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
-    private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE surname = ? ");
-    private static final String GET_BY_EMPLOYEE_AGE_QUERY = GET_ALL_QUERY.concat("WHERE age = ? ");
-    private static final String GET_BY_EMPLOYEE_POSITION_QUERY = GET_ALL_QUERY.concat("WHERE position = ? ");
-    private static final String GET_BY_EMPLOYEE_LEVEL_QUERY = GET_ALL_QUERY.concat("WHERE level = ? ");
-    private static final String GET_BY_EMPLOYEE_SALARY_QUERY = GET_ALL_QUERY.concat("WHERE salary = ? ");
-    private static final String GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY = GET_ALL_QUERY.concat("WHERE phone_number = ? ");
+    private static final String GET_BY_EMPLOYEE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE e.name = ? ");
+    private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE e.surname = ? ");
+    private static final String GET_BY_EMPLOYEE_AGE_QUERY = GET_ALL_QUERY.concat("WHERE e.age = ? ");
+    private static final String GET_BY_EMPLOYEE_POSITION_QUERY = GET_ALL_QUERY.concat("WHERE e.position = ? ");
+    private static final String GET_BY_EMPLOYEE_LEVEL_QUERY = GET_ALL_QUERY.concat("WHERE e.level = ? ");
+    private static final String GET_BY_EMPLOYEE_SALARY_QUERY = GET_ALL_QUERY.concat("WHERE e.salary = ? ");
+    private static final String GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY = GET_ALL_QUERY.concat("WHERE e.phone_number = ? ");
 
-    public EmployeeRepositoryImpl() {
-        this.mapperService = new MapperService();
-        this.mapperEmployee = new MapperEmployee();
-    }
     @Override
     public List<Employee> getByName(String name) {
         List<Employee> employees;

@@ -7,13 +7,11 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class CostRepositoryImpl implements CostRepository {
+public class CostRepositoryImpl extends CostRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperCost mapperCost;
-    private final MapperOrder mapperOrder;
-    private static final String INSERT_COST_QUERY = "INSERT INTO costs (cost, service_id, detail_id) VALUES (?, ?, ?);";
-    private static final String DELETE_COST_QUERY = "DELETE FROM costs WHERE id = ?;";
-    private static final String UPDATE_COST_QUERY = "UPDATE costs SET cost = ? WHERE id = ?;";
+    private static final String INSERT_COST_QUERY = "INSERT INTO costs (cost, service_id, detail_id) VALUES (?, ?, ?) ";
+    private static final String DELETE_COST_QUERY = "DELETE FROM costs WHERE id = ? ";
+    private static final String UPDATE_COST_QUERY = "UPDATE costs SET cost = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
                     "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
@@ -37,12 +35,8 @@ public class CostRepositoryImpl implements CostRepository {
             "LEFT JOIN details det ON c.detail_id = det.id " +
             "WHERE c.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE c.id = ? ");
-    private static final String GET_BY_COST_COST_QUERY = GET_ALL_QUERY.concat("WHERE cost = ? ");
+    private static final String GET_BY_COST_COST_QUERY = GET_ALL_QUERY.concat("WHERE c.cost = ? ");
 
-    public CostRepositoryImpl() {
-        this.mapperCost = new MapperCost();
-        this.mapperOrder = new MapperOrder();
-    }
     @Override
     public List<Cost> getByCost(Double cost) {
         List<Cost> costs;

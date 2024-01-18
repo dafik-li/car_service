@@ -1,10 +1,10 @@
 package com.solvd.carservice;
 
-import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.controller.admin.navigate.MainMenuNavigate;
 
 public class Main {
     public static void main(String[] args) {
-        Generator generator = new Generator();
-        generator.selectDBRepository();
+        MainMenuNavigate mainMenuNavigate = new MainMenuNavigate();
+        mainMenuNavigate.selectDBRepository();
     }
 }

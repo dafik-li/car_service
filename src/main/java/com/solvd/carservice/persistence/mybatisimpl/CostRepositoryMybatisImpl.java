@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class CostRepositoryMybatisImpl implements CostRepository {
+public class CostRepositoryMybatisImpl extends CostRepository {
 
     @Override
     public List<Cost> getByCost(Double cost) {

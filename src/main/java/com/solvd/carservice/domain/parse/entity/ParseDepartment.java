@@ -2,7 +2,6 @@ package com.solvd.carservice.domain.parse.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.*;
-import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -20,32 +19,26 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class ParseDepartment {
+public class ParseDepartment extends AbstractParse<Department>{
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseDepartment.class);
-    private final XmlStaxValidator xmlStaxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_department.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_department.xsd");
-    private final File jsonFile = new File("src/main/resources/json/department.json");
     private Department department;
     private final Company company;
 
     public ParseDepartment() {
-        this.xmlStaxValidator = new XmlStaxValidator();
         this.department = new Department();
         this.company = new Company();
     }
     public Department jacksonParse() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            department = mapper.readValue(jsonFile, Department.class);
+            department = mapper.readValue(jsonFileDepartment, Department.class);
         } catch (IOException e) {
             LOGGER.error(e.toString());
         }
@@ -56,9 +49,9 @@ public class ParseDepartment {
             JAXBContext context = JAXBContext.newInstance(Department.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(xsdFile);
+            Schema schema = factory.newSchema(xsdFileDepartment);
             unmarshaller.setSchema(schema);
-            department = (Department) unmarshaller.unmarshal(xmlFile);
+            department = (Department) unmarshaller.unmarshal(xmlFileDepartment);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
@@ -66,8 +59,8 @@ public class ParseDepartment {
     }
     public Department staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            xmlStaxValidator.validate(xmlFile, xsdFile);
+        try (FileInputStream fileInputStream = new FileInputStream(xmlFileDepartment)) {
+            xmlStaxValidator.validate(xmlFileDepartment, xsdFileDepartment);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

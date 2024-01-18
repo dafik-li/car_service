@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderRepositoryImpl implements OrderRepository{
+public class OrderRepositoryImpl extends OrderRepository{
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperOrder mapperOrder;
-    private static final String INSERT_ORDER_QUERY = "INSERT INTO orders (date, client_id, cost_id) VALUES (?, ?, ?);";
-    private static final String DELETE_ORDER_QUERY = "DELETE FROM orders WHERE id = ?;";
-    private static final String UPDATE_ORDER_QUERY = "UPDATE orders SET date = ? WHERE id = ?;";
+    private static final String INSERT_ORDER_QUERY = "INSERT INTO orders (date, client_id, cost_id) VALUES (?, ?, ?) ";
+    private static final String DELETE_ORDER_QUERY = "DELETE FROM orders WHERE id = ? ";
+    private static final String UPDATE_ORDER_QUERY = "UPDATE orders SET date = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday, " +
                     "c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
@@ -28,11 +27,7 @@ public class OrderRepositoryImpl implements OrderRepository{
             "LEFT JOIN companies com ON d.company_id = c.id " +
             "LEFT JOIN details det ON c.detail_id = det.id ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE o.id = ? ");
-    private static final String GET_BY_ORDER_DATE_QUERY = GET_ALL_QUERY.concat("WHERE date = ? ");
-
-    public OrderRepositoryImpl() {
-        this.mapperOrder = new MapperOrder();
-    }
+    private static final String GET_BY_ORDER_DATE_QUERY = GET_ALL_QUERY.concat("WHERE o.date = ? ");
 
     @Override
     public List<Order> getByDate(Date date) {

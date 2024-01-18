@@ -1,29 +1,33 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.parse.Parser;
-import com.solvd.carservice.domain.view.admin.ViewConsoleAdminMenu;
-import com.solvd.carservice.util.GetDataFromConsole;
-import com.solvd.carservice.domain.controller.Validator;
+import com.solvd.carservice.domain.controller.GetDataFromConsole;
+import com.solvd.carservice.domain.view.admin.*;
 import java.util.Optional;
-import java.util.Scanner;
 
-abstract public class AbstractController {
-    protected Scanner scanner;
-    protected Validator validator;
+abstract public class AbstractController implements InterfaceController {
     protected GetDataFromConsole getDataFromConsole;
-    protected ViewConsoleAdminMenu viewConsoleAdminMenu;
-    protected Parser parser;
+    protected ViewCar viewCar;
+    protected ViewClient viewClient;
+    protected ViewCompany viewCompany;
+    protected ViewDepartment viewDepartment;
+    protected ViewDetail viewDetail;
+    protected ViewEmployee viewEmployee;
+    protected ViewService viewService;
+    protected ViewCost viewCost;
+    protected ViewOrder viewOrder;
 
     public AbstractController() {
-        this.scanner = new Scanner(System.in);
-        this.validator = new Validator();
         this.getDataFromConsole = new GetDataFromConsole();
-        this.viewConsoleAdminMenu = new ViewConsoleAdminMenu();
-        this.parser = new Parser();
+        this.viewCar = new ViewCar();
+        this.viewClient = new ViewClient();
+        this.viewCompany = new ViewCompany();
+        this.viewDepartment = new ViewDepartment();
+        this.viewDetail = new ViewDetail();
+        this.viewEmployee = new ViewEmployee();
+        this.viewService = new ViewService();
+        this.viewCost = new ViewCost();
+        this.viewOrder = new ViewOrder();
     }
-    public abstract void moderate();
-    public abstract void selectInsertMethod();
-    public abstract void selectXmlParser();
     public abstract void add();
     public abstract void retrieveAll();
     public abstract void change();

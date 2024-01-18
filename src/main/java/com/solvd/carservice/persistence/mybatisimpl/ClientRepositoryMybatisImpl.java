@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientRepositoryMybatisImpl implements ClientRepository {
+public class ClientRepositoryMybatisImpl extends ClientRepository {
 
     @Override
     public List<Client> getByName(String name) {

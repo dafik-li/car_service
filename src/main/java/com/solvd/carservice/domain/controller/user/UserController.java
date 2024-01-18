@@ -1,19 +1,15 @@
 package com.solvd.carservice.domain.controller.user;
 
-import com.solvd.carservice.domain.controller.Generator;
+import com.solvd.carservice.domain.controller.admin.navigate.MainMenuNavigate;
 import com.solvd.carservice.domain.controller.Validator;
 import com.solvd.carservice.domain.controller.admin.*;
 import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.view.user.ViewConsoleUserMenu;
-import com.solvd.carservice.service.impl.CarServiceImpl;
-import com.solvd.carservice.service.impl.DetailServiceImpl;
-import com.solvd.carservice.service.impl.EmployeeServiceImpl;
-import com.solvd.carservice.service.impl.ServiceServiceImpl;
+import com.solvd.carservice.service.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -24,22 +20,20 @@ public class UserController extends CarController{
     private final static Logger LOGGER = (Logger) LogManager.getLogger(UserController.class);
     private final Scanner scanner;
     private final Validator validator;
-    private final ClientController clientController;
     private final ViewConsoleUserMenu viewConsoleUserMenu;
 
     public UserController() {
         this.scanner = new Scanner(System.in);
         this.validator = new Validator();
-        this.clientController = new ClientController();
         this.viewConsoleUserMenu = new ViewConsoleUserMenu();
     }
     public void userMenu() {
         viewConsoleUserMenu.userMenu();
         String menu = scanner.nextLine();
         switch (menu) {
-            case "1": selectClient(); break;
-            case "2": addClient(); break;
-            case "3": new Generator().authorization(); break;
+            case "1": retrieveClientById(); calculationOrder(); break;
+            case "2": new ClientController().add(); userMenu(); break;
+            case "3": new MainMenuNavigate().authorization(); break;
             case "0": System.exit(0); break;
         }
         try {
@@ -49,15 +43,11 @@ public class UserController extends CarController{
             userMenu();
         }
     }
-    public void selectClient() {
-        Optional<Client> client = clientController.retrieveById();
-        viewConsoleUserMenu.returnClient(client);
-        calculationOrder();
-    }
-    public void addClient() {
-        clientController.add();
-        userMenu();
-        calculationOrder();
+    //authorization the client
+    public void retrieveClientById() {
+        Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
+                (getDataFromConsole.getLongFromConsole("id")));
+        viewConsoleUserMenu.displayClient(clientOptional);
     }
     //retrieve cars list
     public void retrieveAll() {
@@ -74,13 +64,11 @@ public class UserController extends CarController{
         return carOptional;
     }
     //retrieve services list for chosen car
-    public List<Service> retrieveServicesByCarId(Long id) {
-        List<Service> services = new ArrayList<>();
+    public void retrieveServicesByCarId(Long id) {
         viewConsoleUserMenu.displayTittleServices();
         for (Service service : new ServiceServiceImpl().retrieveByCar(id)) {
             viewConsoleUserMenu.displayServices(service);
         }
-        return services;
     }
     //select desire service
     public Optional<Service> retrieveServiceById() {
@@ -90,22 +78,18 @@ public class UserController extends CarController{
         return serviceOptional;
     }
     //retrieve details list for chosen car
-    public List<Detail> retrieveDetailsByCarId(Long id) {
-        List<Detail> details = new ArrayList<>();
+    public void retrieveDetailsByCarId(Long id) {
         viewConsoleUserMenu.displayTittleDetails();
         for (Detail detail : new DetailServiceImpl().retrieveByCar(id)) {
             viewConsoleUserMenu.displayDetails(detail);
         }
-        return details;
     }
     //retrieve employees available for chosen service
-    public List<Employee> retrieveEmployeesByServiceId(Service service) {
-        List<Employee> employees = new ArrayList<>();
+    public void retrieveEmployeesByServiceId(Service service) {
         viewConsoleUserMenu.displayTittleEmployees();
         for (Employee employee : new ServiceServiceImpl().retrieveEmployeesByServiceId(service)) {
             viewConsoleUserMenu.displayEmployees(employee);
         }
-        return employees;
     }
     //select desire detail
     public Optional<Detail> retrieveDetailById() {
@@ -156,13 +140,13 @@ public class UserController extends CarController{
         retrieveAll();
         Long carId = retrieveById().get().getId();
         viewConsoleUserMenu.chooseService();
-        List<Service> services = retrieveServicesByCarId(carId);
+        retrieveServicesByCarId(carId);
         Optional<Service> serviceId = retrieveServiceById();
         viewConsoleUserMenu.chooseDetail();
-        List<Detail> details = retrieveDetailsByCarId(carId);
+        retrieveDetailsByCarId(carId);
         Optional<Detail> detailId = retrieveDetailById();
         viewConsoleUserMenu.chooseEmployee();
-        List<Employee> employees = retrieveEmployeesByServiceId(serviceId.get());
+        retrieveEmployeesByServiceId(serviceId.get());
         Optional<Employee> employeeId = retrieveEmployeeById();
 
         double totalPrice = calculatePrice(serviceId, detailId);

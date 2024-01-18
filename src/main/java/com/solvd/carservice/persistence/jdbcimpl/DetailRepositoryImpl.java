@@ -8,17 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DetailRepositoryImpl implements DetailRepository {
+public class DetailRepositoryImpl extends DetailRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperDetail mapperDetail;
-    private final MapperCost mapperCost;
     private static final String INSERT_DETAIL_QUERY = "INSERT INTO details " +
-            "(name, price, car_id, in_Stock, delivery_days) VALUES (?, ?, ?, ?, ?);";
-    private static final String DELETE_DETAIL_QUERY = "DELETE FROM details WHERE id = ?;";
-    private static final String UPDATE_DETAIL_NAME_QUERY = "UPDATE details SET name = ? WHERE id = ?;";
-    private static final String UPDATE_DETAIL_PRICE_QUERY = "UPDATE details SET price = ? WHERE id = ?;";
-    private static final String UPDATE_DETAIL_IN_STOCK_QUERY = "UPDATE details SET in_Stock = ? WHERE id = ?;";
-    private static final String UPDATE_DETAIL_DELIVERY_DAYS_QUERY = "UPDATE details SET delivery_days = ? WHERE id = ?;";
+            "(name, price, car_id, in_Stock, delivery_days) VALUES (?, ?, ?, ?, ?) ";
+    private static final String DELETE_DETAIL_QUERY = "DELETE FROM details WHERE id = ? ";
+    private static final String UPDATE_DETAIL_NAME_QUERY = "UPDATE details SET name = ? WHERE id = ? ";
+    private static final String UPDATE_DETAIL_PRICE_QUERY = "UPDATE details SET price = ? WHERE id = ? ";
+    private static final String UPDATE_DETAIL_IN_STOCK_QUERY = "UPDATE details SET in_Stock = ? WHERE id = ? ";
+    private static final String UPDATE_DETAIL_DELIVERY_DAYS_QUERY = "UPDATE details SET delivery_days = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT details.id, details.name, details.price, cars.id, cars.brand, cars.model, cars.year, details.in_stock, details.delivery_days " +
             "FROM details " +
@@ -36,15 +34,11 @@ public class DetailRepositoryImpl implements DetailRepository {
     private static final String GET_BY_CAR_ID =
             GET_ALL_QUERY.concat("WHERE car_id = ? ");
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE details.id = ? ");
-    private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
-    private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
-    private static final String GET_BY_DETAIL_IN_STOCK_QUERY = GET_ALL_QUERY.concat("in_Stock = ? ");
-    private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = GET_ALL_QUERY.concat("WHERE delivery_days = ? ");
+    private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE details.name = ? ");
+    private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE details.price = ? ");
+    private static final String GET_BY_DETAIL_IN_STOCK_QUERY = GET_ALL_QUERY.concat("WHERE details.in_Stock = ? ");
+    private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = GET_ALL_QUERY.concat("WHERE details.delivery_days = ? ");
 
-    public DetailRepositoryImpl() {
-        this.mapperDetail = new MapperDetail();
-        this.mapperCost = new MapperCost();
-    }
     public List<Detail> getByCar(Long carId) {
         List<Detail> details;
         Connection connection = CONNECTION_POOL.getConnection();

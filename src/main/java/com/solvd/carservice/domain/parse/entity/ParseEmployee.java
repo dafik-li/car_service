@@ -3,7 +3,6 @@ package com.solvd.carservice.domain.parse.entity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -21,26 +20,20 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class ParseEmployee {
+public class ParseEmployee extends AbstractParse<Employee>{
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseEmployee.class);
-    private final XmlStaxValidator xmlStaxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_employee.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_employee.xsd");
-    private final File jsonFile = new File("src/main/resources/json/employee.json");
     private Employee employee;
     private final Department department;
     private final ParseCompany parseCompany;
 
     public ParseEmployee() {
-        this.xmlStaxValidator = new XmlStaxValidator();
         this.employee = new Employee();
         this.department = new Department();
         this.parseCompany = new ParseCompany();
@@ -48,7 +41,7 @@ public class ParseEmployee {
     public Employee jacksonParse() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            employee = mapper.readValue(jsonFile, Employee.class);
+            employee = mapper.readValue(jsonFileEmployee, Employee.class);
         } catch (IOException e) {
             LOGGER.error(e.toString());
         }
@@ -59,9 +52,9 @@ public class ParseEmployee {
             JAXBContext context = JAXBContext.newInstance(Employee.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(xsdFile);
+            Schema schema = factory.newSchema(xsdFileEmployee);
             unmarshaller.setSchema(schema);
-            employee = (Employee) unmarshaller.unmarshal(xmlFile);
+            employee = (Employee) unmarshaller.unmarshal(xmlFileEmployee);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
@@ -69,8 +62,8 @@ public class ParseEmployee {
     }
     public Employee staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            xmlStaxValidator.validate(xmlFile, xsdFile);
+        try (FileInputStream fileInputStream = new FileInputStream(xmlFileEmployee)) {
+            xmlStaxValidator.validate(xmlFileEmployee, xsdFileEmployee);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

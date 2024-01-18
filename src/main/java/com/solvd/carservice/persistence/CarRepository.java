@@ -3,13 +3,20 @@ package com.solvd.carservice.persistence;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.domain.entity.Service;
-
+import com.solvd.carservice.persistence.jdbcimpl.*;
 import java.util.List;
 
-public interface CarRepository extends InterfaceRepository<Car>{
-    List<Car> getByBrand(String brand);
-    List<Car> getByModel(String model);
-    List<Car> getByYear(Integer year);
-    List<Service> getServicesByCarId(Car car);
-    List<Detail> getDetailByCarId(Car car);
+public abstract class CarRepository implements InterfaceRepository<Car> {
+    protected MapperDetail mapperDetail;
+    protected MapperService mapperService;
+
+    public CarRepository() {
+        this.mapperDetail = new MapperDetail();
+        this.mapperService = new MapperService();
+    }
+    public abstract List<Car> getByBrand(String brand);
+    public abstract List<Car> getByModel(String model);
+    public abstract List<Car> getByYear(Integer year);
+    public abstract List<Service> getServicesByCarId(Car car);
+    public abstract List<Detail> getDetailByCarId(Car car);
 }

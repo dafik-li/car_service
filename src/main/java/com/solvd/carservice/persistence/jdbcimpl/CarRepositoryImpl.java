@@ -10,16 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CarRepositoryImpl implements CarRepository {
+public class CarRepositoryImpl extends CarRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperService mapperService;
-    private final MapperDetail mapperDetail;
-    private static final String INSERT_CAR_QUERY = "INSERT INTO cars (brand, model, year) VALUES (?, ?, ?);";
-    private static final String DELETE_CAR_QUERY = "DELETE FROM cars WHERE id = ?;";
-    private static final String UPDATE_CAR_BRAND_QUERY = "UPDATE cars SET brand = ? WHERE id = ?;";
-    private static final String UPDATE_CAR_MODEL_QUERY = "UPDATE cars SET model = ? WHERE id = ?;";
-    private static final String UPDATE_CAR_YEAR_QUERY = "UPDATE cars SET year = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM cars;";
+    private static final String INSERT_CAR_QUERY = "INSERT INTO cars (brand, model, year) VALUES (?, ?, ?) ";
+    private static final String DELETE_CAR_QUERY = "DELETE FROM cars WHERE id = ? ";
+    private static final String UPDATE_CAR_BRAND_QUERY = "UPDATE cars SET brand = ? WHERE id = ? ";
+    private static final String UPDATE_CAR_MODEL_QUERY = "UPDATE cars SET model = ? WHERE id = ? ";
+    private static final String UPDATE_CAR_YEAR_QUERY = "UPDATE cars SET year = ? WHERE id = ? ";
+    private static final String GET_ALL_QUERY = "SELECT * FROM cars ";
     private static final String GET_SERVICES_BY_CAR_ID =
             "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
                     "d.id, d.name, com.id, com.name, com.address " +
@@ -33,15 +31,11 @@ public class CarRepositoryImpl implements CarRepository {
             "FROM details " +
             "LEFT JOIN cars ON details.car_id = cars.id " +
             "WHERE cars.id = ? ";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM cars WHERE id = ?;";
-    private static final String GET_BY_CAR_BRAND_QUERY = "SELECT * FROM cars where brand = ?;";
-    private static final String GET_BY_CAR_MODEL_QUERY = "SELECT * FROM cars where model = ?;";
-    private static final String GET_BY_CAR_YEAR_QUERY = "SELECT * FROM cars where year = ?;";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE id = ? ");
+    private static final String GET_BY_CAR_BRAND_QUERY = GET_ALL_QUERY.concat("WHERE brand = ? ");
+    private static final String GET_BY_CAR_MODEL_QUERY = GET_ALL_QUERY.concat("WHERE model = ? ");
+    private static final String GET_BY_CAR_YEAR_QUERY = GET_ALL_QUERY.concat("WHERE year = ? ");
 
-    public CarRepositoryImpl() {
-        this.mapperService = new MapperService();
-        this.mapperDetail = new MapperDetail();
-    }
     @Override
     public List<Car> getByBrand(String brand) {
         List<Car> cars;

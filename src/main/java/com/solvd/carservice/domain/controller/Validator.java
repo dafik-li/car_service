@@ -1,9 +1,10 @@
 package com.solvd.carservice.domain.controller;
 
-import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.ModerateException;
 import com.solvd.carservice.domain.exception.TableException;
+
+import java.util.Optional;
 
 public class Validator {
 
@@ -27,8 +28,8 @@ public class Validator {
             throw new AuthorizationException("What do you want, dude?");
         }
     }
-    public void validateClient(String menu, Client client) throws AuthorizationException {
-        if (!menu.equals(client.getId())) {
+    public void validateDB(String menu, Optional<?> entity) throws AuthorizationException {
+        if (!menu.equals(entity.get())) {
             throw new AuthorizationException("What do you want, dude?");
         }
     }

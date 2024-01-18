@@ -22,6 +22,12 @@ public class ViewEmployee extends AbstractView<Employee> {
     public void added(Employee entity) {
         super.added(entity);
     }
+    public void addService() {
+        LOGGER.info("Add service to employee");
+    }
+    public void addedService(Long employeeId, Long serviceId) {
+        LOGGER.info("Service id - " + serviceId + " was assigned to the employee id - " + employeeId);
+    }
     @Override
     public void update() {
         LOGGER.info("Update employee");

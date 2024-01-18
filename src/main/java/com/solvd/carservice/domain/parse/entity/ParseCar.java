@@ -2,7 +2,6 @@ package com.solvd.carservice.domain.parse.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.Car;
-import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -18,29 +17,23 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ParseCar {
+public class ParseCar extends AbstractParse<Car>{
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCar.class);
-    private final XmlStaxValidator xmlStaxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_car.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_car.xsd");
-    private final File jsonFile = new File("src/main/resources/json/car.json");
     private Car car;
 
     public ParseCar() {
-        this.xmlStaxValidator = new XmlStaxValidator();
         this.car = new Car();
     }
     public Car jacksonParse() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            car = mapper.readValue(jsonFile, Car.class);
+            car = mapper.readValue(jsonFileCar, Car.class);
         } catch (IOException e) {
             LOGGER.error(e.toString());
         }
@@ -51,9 +44,9 @@ public class ParseCar {
             JAXBContext context = JAXBContext.newInstance(Car.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(xsdFile);
+            Schema schema = factory.newSchema(xsdFileCar);
             unmarshaller.setSchema(schema);
-            car = (Car) unmarshaller.unmarshal(xmlFile);
+            car = (Car) unmarshaller.unmarshal(xmlFileCar);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
@@ -61,8 +54,8 @@ public class ParseCar {
     }
     public Car staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            xmlStaxValidator.validate(xmlFile, xsdFile);
+        try (FileInputStream fileInputStream = new FileInputStream(xmlFileCar)) {
+            xmlStaxValidator.validate(xmlFileCar, xsdFileCar);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

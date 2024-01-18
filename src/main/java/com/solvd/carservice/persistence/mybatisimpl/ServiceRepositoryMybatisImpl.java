@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class ServiceRepositoryMybatisImpl implements ServiceRepository {
+public class ServiceRepositoryMybatisImpl extends ServiceRepository {
 
     @Override
     public List<Service> getByCar(Long carId) {

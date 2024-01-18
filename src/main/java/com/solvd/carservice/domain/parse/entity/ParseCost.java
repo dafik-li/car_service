@@ -2,7 +2,6 @@ package com.solvd.carservice.domain.parse.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.carservice.domain.entity.*;
-import com.solvd.carservice.domain.parse.XmlStaxValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -20,20 +19,15 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class ParseCost {
+public class ParseCost extends AbstractParse<Cost>{
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCost.class);
-    private final XmlStaxValidator xmlStaxValidator;
-    private final File xmlFile = new File("src/main/resources/new_xml/new_cost.xml");
-    private final File xsdFile = new File("src/main/resources/new_xml/new_cost.xsd");
-    private final File jsonFile = new File("src/main/resources/json/cost.json");
     private Cost cost;
     private final Detail detail;
     private final Service service;
@@ -41,7 +35,6 @@ public class ParseCost {
     private final ParseDepartment parseDepartment;
 
     public ParseCost() {
-        this.xmlStaxValidator = new XmlStaxValidator();
         this.cost = new Cost();
         this.detail = new Detail();
         this.service = new Service();
@@ -51,7 +44,7 @@ public class ParseCost {
     public Cost jacksonParse() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            cost = mapper.readValue(jsonFile, Cost.class);
+            cost = mapper.readValue(jsonFileCost, Cost.class);
         } catch (IOException e) {
             LOGGER.error(e.toString());
         }
@@ -62,9 +55,9 @@ public class ParseCost {
             JAXBContext context = JAXBContext.newInstance(Cost.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(xsdFile);
+            Schema schema = factory.newSchema(xsdFileCost);
             unmarshaller.setSchema(schema);
-            cost = (Cost) unmarshaller.unmarshal(xmlFile);
+            cost = (Cost) unmarshaller.unmarshal(xmlFileCost);
         } catch (JAXBException | SAXException e) {
             LOGGER.error(e.toString());
         }
@@ -72,8 +65,8 @@ public class ParseCost {
     }
     public Cost staxParse() {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fileInputStream = new FileInputStream(xmlFile)) {
-            xmlStaxValidator.validate(xmlFile, xsdFile);
+        try (FileInputStream fileInputStream = new FileInputStream(xmlFileCost)) {
+            xmlStaxValidator.validate(xmlFileCost, xsdFileCost);
             XMLEventReader reader = inputFactory.createXMLEventReader(fileInputStream);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();

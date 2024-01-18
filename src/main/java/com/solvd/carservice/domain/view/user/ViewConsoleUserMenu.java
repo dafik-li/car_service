@@ -18,7 +18,7 @@ public class ViewConsoleUserMenu {
                 "3 - return" + "\n" +
                 "0 - exit");
     }
-    public void returnClient(Optional<Client> client) {
+    public void displayClient(Optional<Client> client) {
         LOGGER.info("Hallo " + client.get().getName() + " " + client.get().getSurname() + "!");
     }
     public void displayTittleCars() {

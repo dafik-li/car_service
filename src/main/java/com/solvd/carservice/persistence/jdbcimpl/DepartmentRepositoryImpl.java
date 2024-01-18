@@ -10,11 +10,8 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class DepartmentRepositoryImpl implements DepartmentRepository {
+public class DepartmentRepositoryImpl extends DepartmentRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperService mapperService;
-    private final MapperEmployee mapperEmployee;
-    private final MapperDepartment mapperDepartment;
     private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments (name, company_id) VALUES (?, ?) ";
     private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ? ";
     private static final String UPDATE_DEPARTMENT_NAME_QUERY = "UPDATE departments SET name = ? WHERE id = ? ";
@@ -37,13 +34,8 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
             "LEFT JOIN companies com ON d.company_id = com.id " +
             "WHERE d.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE d.id = ? ");
-    private static final String GET_BY_DEPARTMENT_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
-
-    public DepartmentRepositoryImpl() {
-        this.mapperService = new MapperService();
-        this.mapperEmployee = new MapperEmployee();
-        this.mapperDepartment = new MapperDepartment();
-    }
+    private static final String GET_BY_DEPARTMENT_NAME_QUERY = GET_ALL_QUERY.concat("WHERE d.name = ? ");
+    
     @Override
     public List<Department> getByName(String name) {
         List<Department> departments;

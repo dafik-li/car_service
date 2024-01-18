@@ -1,79 +1,14 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Order;
-import com.solvd.carservice.domain.exception.AuthorizationException;
-import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.domain.view.admin.ViewOrder;
 import com.solvd.carservice.service.OrderService;
 import com.solvd.carservice.service.impl.OrderServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 import java.util.Optional;
 
 public class OrderController extends AbstractController {
-    static {
-        System.setProperty("log4j.configurationFile", "log4j2.xml");
-    }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
-    private final ViewOrder viewOrder;
 
-    public OrderController() {
-        this.viewOrder = new ViewOrder();
-    }
-
-    public void moderate() {
-        viewConsoleAdminMenu.chooseModerateMenu();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": selectInsertMethod(); break;
-            case "2": retrieveAll(); break;
-            case "3": retrieveById(); break;
-            case "4": change(); break;
-            case "5": removeById(); break;
-            case "0": new Generator().moderateController(); break;
-        }
-        try {
-            validator.validateActionMenu(menu);
-        } catch (TableException e) {
-            LOGGER.error(e.toString());
-            moderate();
-        }
-    }
-    public void selectInsertMethod() {
-        viewConsoleAdminMenu.chooseInsertMethod();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": selectXmlParser(); break;
-            case "2": add(); break;
-            case "3": parser.addOrder(menu);
-            case "0": moderate(); break;
-        }
-        try {
-            validator.validateAuthorization(menu);
-        } catch (AuthorizationException e) {
-            LOGGER.error(e.toString());
-            selectInsertMethod();
-        }
-    }
-    public void selectXmlParser() {
-        viewConsoleAdminMenu.chooseXmlParser();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1":
-            case "2":
-                parser.addOrder(menu); break;
-            case "0": selectInsertMethod(); break;
-        }
-        try {
-            validator.validateStartPageMenu(menu);
-        } catch (AuthorizationException e) {
-            LOGGER.error(e.toString());
-            selectXmlParser();
-        }
-    }
     public void add() {
         Order order = new Order(
                 getDataFromConsole.getDateFromConsole("date"),

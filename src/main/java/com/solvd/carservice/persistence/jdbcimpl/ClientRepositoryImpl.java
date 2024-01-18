@@ -9,16 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientRepositoryImpl implements ClientRepository {
+public class ClientRepositoryImpl extends ClientRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperOrder mapperOrder;
-    private static final String INSERT_CLIENT_QUERY = "INSERT INTO clients (name, surname, phone_number, birthday) VALUES (?, ?, ?, ?)";
-    private static final String DELETE_CLIENT_QUERY = "DELETE FROM clients WHERE id = ?";
-    private static final String UPDATE_CLIENT_NAME_QUERY = "UPDATE clients SET name = ? WHERE id = ?";
-    private static final String UPDATE_CLIENT_SURNAME_QUERY = "UPDATE clients SET surname = ? WHERE id = ?";
-    private static final String UPDATE_CLIENT_PHONE_NUMBER_QUERY = "UPDATE clients SET phone_number = ? WHERE id = ?";
-    private static final String UPDATE_CLIENT_BIRTHDAY_QUERY = "UPDATE clients SET birthday = ? WHERE id = ?";
-    private static final String GET_ALL_QUERY = "SELECT * FROM clients";
+    private static final String INSERT_CLIENT_QUERY = "INSERT INTO clients (name, surname, phone_number, birthday) VALUES (?, ?, ?, ?) ";
+    private static final String DELETE_CLIENT_QUERY = "DELETE FROM clients WHERE id = ? ";
+    private static final String UPDATE_CLIENT_NAME_QUERY = "UPDATE clients SET name = ? WHERE id = ? ";
+    private static final String UPDATE_CLIENT_SURNAME_QUERY = "UPDATE clients SET surname = ? WHERE id = ? ";
+    private static final String UPDATE_CLIENT_PHONE_NUMBER_QUERY = "UPDATE clients SET phone_number = ? WHERE id = ? ";
+    private static final String UPDATE_CLIENT_BIRTHDAY_QUERY = "UPDATE clients SET birthday = ? WHERE id = ? ";
+    private static final String GET_ALL_QUERY = "SELECT * FROM clients ";
     private static final String GET_ORDERS_BY_CLIENT_ID =
             "SELECT o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday, " +
                     "c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
@@ -32,15 +31,12 @@ public class ClientRepositoryImpl implements ClientRepository {
             "LEFT JOIN companies com ON d.company_id = c.id " +
             "LEFT JOIN details det ON c.detail_id = det.id " +
             "WHERE cl.id = ? ";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM clients WHERE id = ?";
-    private static final String GET_BY_CLIENT_NAME_QUERY = "SELECT * FROM clients WHERE name = ?";
-    private static final String GET_BY_CLIENT_SURNAME_QUERY = "SELECT * FROM clients WHERE surname = ?";
-    private static final String GET_BY_CLIENT_PHONE_NUMBER_QUERY = "SELECT * FROM clients WHERE phone_number = ?";
-    private static final String GET_BY_CLIENT_BIRTHDAY_QUERY = "SELECT * FROM clients WHERE birthday = ?";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE id = ? ");
+    private static final String GET_BY_CLIENT_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
+    private static final String GET_BY_CLIENT_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE surname = ? ");
+    private static final String GET_BY_CLIENT_PHONE_NUMBER_QUERY = GET_ALL_QUERY.concat("WHERE phone_number = ? ");
+    private static final String GET_BY_CLIENT_BIRTHDAY_QUERY = GET_ALL_QUERY.concat("WHERE birthday = ? ");
 
-    public ClientRepositoryImpl() {
-        this.mapperOrder = new MapperOrder();
-    }
     @Override
     public List<Client> getByName(String name) {
         List<Client> clients;

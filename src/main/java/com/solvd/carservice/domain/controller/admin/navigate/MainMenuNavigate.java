@@ -1,5 +1,7 @@
-package com.solvd.carservice.domain.controller;
+package com.solvd.carservice.domain.controller.admin.navigate;
 
+import com.solvd.carservice.domain.controller.SwitcherRepository;
+import com.solvd.carservice.domain.controller.Validator;
 import com.solvd.carservice.domain.controller.admin.ControllerFactory;
 import com.solvd.carservice.domain.controller.user.UserController;
 import com.solvd.carservice.domain.exception.AuthorizationException;
@@ -9,11 +11,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import java.util.Scanner;
 
-public class Generator {
+public class MainMenuNavigate {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(Generator.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(MainMenuNavigate.class);
     private final Scanner scanner;
     private final Validator validator;
     private final ViewConsoleAdminMenu viewConsoleAdminMenu;
@@ -21,7 +23,7 @@ public class Generator {
     private final ControllerFactory controllerFactory;
     private final SwitcherRepository switcherRepository;
 
-    public Generator() {
+    public MainMenuNavigate() {
         this.scanner = new Scanner(System.in);
         this.validator = new Validator();
         this.viewConsoleAdminMenu = new ViewConsoleAdminMenu();
