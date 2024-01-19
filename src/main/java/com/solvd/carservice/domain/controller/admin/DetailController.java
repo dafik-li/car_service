@@ -11,12 +11,12 @@ public class DetailController extends AbstractController {
 
     public void add() {
         Detail detail = new Detail(
-                getDataFromConsole.getStringFromConsole("name"),
-                getDataFromConsole.getIntegerFromConsole("price"),
+                getDataFromConsole.getString("name"),
+                getDataFromConsole.getInteger("price"),
                 new Car(
-                        getDataFromConsole.getLongFromConsole("car")),
-                getDataFromConsole.getBooleanFromConsole("in stock"),
-                getDataFromConsole.getIntegerFromConsole("delivery days"));
+                        getDataFromConsole.getLong("car")),
+                getDataFromConsole.getBoolean("in stock"),
+                getDataFromConsole.getInteger("delivery days"));
         DetailService detailService = new DetailServiceImpl();
         detailService.add(detail);
         viewDetail.added(detail);
@@ -34,19 +34,19 @@ public class DetailController extends AbstractController {
         viewDetail.update();
         Optional<Detail> detail = retrieveById();
         DetailService detailService = new DetailServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                detail.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                detail.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "price":
-                detail.get().setPrice(getDataFromConsole.getIntegerFromConsole("price"));
+                detail.get().setPrice(getDataFromConsole.getInteger("price"));
                 break;
             case "in_stock":
-                detail.get().setInStock(getDataFromConsole.getBooleanFromConsole("in_stock"));
+                detail.get().setInStock(getDataFromConsole.getBoolean("in_stock"));
                 break;
             case "delivery_days":
-                detail.get().setDeliveryDays(getDataFromConsole.getIntegerFromConsole("delivery_days"));
+                detail.get().setDeliveryDays(getDataFromConsole.getInteger("delivery_days"));
                 break;
         }
         detailService.change(detail, field);
@@ -54,7 +54,7 @@ public class DetailController extends AbstractController {
     }
     public Optional<Detail> retrieveById() {
         Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
+                (getDataFromConsole.getLong("id")));
         viewDetail.showById(detailOptional);
         for (Cost cost : detailOptional.get().getCosts()) {
             viewCost.showById(Optional.ofNullable(cost));
@@ -65,7 +65,7 @@ public class DetailController extends AbstractController {
         viewDetail.delete();
         DetailService detailService = new DetailServiceImpl();
         detailService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewDetail.successfulDeleted();
     }
 }

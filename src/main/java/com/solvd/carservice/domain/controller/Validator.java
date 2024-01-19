@@ -3,6 +3,7 @@ package com.solvd.carservice.domain.controller;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.ModerateException;
 import com.solvd.carservice.domain.exception.TableException;
+import java.util.List;
 
 public class Validator {
 
@@ -48,6 +49,13 @@ public class Validator {
     public void validateIsString(String menu) throws AuthorizationException {
         if (menu.equals("[a-zA-Z]+")) {
             throw new AuthorizationException("What do you want, dude?");
+        }
+    }
+    public void validateId(List<?> list, Long carId) throws AuthorizationException {
+        for (int i =0; i < list.size(); i++) {
+            if (list.indexOf(i) == carId) {
+                throw new AuthorizationException("What do you want, dude?");
+            }
         }
     }
 }

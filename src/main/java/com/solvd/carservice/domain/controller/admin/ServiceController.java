@@ -12,13 +12,13 @@ public class ServiceController extends AbstractController {
 
     public void add() {
         Service service = new Service(
-                getDataFromConsole.getStringFromConsole("name"),
-                getDataFromConsole.getDoubleFromConsole("price"),
-                getDataFromConsole.getIntegerFromConsole("hours to do"),
+                getDataFromConsole.getString("name"),
+                getDataFromConsole.getDouble("price"),
+                getDataFromConsole.getInteger("hours to do"),
                 new Car(
-                        getDataFromConsole.getLongFromConsole("car")),
+                        getDataFromConsole.getLong("car")),
                 new Department(
-                        getDataFromConsole.getLongFromConsole("department")));
+                        getDataFromConsole.getLong("department")));
         ServiceService serviceService = new ServiceServiceImpl();
         serviceService.add(service);
         viewService.added(service);
@@ -26,8 +26,8 @@ public class ServiceController extends AbstractController {
     public void addEmployee() {
         viewService.addEmployee();
         ServiceService serviceService = new ServiceServiceImpl();
-        Long serviceId = getDataFromConsole.getLongFromConsole("service_id");
-        Long employeeId = getDataFromConsole.getLongFromConsole("employee_id");
+        Long serviceId = getDataFromConsole.getLong("service_id");
+        Long employeeId = getDataFromConsole.getLong("employee_id");
         serviceService.addEmployee(employeeId, serviceId);
         viewService.addedEmployee(employeeId, serviceId);
     }
@@ -44,16 +44,16 @@ public class ServiceController extends AbstractController {
         viewService.update();
         Optional<Service> service = retrieveById();
         ServiceService serviceService = new ServiceServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                service.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                service.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "price":
-                service.get().setPrice(getDataFromConsole.getDoubleFromConsole("price"));
+                service.get().setPrice(getDataFromConsole.getDouble("price"));
                 break;
             case "hours_to_do":
-                service.get().setHoursToDo(getDataFromConsole.getIntegerFromConsole("hours_to_do"));
+                service.get().setHoursToDo(getDataFromConsole.getInteger("hours_to_do"));
                 break;
         }
         serviceService.change(service, field);
@@ -61,7 +61,7 @@ public class ServiceController extends AbstractController {
     }
     public Optional<Service> retrieveById() {
         Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
+                (getDataFromConsole.getLong("id")));
         viewService.showById(serviceOptional);
         for (Employee employee : serviceOptional.get().getEmployees()) {
             viewEmployee.showById(Optional.ofNullable(employee));
@@ -72,7 +72,7 @@ public class ServiceController extends AbstractController {
         viewService.delete();
         ServiceService serviceService = new ServiceServiceImpl();
         serviceService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewService.successfulDeleted();
     }
 }

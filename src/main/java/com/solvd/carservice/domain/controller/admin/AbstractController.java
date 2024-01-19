@@ -1,11 +1,13 @@
 package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.controller.GetDataFromConsole;
+import com.solvd.carservice.domain.controller.Validator;
 import com.solvd.carservice.domain.view.admin.*;
 import java.util.Optional;
 
 abstract public class AbstractController implements InterfaceController {
     protected GetDataFromConsole getDataFromConsole;
+    protected Validator validator;
     protected ViewCar viewCar;
     protected ViewClient viewClient;
     protected ViewCompany viewCompany;
@@ -18,6 +20,7 @@ abstract public class AbstractController implements InterfaceController {
 
     public AbstractController() {
         this.getDataFromConsole = new GetDataFromConsole();
+        this.validator = new Validator();
         this.viewCar = new ViewCar();
         this.viewClient = new ViewClient();
         this.viewCompany = new ViewCompany();

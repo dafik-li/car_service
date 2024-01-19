@@ -12,11 +12,11 @@ public class CostController extends AbstractController {
 
     public void add() {
         Cost cost = new Cost(
-                getDataFromConsole.getDoubleFromConsole("cost"),
+                getDataFromConsole.getDouble("cost"),
                 new Service(
-                        getDataFromConsole.getLongFromConsole("service")),
+                        getDataFromConsole.getLong("service")),
                 new Detail(
-                        getDataFromConsole.getLongFromConsole("detail")));
+                        getDataFromConsole.getLong("detail")));
         CostService costService = new CostServiceImpl();
         costService.add(cost);
         viewCost.added(cost);
@@ -34,10 +34,10 @@ public class CostController extends AbstractController {
         viewCost.update();
         Optional<Cost> cost = retrieveById();
         CostService costService = new CostServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "cost":
-                cost.get().setCost(getDataFromConsole.getDoubleFromConsole("cost"));
+                cost.get().setCost(getDataFromConsole.getDouble("cost"));
                 break;
         }
         costService.change(cost, field);
@@ -45,7 +45,7 @@ public class CostController extends AbstractController {
     }
     public Optional<Cost> retrieveById() {
         Optional<Cost> costOptional = new CostServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
+                (getDataFromConsole.getLong("id")));
         viewCost.showById(costOptional);
         for (Order order : costOptional.get().getOrders()) {
             viewOrder.showById(Optional.ofNullable(order));
@@ -56,7 +56,7 @@ public class CostController extends AbstractController {
         viewCost.delete();
         CostService costService = new CostServiceImpl();
         costService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewCost.successfulDeleted();
     }
 }

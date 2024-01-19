@@ -13,9 +13,9 @@ public class DepartmentController extends AbstractController {
     public void add() {
         Department department =
                 new Department(
-                        getDataFromConsole.getStringFromConsole("name"),
+                        getDataFromConsole.getString("name"),
                 new Company(
-                        getDataFromConsole.getLongFromConsole("company")));
+                        getDataFromConsole.getLong("company")));
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.add(department);
         viewDepartment.added(department);
@@ -36,10 +36,10 @@ public class DepartmentController extends AbstractController {
         viewDepartment.update();
         Optional<Department> department = retrieveById();
         DepartmentService departmentService = new DepartmentServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                department.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                department.get().setName(getDataFromConsole.getString("name"));
                 break;
         }
         departmentService.change(department, field);
@@ -48,7 +48,7 @@ public class DepartmentController extends AbstractController {
     public Optional<Department> retrieveById() {
         Optional<Department> departmentOptional =
                 new DepartmentServiceImpl().retrieveById(
-                        (getDataFromConsole.getLongFromConsole("id")));
+                        (getDataFromConsole.getLong("id")));
         viewDepartment.showById(departmentOptional);
         for (Service service : departmentOptional.get().getServices()) {
             viewService.showById(Optional.ofNullable(service));
@@ -62,7 +62,7 @@ public class DepartmentController extends AbstractController {
         viewDepartment.delete();
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewDepartment.successfulDeleted();
     }
 }

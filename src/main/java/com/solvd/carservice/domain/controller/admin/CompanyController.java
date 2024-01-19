@@ -10,8 +10,8 @@ public class CompanyController extends AbstractController {
 
     public void add() {
         Company company = new Company(
-                getDataFromConsole.getStringFromConsole("name"),
-                getDataFromConsole.getStringFromConsole("address"));
+                getDataFromConsole.getString("name"),
+                getDataFromConsole.getString("address"));
         CompanyService companyService = new CompanyServiceImpl();
         companyService.add(company);
         viewCompany.added(company);
@@ -30,13 +30,13 @@ public class CompanyController extends AbstractController {
         viewCompany.update();
         Optional<Company> company = retrieveById();
         CompanyService companyService = new CompanyServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                company.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                company.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "address":
-                company.get().setAddress(getDataFromConsole.getStringFromConsole("address"));
+                company.get().setAddress(getDataFromConsole.getString("address"));
                 break;
         }
         companyService.change(company, field);
@@ -44,7 +44,7 @@ public class CompanyController extends AbstractController {
     }
     public Optional<Company> retrieveById() {
         Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
+                (getDataFromConsole.getLong("id")));
         viewCompany.showById(companyOptional);
         for (Department department : companyOptional.get().getDepartments()) {
             viewDepartment.showById(Optional.ofNullable(department));
@@ -55,7 +55,7 @@ public class CompanyController extends AbstractController {
         viewCompany.delete();
         CompanyService companyService = new CompanyServiceImpl();
         companyService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewCompany.successfulDeleted();
     }
 }

@@ -11,10 +11,10 @@ public class ClientController extends AbstractController {
     public void add() {
         Client client =
                 new Client(
-                        getDataFromConsole.getStringFromConsole("name"),
-                        getDataFromConsole.getStringFromConsole("surname"),
-                        getDataFromConsole.getStringFromConsole("phone number"),
-                        getDataFromConsole.getDateFromConsole("birthday"));
+                        getDataFromConsole.getString("name"),
+                        getDataFromConsole.getString("surname"),
+                        getDataFromConsole.getString("phone number"),
+                        getDataFromConsole.getDate("birthday"));
         ClientService clientService = new ClientServiceImpl();
         clientService.add(client);
         viewClient.added(client);
@@ -32,19 +32,19 @@ public class ClientController extends AbstractController {
         viewClient.update();
         Optional<Client> client = retrieveById();
         ClientService clientService = new ClientServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                client.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                client.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "surname":
-                client.get().setSurname(getDataFromConsole.getStringFromConsole("surname"));
+                client.get().setSurname(getDataFromConsole.getString("surname"));
                 break;
             case "phone_number":
-                client.get().setPhoneNumber(getDataFromConsole.getStringFromConsole("phone_number"));
+                client.get().setPhoneNumber(getDataFromConsole.getString("phone_number"));
                 break;
             case "birthday":
-                client.get().setBirthday(getDataFromConsole.getDateFromConsole("birthday"));
+                client.get().setBirthday(getDataFromConsole.getDate("birthday"));
                 break;
         }
         clientService.change(client, field);
@@ -52,7 +52,7 @@ public class ClientController extends AbstractController {
     }
     public Optional<Client> retrieveById() {
         Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
+                (getDataFromConsole.getLong("id")));
         viewClient.showById(clientOptional);
         for (Order order : clientOptional.get().getOrders()) {
             viewOrder.showById(Optional.ofNullable(order));
@@ -63,7 +63,7 @@ public class ClientController extends AbstractController {
         viewClient.delete();
         ClientService clientService = new ClientServiceImpl();
         clientService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewClient.successfulDeleted();
     }
 }

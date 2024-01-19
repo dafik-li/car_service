@@ -11,11 +11,11 @@ public class OrderController extends AbstractController {
 
     public void add() {
         Order order = new Order(
-                getDataFromConsole.getDateFromConsole("date"),
+                getDataFromConsole.getDate("date"),
                 new Client(
-                        getDataFromConsole.getLongFromConsole("client")),
+                        getDataFromConsole.getLong("client")),
                 new Cost(
-                        getDataFromConsole.getLongFromConsole("cost")));
+                        getDataFromConsole.getLong("cost")));
         OrderService orderService = new OrderServiceImpl();
         orderService.add(order);
         viewOrder.added(order);
@@ -30,10 +30,10 @@ public class OrderController extends AbstractController {
         viewOrder.update();
         Optional<Order> order = retrieveById();
         OrderService orderService = new OrderServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "date":
-                order.get().setDate(getDataFromConsole.getDateFromConsole("date"));
+                order.get().setDate(getDataFromConsole.getDate("date"));
                 break;
         }
         orderService.change(order, field);
@@ -41,7 +41,7 @@ public class OrderController extends AbstractController {
     }
     public Optional<Order> retrieveById() {
         Optional<Order> orderOptional = new OrderServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
+                (getDataFromConsole.getLong("id")));
         viewOrder.showById(orderOptional);
         return orderOptional;
     }
@@ -49,7 +49,7 @@ public class OrderController extends AbstractController {
         viewOrder.delete();
         OrderService orderService = new OrderServiceImpl();
         orderService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
+                getDataFromConsole.getLong("id"));
         viewOrder.successfulDeleted();
     }
 }

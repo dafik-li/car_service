@@ -20,7 +20,7 @@ public class GetDataFromConsole {
         this.scanner = new Scanner(System.in);
         this.validator = new Validator();
     }
-    public Long getLongFromConsole(String name) {
+    public Long getLong(String name) {
         LOGGER.info("Enter the " + name);
         long fromConsole = 0;
         String query = scanner.nextLine();
@@ -30,11 +30,11 @@ public class GetDataFromConsole {
             fromConsole = Long.parseLong(query);
         } catch (NumberFormatException | AuthorizationException e) {
             LOGGER.error(e.toString());
-            getLongFromConsole(name);
+            getLong(name);
         }
         return fromConsole;
     }
-    public Integer getIntegerFromConsole(String name) {
+    public Integer getInteger(String name) {
         LOGGER.info("Enter the " + name);
         int fromConsole = 0;
         String query = scanner.nextLine();
@@ -44,11 +44,11 @@ public class GetDataFromConsole {
             fromConsole = Integer.parseInt(query);
         } catch (NumberFormatException | AuthorizationException e) {
             LOGGER.error(e.toString());
-            getIntegerFromConsole(name);
+            getInteger(name);
         }
         return fromConsole;
     }
-    public Double getDoubleFromConsole(String name) {
+    public Double getDouble(String name) {
         LOGGER.info("Enter the " + name);
         double fromConsole = 0;
         String query = scanner.nextLine();
@@ -58,11 +58,11 @@ public class GetDataFromConsole {
             fromConsole = Double.parseDouble(query);
         } catch (NumberFormatException | AuthorizationException e) {
             LOGGER.error(e.toString());
-            getDoubleFromConsole(name);
+            getDouble(name);
         }
         return fromConsole;
     }
-    public String getStringFromConsole(String name) {
+    public String getString(String name) {
         LOGGER.info("Enter the " + name);
         String fromConsole = scanner.nextLine();
         try {
@@ -70,11 +70,11 @@ public class GetDataFromConsole {
             LOGGER.info("You typed - " + fromConsole);
         } catch (NumberFormatException | AuthorizationException e) {
             LOGGER.error(e.toString());
-            getStringFromConsole(name);
+            getString(name);
         }
         return fromConsole;
     }
-    public Date getDateFromConsole(String name) {
+    public Date getDate(String name) {
         LOGGER.info("Enter the " + name + "in format YYYY-MM-DD");
         java.util.Date fromConsole;
         Date fromConsoleSql = null;
@@ -89,7 +89,7 @@ public class GetDataFromConsole {
         }
         return fromConsoleSql;
     }
-    public Boolean getBooleanFromConsole(String name) {
+    public Boolean getBoolean(String name) {
         LOGGER.info("Enter the " + name + " 1 - yes, 0 - no");
         boolean fromConsole = false;
         String query = scanner.nextLine();
@@ -99,7 +99,7 @@ public class GetDataFromConsole {
             fromConsole = Boolean.parseBoolean(query);
         } catch (NumberFormatException | AuthorizationException e) {
             LOGGER.error(e.toString());
-            getBooleanFromConsole(name);
+            getBoolean(name);
         }
         return fromConsole;
     }
