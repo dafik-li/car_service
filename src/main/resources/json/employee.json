@@ -1,0 +1,22 @@
+{
+  "id": 10,
+  "name": "Arnold",
+  "surname": "Schwarzenegger",
+  "age": 76,
+  "position": "CEO",
+  "level": 10,
+  "salary": 100000,
+  "phoneNumber": "375299000000",
+  "departmentId": {
+    "id": 7,
+    "name": "Director",
+    "companyId": {
+      "id": 7,
+      "name": "Tony Montana Service - Minsk",
+      "address": "Minsk, av. F. Skaryny, 8",
+      "departments": []
+    },
+    "employees": [],
+    "services": []
+  }
+}

@@ -3,7 +3,7 @@ package com.solvd.carservice.service.impl;
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.persistence.DetailRepository;
 import com.solvd.carservice.service.DetailService;
-import com.solvd.carservice.util.SwitcherRepository;
+import com.solvd.carservice.domain.controller.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +23,11 @@ public class DetailServiceImpl implements DetailService {
     @Override
     public List<Detail> retrieveAll() {
         return detailRepository.getAll();
+    }
+
+    @Override
+    public List<Detail> retrieveByCar(Long carId) {
+        return detailRepository.getByCar(carId);
     }
     @Override
     public Optional<Detail> retrieveById(Long id) {

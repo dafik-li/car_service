@@ -4,15 +4,14 @@ import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.CostRepository;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CostRepositoryImpl implements CostRepository {
+public class CostRepositoryImpl extends CostRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String INSERT_COST_QUERY = "INSERT INTO costs (cost, service_id, detail_id) VALUES (?, ?, ?);";
-    private static final String DELETE_COST_QUERY = "DELETE FROM costs WHERE id = ?;";
-    private static final String UPDATE_COST_QUERY = "UPDATE costs SET cost = ? WHERE id = ?;";
+    private static final String INSERT_COST_QUERY = "INSERT INTO costs (cost, service_id, detail_id) VALUES (?, ?, ?) ";
+    private static final String DELETE_COST_QUERY = "DELETE FROM costs WHERE id = ? ";
+    private static final String UPDATE_COST_QUERY = "UPDATE costs SET cost = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
                     "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
@@ -22,8 +21,21 @@ public class CostRepositoryImpl implements CostRepository {
             "LEFT JOIN departments d ON s.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = c.id " +
             "LEFT JOIN details det ON c.detail_id = det.id ";
+    private static final String GET_ORDERS_BY_COST_ID =
+            "SELECT o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday, " +
+                    "c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
+                    "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
+            "FROM orders o " +
+            "LEFT JOIN clients cl ON o.client_id = cl.id " +
+            "LEFT JOIN costs c ON o.cost_id = c.id " +
+            "LEFT JOIN services s ON c.service_id = s.id " +
+            "LEFT JOIN cars ON s.car_id = cars.id " +
+            "LEFT JOIN departments d ON s.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = c.id " +
+            "LEFT JOIN details det ON c.detail_id = det.id " +
+            "WHERE c.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE c.id = ? ");
-    private static final String GET_BY_COST_COST_QUERY = GET_ALL_QUERY.concat("WHERE cost = ? ");
+    private static final String GET_BY_COST_COST_QUERY = GET_ALL_QUERY.concat("WHERE c.cost = ? ");
 
     @Override
     public List<Cost> getByCost(Double cost) {
@@ -32,7 +44,7 @@ public class CostRepositoryImpl implements CostRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_COST_COST_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            costs = mapCosts(resultSet);
+            costs = mapperCost.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("cost");
             }
@@ -63,17 +75,35 @@ public class CostRepositoryImpl implements CostRepository {
         }
     }
     @Override
+    public List<Order> getOrdersByCostId(Cost cost) {
+        List<Order> orders;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ORDERS_BY_COST_ID)) {
+            preparedStatement.setLong(1, cost.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            orders = mapperOrder.map(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get employee services", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return orders;
+    }
+    @Override
     public List<Cost> getAll() {
         List<Cost> costs;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            costs = mapCosts(resultSet);
+            costs = mapperCost.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
+        }
+        for (Cost cost : costs) {
+            cost.setOrders(getOrdersByCostId(cost));
         }
         return costs;
     }
@@ -111,6 +141,11 @@ public class CostRepositoryImpl implements CostRepository {
                                     resultSet.getLong(16),
                                     resultSet.getString(17),
                                     resultSet.getInt(18),
+                                    new Car(
+                                            resultSet.getLong(7),
+                                            resultSet.getString(8),
+                                            resultSet.getString(9),
+                                            resultSet.getInt(10)),
                                     resultSet.getBoolean(19),
                                     resultSet.getInt(20))));
         } catch (SQLException e) {
@@ -118,6 +153,7 @@ public class CostRepositoryImpl implements CostRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+        costOptional.get().setOrders(getOrdersByCostId(costOptional.get()));
         return costOptional;
     }
     @Override
@@ -155,43 +191,5 @@ public class CostRepositoryImpl implements CostRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-    }
-    public List<Cost> mapCosts(ResultSet resultSet) {
-        List<Cost> costs = new ArrayList<>();
-        try {
-            while (resultSet.next()) {
-                Cost cost = new Cost();
-                cost.setId(resultSet.getLong(1));
-                cost.setCost(resultSet.getDouble(2));
-                cost.setServiceId(
-                        new Service(
-                                resultSet.getLong(3),
-                                resultSet.getString(4),
-                                resultSet.getDouble(5),
-                                resultSet.getInt(6),
-                                new Car(
-                                        resultSet.getLong(7),
-                                        resultSet.getString(8),
-                                        resultSet.getString(9),
-                                        resultSet.getInt(10)),
-                                new Department(
-                                        resultSet.getLong(11),
-                                        resultSet.getString(12),
-                                        new Company(
-                                                resultSet.getLong(13),
-                                                resultSet.getString(14),
-                                                resultSet.getString(15)))));
-                cost.setDetailId(new Detail(
-                        resultSet.getLong(16),
-                        resultSet.getString(17),
-                        resultSet.getInt(18),
-                        resultSet.getBoolean(19),
-                        resultSet.getInt(20)));
-                costs.add(cost);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to map costs", e);
-        }
-        return costs;
     }
 }

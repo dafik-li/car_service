@@ -1,13 +1,32 @@
 package com.solvd.carservice.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solvd.carservice.domain.parse.JsonDateAdapter;
+import com.solvd.carservice.domain.parse.XmlDateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.sql.Date;
 import java.util.Objects;
 
+@XmlRootElement(name = "order")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Order {
+
+    @XmlAttribute(name = "id")
     private Long id;
-    private Date date;
+
+    @JsonDeserialize(using = JsonDateAdapter.class)
+    //@JsonFormat(pattern = "yyyy-MM-dd")
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
+    private java.util.Date date;
     private Client clientId;
     private Cost costId;
+
 
     public Order() { }
     public Order(Date date, Client clientId, Cost costId) {
@@ -27,10 +46,10 @@ public class Order {
     public void setId(Long id) {
         this.id = id;
     }
-    public Date getDate() {
+    public java.util.Date getDate() {
         return date;
     }
-    public void setDate(Date date) {
+    public void setDate(java.util.Date date) {
         this.date = date;
     }
     public Client getClientId() {
@@ -61,11 +80,9 @@ public class Order {
     }
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", date=" + date +
-                ", client_id=" + clientId +
-                ", cost_id=" + costId +
-                '}';
+        return  "Order id - " + getId() + "|" +
+                "date - " + getDate() + " - [" +
+                getClientId() + "] - [" +
+                getCostId() + "]";
     }
 }

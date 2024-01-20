@@ -1,14 +1,15 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
 import com.solvd.carservice.domain.entity.Car;
-import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Detail;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.CarRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class CarRepositoryMybatisImpl implements CarRepository {
+public class CarRepositoryMybatisImpl extends CarRepository {
 
     @Override
     public List<Car> getByBrand(String brand) {
@@ -36,6 +37,20 @@ public class CarRepositoryMybatisImpl implements CarRepository {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             CarRepository carRepository = sqlSession.getMapper(CarRepository.class);
             carRepository.create(car);
+        }
+    }
+    @Override
+    public List<Service> getServicesByCarId(Car car) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            CarRepository carRepository = sqlSession.getMapper(CarRepository.class);
+            return carRepository.getServicesByCarId(car);
+        }
+    }
+    @Override
+    public List<Detail> getDetailByCarId(Car car) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            CarRepository carRepository = sqlSession.getMapper(CarRepository.class);
+            return carRepository.getDetailByCarId(car);
         }
     }
     @Override

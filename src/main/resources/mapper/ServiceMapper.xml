@@ -39,15 +39,10 @@
 
     <sql id="serviceSelect">
         SELECT
-        services.id, services.name, services.price, services.hours_to_do,
-        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
-        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
+        d.id, d.name, com.id, com.name, com.address
         FROM
         services
-        LEFT JOIN
-        employee_services es ON es.service_id = services.id
-        LEFT JOIN
-        employees e ON es.employee_id = e.id
         LEFT JOIN
         cars ON services.car_id = cars.id
         LEFT JOIN
@@ -58,9 +53,7 @@
 
     <select id="getEmployeesByServiceId" resultMap="ServiceResultMap">
         SELECT
-        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number,
-        services.id, services.name, services.price, services.hours_to_do,
-        cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address
+        e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, com.id, com.name, com.address,
         FROM
         employees e
         LEFT JOIN
@@ -68,13 +61,11 @@
         LEFT JOIN
         services ON es.service_id = services.id
         LEFT JOIN
-        cars ON services.car_id = cars.id
-        LEFT JOIN
         departments d ON services.department_id = d.id
         LEFT JOIN
         companies com ON d.company_id = com.id
         WHERE
-        service_id = #{service_id}
+        services.id = #{services.id}
     </select>
 
     <select id="getAll" resultMap="ServiceResultMap">
@@ -112,6 +103,8 @@
                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
         <collection property="employees"
                     resultMap="com.solvd.carservice.persistence.EmployeeRepository.EmployeeResultMap"/>
+        <collection property="costs"
+                     resultMap="com.solvd.carservice.persistence.CostRepository.CostResultMap"/>
     </resultMap>
 
 </mapper>

@@ -1,14 +1,25 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "detail")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Detail {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private Integer price;
     private Car carId;
     private Boolean inStock;
     private Integer deliveryDays;
+
+    @XmlElementWrapper(name = "costs")
+    @XmlElement(name = "cost")
+    private List<Cost> costs;
+
 
     public Detail() { }
     public Detail(Long id) {
@@ -72,6 +83,12 @@ public class Detail {
     public void setDeliveryDays(Integer deliveryDays) {
         this.deliveryDays = deliveryDays;
     }
+    public List<Cost> getCosts() {
+        return costs;
+    }
+    public void setCosts(List<Cost> costs) {
+        this.costs = costs;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,21 +99,20 @@ public class Detail {
                 getPrice().equals(detail.getPrice()) &&
                 getCarId().equals(detail.getCarId()) &&
                 getInStock().equals(detail.getInStock()) &&
-                getDeliveryDays().equals(detail.getDeliveryDays());
+                getDeliveryDays().equals(detail.getDeliveryDays()) &&
+                getCosts().equals(detail.getCosts());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getPrice(), getCarId(), getInStock(), getDeliveryDays());
+        return Objects.hash(getId(), getName(), getPrice(), getCarId(), getInStock(), getDeliveryDays(), getCosts());
     }
     @Override
     public String toString() {
-        return "Detail{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", carId=" + carId +
-                ", inStock=" + inStock +
-                ", deliveryDays=" + deliveryDays +
-                '}';
+        return  "Detail id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "price - " + getPrice() + " - [" +
+                getCarId() + "] - " +
+                "in stock - " + getInStock() + "|" +
+                "delivery days - " + getDeliveryDays();
     }
 }

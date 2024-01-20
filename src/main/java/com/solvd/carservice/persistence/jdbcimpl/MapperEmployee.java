@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapperEmployee {
-    public List<Employee> mapEmployees(ResultSet resultSet) {
+    public List<Employee> map(ResultSet resultSet) {
         List<Employee> employees = new ArrayList<>();
         try {
             while (resultSet.next()) {

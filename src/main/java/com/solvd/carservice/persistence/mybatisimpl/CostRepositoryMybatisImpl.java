@@ -1,13 +1,14 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
 import com.solvd.carservice.domain.entity.Cost;
+import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.persistence.CostRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class CostRepositoryMybatisImpl implements CostRepository {
+public class CostRepositoryMybatisImpl extends CostRepository {
 
     @Override
     public List<Cost> getByCost(Double cost) {
@@ -21,6 +22,13 @@ public class CostRepositoryMybatisImpl implements CostRepository {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             CostRepository costRepository = sqlSession.getMapper(CostRepository.class);
             costRepository.create(cost);
+        }
+    }
+    @Override
+    public List<Order> getOrdersByCostId(Cost cost) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            CostRepository costRepository = sqlSession.getMapper(CostRepository.class);
+            return costRepository.getOrdersByCostId(cost);
         }
     }
     @Override

@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepositoryMybatisImpl implements EmployeeRepository {
+public class EmployeeRepositoryMybatisImpl extends EmployeeRepository {
 
     @Override
     public List<Employee> getByName(String name) {

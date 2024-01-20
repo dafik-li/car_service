@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapperService {
-    public List<Service> mapServices(ResultSet resultSet) {
+    public List<Service> map(ResultSet resultSet) {
         List<Service> services = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -18,18 +18,18 @@ public class MapperService {
                 service.setHoursToDo(resultSet.getInt(4));
                 service.setCarId(
                         new Car(
-                                resultSet.getLong(13),
-                                resultSet.getString(14),
-                                resultSet.getString(15),
-                                resultSet.getInt(16)));
+                                resultSet.getLong(5),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getInt(8)));
                 service.setDepartmentId(
                         new Department(
-                                resultSet.getLong(17),
-                                resultSet.getString(18),
+                                resultSet.getLong(9),
+                                resultSet.getString(10),
                                 new Company(
-                                        resultSet.getLong(19),
-                                        resultSet.getString(20),
-                                        resultSet.getString(21))));
+                                        resultSet.getLong(11),
+                                        resultSet.getString(12),
+                                        resultSet.getString(13))));
                 services.add(service);
             }
         } catch (SQLException e) {

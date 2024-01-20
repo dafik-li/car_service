@@ -1,9 +1,15 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+
+@XmlRootElement(name = "employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Employee {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private String surname;
@@ -13,7 +19,11 @@ public class Employee {
     private Integer salary;
     private String phoneNumber;
     private Department departmentId;
+
+    @XmlElementWrapper(name = "services")
+    @XmlElement(name = "service")
     private List<Service> services;
+
 
     public Employee() { }
     public Employee(String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber, Department departmentId) {
@@ -26,7 +36,7 @@ public class Employee {
         this.phoneNumber = phoneNumber;
         this.departmentId = departmentId;
     }
-    public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber) {
+    public Employee(Long id, String name, String surname, Integer age, String position, Integer level, Integer salary, String phoneNumber, Department departmentId) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -35,6 +45,7 @@ public class Employee {
         this.level = level;
         this.salary = salary;
         this.phoneNumber = phoneNumber;
+        this.departmentId = departmentId;
     }
     public Long getId() {
         return id;
@@ -109,24 +120,23 @@ public class Employee {
                 getLevel().equals(employee.getLevel()) &&
                 getSalary().equals(employee.getSalary()) &&
                 getPhoneNumber().equals(employee.getPhoneNumber()) &&
-                getDepartmentId().equals(employee.getDepartmentId());
+                getDepartmentId().equals(employee.getDepartmentId()) &&
+                getServices().equals(employee.getServices());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSurname(), getAge(), getPosition(), getLevel(), getSalary(), getPhoneNumber(), getDepartmentId());
+        return Objects.hash(getId(), getName(), getSurname(), getAge(), getPosition(), getLevel(), getSalary(), getPhoneNumber(), getDepartmentId(), getServices());
     }
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", position='" + position + '\'' +
-                ", level=" + level +
-                ", salary=" + salary +
-                ", phone_number='" + phoneNumber + '\'' +
-                ", department_id=" + departmentId +
-                '}';
+        return  "Employee id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "surname - " + getSurname() + "|" +
+                "age - " + getAge() + "|" +
+                "position - " + getPosition() + "|" +
+                "level - " + getLevel() + "|" +
+                "salary - " + getSalary() + "|" +
+                "phone - " + getPhoneNumber() + " - [" +
+                getDepartmentId() + "]";
     }
 }

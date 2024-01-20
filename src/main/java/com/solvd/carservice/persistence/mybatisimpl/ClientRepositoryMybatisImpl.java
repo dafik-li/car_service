@@ -1,6 +1,7 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
 import com.solvd.carservice.domain.entity.Client;
+import com.solvd.carservice.domain.entity.Order;
 import com.solvd.carservice.persistence.ClientRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
 import org.apache.ibatis.session.SqlSession;
@@ -8,7 +9,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientRepositoryMybatisImpl implements ClientRepository {
+public class ClientRepositoryMybatisImpl extends ClientRepository {
 
     @Override
     public List<Client> getByName(String name) {
@@ -36,6 +37,13 @@ public class ClientRepositoryMybatisImpl implements ClientRepository {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             ClientRepository clientRepository = sqlSession.getMapper(ClientRepository.class);
             return clientRepository.getByBirthday(birthday);
+        }
+    }
+    @Override
+    public List<Order> getOrdersByClientId(Client client) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            ClientRepository clientRepository = sqlSession.getMapper(ClientRepository.class);
+            return clientRepository.getOrdersByClientId(client);
         }
     }
     @Override

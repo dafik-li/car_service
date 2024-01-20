@@ -1,11 +1,23 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
 import java.util.Objects;
 
+
+@XmlRootElement(name = "company")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private String address;
+
+    @XmlElementWrapper(name = "departments")
+    @XmlElement(name = "department")
+    private List<Department> departments;
+
 
     public Company() { }
     public Company(Long id) {
@@ -38,6 +50,12 @@ public class Company {
     public void setAddress(String address) {
         this.address = address;
     }
+    public List<Department> getDepartments() {
+        return departments;
+    }
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,18 +63,17 @@ public class Company {
         Company company = (Company) o;
         return getId().equals(company.getId()) &&
                 getName().equals(company.getName()) &&
-                getAddress().equals(company.getAddress());
+                getAddress().equals(company.getAddress()) &&
+                getDepartments().equals(company.getDepartments());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getAddress());
+        return Objects.hash(getId(), getName(), getAddress(), getDepartments());
     }
     @Override
     public String toString() {
-        return "Company{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+        return  "Company id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "address - " + getAddress();
     }
 }

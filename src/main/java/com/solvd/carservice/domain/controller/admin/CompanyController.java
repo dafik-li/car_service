@@ -1,90 +1,58 @@
 package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.entity.Company;
-import com.solvd.carservice.domain.controller.Generator;
-import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.service.CompanyService;
-import com.solvd.carservice.service.impl.CompanyServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import com.solvd.carservice.domain.entity.Department;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewDepartment;
+import com.solvd.carservice.service.InterfaceService;
 import java.util.Optional;
 
-public class CompanyController extends AbstractController {
-    static {
-        System.setProperty("log4j.configurationFile", "log4j2.xml");
-    }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(CompanyController.class);
+public class CompanyController extends AbstractController<Company> {
+    private final ViewDepartment viewDepartment;
 
-    public void moderate() {
-        consoleMenu.chooseModerateMenu();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": add(); break;
-            case "2": retrieveAll(); break;
-            case "3": retrieveById(); break;
-            case "4": change(); break;
-            case "5": removeById(); break;
-            case "0": new Generator().moderateController(); break;
-        }
-        try {
-            validator.validateActionMenu(menu);
-        } catch (TableException e) {
-            LOGGER.error(e.toString());
-            moderate();
-        }
+    public CompanyController(InterfaceView<Company> view, InterfaceService<Company> service) {
+        super(view, service);
+        this.viewDepartment = new ViewDepartment();
     }
     public void add() {
         Company company = new Company(
-                getDataFromConsole.getStringFromConsole("name"),
-                getDataFromConsole.getStringFromConsole("address"));
-        CompanyService companyService = new CompanyServiceImpl();
-        companyService.add(company);
-        LOGGER.info(
-                "Company - " +
-                company.getName() +
-                company.getAddress() +
-                " - was added");
+                getDataFromConsole.getString("name"),
+                getDataFromConsole.getString("address"));
+        service.add(company);
+        view.added(company);
     }
     public void retrieveAll() {
-        LOGGER.info("List of companies");
-        for (Company company : new CompanyServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Company id - " + company.getId() + "|" +
-                    "name - " + company.getName() + "|" +
-                    "address - " + company.getAddress());
+        view.showAll();
+        for (Company company : service.retrieveAll()) {
+            view.show(company);
+            for (Department department : company.getDepartments()) {
+                viewDepartment.show(department);
+            }
         }
     }
     @Override
     public void change() {
-        LOGGER.info("Update company");
+        view.update();
         Optional<Company> company = retrieveById();
-        CompanyService companyService = new CompanyServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                company.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                company.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "address":
-                company.get().setAddress(getDataFromConsole.getStringFromConsole("address"));
+                company.get().setAddress(getDataFromConsole.getString("address"));
                 break;
         }
-        companyService.change(company, field);
-        LOGGER.info("Company " + field + " was changed");
+        service.change(company, field);
+        view.updated(field);
     }
     public Optional<Company> retrieveById() {
-        Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("|" +
-                "Company id - " + companyOptional.get().getId() + "|" +
-                "name - " + companyOptional.get().getName() + "|" +
-                "address - " + companyOptional.get().getAddress() + "|");
+        Optional<Company> companyOptional = service.retrieveById(
+                (getDataFromConsole.getLong("id")));
+        view.showById(companyOptional);
+        for (Department department : companyOptional.get().getDepartments()) {
+            viewDepartment.showById(Optional.ofNullable(department));
+        }
         return companyOptional;
-    }
-    public void removeById() {
-        LOGGER.info("Following company will be terminated");
-        CompanyService companyService = new CompanyServiceImpl();
-        companyService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
     }
 }

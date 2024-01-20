@@ -30,6 +30,16 @@
         SELECT * FROM companies
     </sql>
 
+    <select id="getDepartmentsByCompanyId" resultMap="CompanyResultMap">
+        SELECT
+        d.id, d.name, com.id, com.name, com.address,
+        FROM
+        departments d
+        companies com ON d.company_id = com.id
+        WHERE
+        com.id = #{com.id}
+    </select>
+
     <select id="getAll" resultMap="CompanyResultMap">
         <include refid="companySelect"/>
     </select>
@@ -53,6 +63,8 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="address" property="address"/>
+        <collection property="departments"
+                     resultMap="com.solvd.carservice.persistence.DepartmentRepository.DepartmentResultMap"/>
     </resultMap>
 
 </mapper>

@@ -1,12 +1,27 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "car")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Car {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String brand;
     private String model;
     private Integer year;
+
+    @XmlElementWrapper(name = "services")
+    @XmlElement(name = "service")
+    private List<Service> services;
+
+    @XmlElementWrapper(name = "details")
+    @XmlElement(name = "detail")
+    private List<Detail> details;
+
 
     public Car() { }
     public Car(Long id) {
@@ -47,6 +62,18 @@ public class Car {
     public void setYear(Integer year) {
         this.year = year;
     }
+    public List<Service> getServices() {
+        return services;
+    }
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
+    public List<Detail> getDetails() {
+        return details;
+    }
+    public void setDetails(List<Detail> details) {
+        this.details = details;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,19 +82,19 @@ public class Car {
         return getId().equals(car.getId()) &&
                 getBrand().equals(car.getBrand()) &&
                 getModel().equals(car.getModel()) &&
-                getYear().equals(car.getYear());
+                getYear().equals(car.getYear()) &&
+                getServices().equals(car.getServices()) &&
+                getDetails().equals(car.getDetails());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getBrand(), getModel(), getYear());
+        return Objects.hash(getId(), getBrand(), getModel(), getYear(), getServices(), getDetails());
     }
     @Override
     public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", year=" + year +
-                '}';
+        return  "Car id - " + getId() + "|" +
+                "brand - " + getBrand() + "|" +
+                "model - " + getModel() + "|" +
+                "year - " + getYear();
     }
 }

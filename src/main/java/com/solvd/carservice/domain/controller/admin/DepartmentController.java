@@ -1,94 +1,66 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.controller.Generator;
-import com.solvd.carservice.domain.entity.Company;
-import com.solvd.carservice.domain.entity.Department;
-import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.entity.*;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewEmployee;
+import com.solvd.carservice.domain.view.admin.ViewService;
 import com.solvd.carservice.service.DepartmentService;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.impl.DepartmentServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 import java.util.Optional;
 
-public class DepartmentController extends AbstractController {
-    static {
-        System.setProperty("log4j.configurationFile", "log4j2.xml");
-    }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(DepartmentController.class);
+public class DepartmentController extends AbstractController<Department> {
+    private final ViewService viewService;
+    private final ViewEmployee viewEmployee;
 
-    public void moderate() {
-        consoleMenu.chooseModerateMenu();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": add(); break;
-            case "2": retrieveAll(); break;
-            case "3": retrieveById(); break;
-            case "4": change(); break;
-            case "5": removeById(); break;
-            case "0": new Generator().moderateController(); break;
-        }
-        try {
-            validator.validateActionMenu(menu);
-        } catch (TableException e) {
-            LOGGER.error(e.toString());
-            moderate();
-        }
+    public DepartmentController(InterfaceView<Department> view, InterfaceService<Department> service) {
+        super(view, service);
+        this.viewService = new ViewService();
+        this.viewEmployee = new ViewEmployee();
     }
     public void add() {
         Department department =
                 new Department(
-                        getDataFromConsole.getStringFromConsole("name"),
+                        getDataFromConsole.getString("name"),
                 new Company(
-                        getDataFromConsole.getLongFromConsole("company")));
-        DepartmentService departmentService = new DepartmentServiceImpl();
-        departmentService.add(department);
-        LOGGER.info(
-                "Department - " +
-                department.getName() +
-                department.getCompanyId() +
-                " - was added");
+                        getDataFromConsole.getLong("company")));
+        service.add(department);
+        view.added(department);
     }
     public void retrieveAll() {
-        LOGGER.info("List of departments");
-        for (Department department : new DepartmentServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Department id - " + department.getId() + "|" +
-                    "name - " + department.getName() + "[" +
-                    "company id - " + department.getCompanyId().getId() + "|" +
-                    "name - " + department.getCompanyId().getName() + "|" +
-                    "address - " + department.getCompanyId().getAddress() + "]");
+        view.showAll();
+        for (Department department : service.retrieveAll()) {
+            view.show(department);
+            for (Service service : department.getServices()) {
+                viewService.show(service);
+            }
+            for (Employee employee : department.getEmployees()) {
+                viewEmployee.show(employee);
+            }
         }
     }
     public void change() {
-        LOGGER.info("Update department");
+        view.update();
         Optional<Department> department = retrieveById();
-        DepartmentService departmentService = new DepartmentServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                department.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                department.get().setName(getDataFromConsole.getString("name"));
                 break;
         }
-        departmentService.change(department, field);
-        LOGGER.info("Cost " + field + " was changed");
+        service.change(department, field);
+        view.updated(field);
     }
     public Optional<Department> retrieveById() {
-        Optional<Department> departmentOptional =
-                new DepartmentServiceImpl().retrieveById(
-                        (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("\n|" +
-                "Department id - " + departmentOptional.get().getId() + "|" +
-                "name - " + departmentOptional.get().getName() + "\n[" +
-                "company id - " + departmentOptional.get().getCompanyId().getId() + "|" +
-                "name - " + departmentOptional.get().getCompanyId().getName() + "|" +
-                "address - " + departmentOptional.get().getCompanyId().getAddress() + "]");
+        Optional<Department> departmentOptional = service.retrieveById(
+                        (getDataFromConsole.getLong("id")));
+        view.showById(departmentOptional);
+        for (Service service : departmentOptional.get().getServices()) {
+            viewService.showById(Optional.ofNullable(service));
+        }
+        for (Employee employee : departmentOptional.get().getEmployees()) {
+            viewEmployee.showById(Optional.ofNullable(employee));
+        }
         return departmentOptional;
-    }
-    public void removeById() {
-        LOGGER.info("Following department will be redundant");
-        DepartmentService departmentService = new DepartmentServiceImpl();
-        departmentService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.solvd.carservice.persistence.CostRepository">
+<mapper namespace="com.solvd.carservice.persistence.OrderRepository">
 
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO
@@ -19,7 +19,7 @@
         UPDATE orders SET date = #{order.date} WHERE id = #{id};
     </update>
 
-    <sql id="costSelect">
+    <sql id="orderSelect">
         SELECT
         o.id, o.date, cl.id, cl.name, cl.surname, cl.phone_number, cl.birthday,
         c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
@@ -42,21 +42,21 @@
         details det ON c.detail_id = det.id
     </sql>
 
-    <select id="getAll" resultMap="CostResultMap">
-        <include refid="costSelect"/>
+    <select id="getAll" resultMap="OrderResultMap">
+        <include refid="orderSelect"/>
     </select>
 
-    <select id="getById" resultMap="CostResultMap">
-        <include refid="costSelect"/>
+    <select id="getById" resultMap="OrderResultMap">
+        <include refid="orderSelect"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByDate" resultMap="CostResultMap">
-        <include refid="costSelect"/>
+    <select id="getByDate" resultMap="OrderResultMap">
+        <include refid="orderSelect"/>
         WHERE date = #{date}
     </select>
 
-    <resultMap id="CostResultMap" type="com.solvd.carservice.domain.entity.Cost" autoMapping="false">
+    <resultMap id="OrderResultMap" type="com.solvd.carservice.domain.entity.Order" autoMapping="false">
         <id column="id" property="id"/>
         <result column="date" property="date"/>
         <association property="clientId"

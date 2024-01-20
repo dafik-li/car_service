@@ -1,5 +1,6 @@
 package com.solvd.carservice.persistence.mybatisimpl;
 
+import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Detail;
 import com.solvd.carservice.persistence.DetailRepository;
 import com.solvd.carservice.persistence.MybatisConfig;
@@ -7,7 +8,15 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class DetailRepositoryMybatisImpl implements DetailRepository {
+public class DetailRepositoryMybatisImpl extends DetailRepository {
+
+    @Override
+    public List<Detail> getByCar(Long carId) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            DetailRepository detailRepository = sqlSession.getMapper(DetailRepository.class);
+            return detailRepository.getByCar(carId);
+        }
+    }
 
     @Override
     public List<Detail> getByName(String name) {
@@ -35,6 +44,13 @@ public class DetailRepositoryMybatisImpl implements DetailRepository {
         try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             DetailRepository detailRepository = sqlSession.getMapper(DetailRepository.class);
             return detailRepository.getByDeliveryDays(deliveryDays);
+        }
+    }
+    @Override
+    public List<Cost> getCostsByDetailId(Detail detail) {
+        try(SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            DetailRepository detailRepository = sqlSession.getMapper(DetailRepository.class);
+            return detailRepository.getCostsByDetailId(detail);
         }
     }
     @Override

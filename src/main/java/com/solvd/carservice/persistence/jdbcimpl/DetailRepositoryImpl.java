@@ -1,7 +1,6 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
-import com.solvd.carservice.domain.entity.Car;
-import com.solvd.carservice.domain.entity.Detail;
+import com.solvd.carservice.domain.entity.*;
 import com.solvd.carservice.persistence.ConnectionPool;
 import com.solvd.carservice.persistence.DetailRepository;
 import java.sql.*;
@@ -9,25 +8,55 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DetailRepositoryImpl implements DetailRepository {
+public class DetailRepositoryImpl extends DetailRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_DETAIL_QUERY = "INSERT INTO details " +
-            "(name, price, car_id, in_Stock, delivery_days) VALUES (?, ?, ?, ?, ?);";
-    private static final String DELETE_DETAIL_QUERY = "DELETE FROM details WHERE id = ?;";
-    private static final String UPDATE_DETAIL_NAME_QUERY = "UPDATE details SET name = ? WHERE id = ?;";
-    private static final String UPDATE_DETAIL_PRICE_QUERY = "UPDATE details SET price = ? WHERE id = ?;";
-    private static final String UPDATE_DETAIL_IN_STOCK_QUERY = "UPDATE details SET in_Stock = ? WHERE id = ?;";
-    private static final String UPDATE_DETAIL_DELIVERY_DAYS_QUERY = "UPDATE details SET delivery_days = ? WHERE id = ?;";
+            "(name, price, car_id, in_Stock, delivery_days) VALUES (?, ?, ?, ?, ?) ";
+    private static final String DELETE_DETAIL_QUERY = "DELETE FROM details WHERE id = ? ";
+    private static final String UPDATE_DETAIL_NAME_QUERY = "UPDATE details SET name = ? WHERE id = ? ";
+    private static final String UPDATE_DETAIL_PRICE_QUERY = "UPDATE details SET price = ? WHERE id = ? ";
+    private static final String UPDATE_DETAIL_IN_STOCK_QUERY = "UPDATE details SET in_Stock = ? WHERE id = ? ";
+    private static final String UPDATE_DETAIL_DELIVERY_DAYS_QUERY = "UPDATE details SET delivery_days = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
             "SELECT details.id, details.name, details.price, cars.id, cars.brand, cars.model, cars.year, details.in_stock, details.delivery_days " +
             "FROM details " +
-            "LEFT JOIN cars ON details.car_id = cars.id;";
-    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE id = ? ");
-    private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
-    private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE price = ? ");
-    private static final String GET_BY_DETAIL_IN_STOCK_QUERY = GET_ALL_QUERY.concat("in_Stock = ? ");
-    private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = GET_ALL_QUERY.concat("WHERE delivery_days = ? ");
+            "LEFT JOIN cars ON details.car_id = cars.id ";
+    private static final String GET_COSTS_BY_DETAIL_ID =
+            "SELECT c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
+                    "d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days " +
+            "FROM costs c " +
+            "LEFT JOIN services s ON c.service_id = s.id " +
+            "LEFT JOIN cars ON s.car_id = cars.id " +
+            "LEFT JOIN departments d ON s.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = c.id " +
+            "LEFT JOIN details det ON c.detail_id = det.id " +
+            "WHERE det.id = ? ";
+    private static final String GET_BY_CAR_ID =
+            GET_ALL_QUERY.concat("WHERE car_id = ? ");
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE details.id = ? ");
+    private static final String GET_BY_DETAIL_NAME_QUERY = GET_ALL_QUERY.concat("WHERE details.name = ? ");
+    private static final String GET_BY_DETAIL_PRICE_QUERY = GET_ALL_QUERY.concat("WHERE details.price = ? ");
+    private static final String GET_BY_DETAIL_IN_STOCK_QUERY = GET_ALL_QUERY.concat("WHERE details.in_Stock = ? ");
+    private static final String GET_BY_DETAIL_DELIVERY_DAYS_QUERY = GET_ALL_QUERY.concat("WHERE details.delivery_days = ? ");
 
+    public List<Detail> getByCar(Long carId) {
+        List<Detail> details;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_CAR_ID);
+            preparedStatement.setLong(1, carId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            details = mapperDetail.map(resultSet);
+            while (resultSet.next()) {
+                resultSet.getLong("car_id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get service by car_id", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return details;
+    }
     @Override
     public List<Detail> getByName(String name) {
         List<Detail> details;
@@ -35,7 +64,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_DETAIL_NAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            details = mapDetails(resultSet);
+            details = mapperDetail.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("name");
             }
@@ -53,7 +82,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_DETAIL_PRICE_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            details = mapDetails(resultSet);
+            details = mapperDetail.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("price");
             }
@@ -71,7 +100,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_DETAIL_IN_STOCK_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            details = mapDetails(resultSet);
+            details = mapperDetail.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("in_stock");
             }
@@ -89,7 +118,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_DETAIL_DELIVERY_DAYS_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            details = mapDetails(resultSet);
+            details = mapperDetail.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("delivery_days");
             }
@@ -121,6 +150,20 @@ public class DetailRepositoryImpl implements DetailRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
+    public List<Cost> getCostsByDetailId(Detail detail) {
+        List<Cost> costs;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COSTS_BY_DETAIL_ID)) {
+            preparedStatement.setLong(1, detail.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            costs = mapperCost.map(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get employee services", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return costs;
+    }
     @Override
     public List<Detail> getAll() {
         List<Detail> details;
@@ -128,11 +171,14 @@ public class DetailRepositoryImpl implements DetailRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            details = mapDetails(resultSet);
+            details = mapperDetail.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
+        }
+        for (Detail detail : details) {
+            detail.setCosts(getCostsByDetailId(detail));
         }
         return details;
     }
@@ -162,6 +208,7 @@ public class DetailRepositoryImpl implements DetailRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+        detailOptional.get().setCosts(getCostsByDetailId(detailOptional.get()));
         return detailOptional;
     }
     @Override
@@ -211,28 +258,5 @@ public class DetailRepositoryImpl implements DetailRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-    }
-    public List<Detail> mapDetails(ResultSet resultSet) {
-        List<Detail> details = new ArrayList<>();
-        try {
-            while (resultSet.next()) {
-                Detail detail = new Detail();
-                detail.setId(resultSet.getLong(1));
-                detail.setName(resultSet.getString(2));
-                detail.setPrice(resultSet.getInt(3));
-                detail.setCarId(
-                        new Car(
-                                resultSet.getLong(4),
-                                resultSet.getString(5),
-                                resultSet.getString(6),
-                                resultSet.getInt(7)));
-                detail.setInStock(resultSet.getBoolean(8));
-                detail.setDeliveryDays(resultSet.getInt(9));
-                details.add(detail);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to map details", e);
-        }
-        return details;
     }
 }

@@ -1,102 +1,66 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Client;
-import com.solvd.carservice.domain.exception.TableException;
-import com.solvd.carservice.service.ClientService;
-import com.solvd.carservice.service.impl.ClientServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import com.solvd.carservice.domain.entity.Order;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewOrder;
+import com.solvd.carservice.service.InterfaceService;
 import java.util.Optional;
 
-public class ClientController extends AbstractController {
-    static {
-        System.setProperty("log4j.configurationFile", "log4j2.xml");
-    }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(CarController.class);
+public class ClientController extends AbstractController<Client> {
+    private final ViewOrder viewOrder;
 
-    public void moderate() {
-        consoleMenu.chooseModerateMenu();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": add(); break;
-            case "2": retrieveAll(); break;
-            case "3": retrieveById(); break;
-            case "4": change(); break;
-            case "5": removeById(); break;
-            case "0": new Generator().moderateController(); break;
-        }
-        try {
-            validator.validateActionMenu(menu);
-        } catch (TableException e) {
-            LOGGER.error(e.toString());
-            moderate();
-        }
+    public ClientController(InterfaceView<Client> view, InterfaceService<Client> service) {
+        super(view, service);
+        this.viewOrder = new ViewOrder();
     }
     public void add() {
         Client client =
                 new Client(
-                        getDataFromConsole.getStringFromConsole("name"),
-                        getDataFromConsole.getStringFromConsole("surname"),
-                        getDataFromConsole.getStringFromConsole("phone number"),
-                        getDataFromConsole.getDateFromConsole("birthday"));
-        ClientService clientService = new ClientServiceImpl();
-        clientService.add(client);
-        LOGGER.info(
-                "Client - " +
-                client.getName() +
-                client.getSurname() +
-                " - was added");
+                        getDataFromConsole.getString("name"),
+                        getDataFromConsole.getString("surname"),
+                        getDataFromConsole.getString("phone number"),
+                        getDataFromConsole.getDate("birthday"));
+        service.add(client);
+        view.added(client);
     }
     public void retrieveAll() {
-        LOGGER.info("List of clients");
-        for (Client client : new ClientServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Client id - " + client.getId() + "|" +
-                    "name - " + client.getName() + "|" +
-                    "surname - " + client.getSurname() + "|" +
-                    "phone number - " + client.getPhoneNumber() + "|" +
-                    "birthday - " + client.getBirthday());
+        view.showAll();
+        for (Client client : service.retrieveAll()) {
+            view.show(client);
+            for (Order order : client.getOrders()) {
+                viewOrder.show(order);
+            }
         }
     }
     public void change() {
-        LOGGER.info("Update client");
+        view.update();
         Optional<Client> client = retrieveById();
-        ClientService clientService = new ClientServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                client.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                client.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "surname":
-                client.get().setSurname(getDataFromConsole.getStringFromConsole("surname"));
+                client.get().setSurname(getDataFromConsole.getString("surname"));
                 break;
             case "phone_number":
-                client.get().setPhoneNumber(getDataFromConsole.getStringFromConsole("phone_number"));
+                client.get().setPhoneNumber(getDataFromConsole.getString("phone_number"));
                 break;
             case "birthday":
-                client.get().setBirthday(getDataFromConsole.getDateFromConsole("birthday"));
+                client.get().setBirthday(getDataFromConsole.getDate("birthday"));
                 break;
         }
-        clientService.change(client, field);
-        LOGGER.info("Client " + field + " was changed");
+        service.change(client, field);
+        view.updated(field);
     }
     public Optional<Client> retrieveById() {
-        Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("|" +
-                "Client id - " + clientOptional.get().getId() + "|" +
-                "name - " + clientOptional.get().getName() + "|" +
-                "surname - " + clientOptional.get().getSurname() + "|" +
-                "phone number - " + clientOptional.get().getPhoneNumber() + "|" +
-                "birthday - " + clientOptional.get().getBirthday() + "|");
+        Optional<Client> clientOptional = service.retrieveById(
+                (getDataFromConsole.getLong("id")));
+        view.showById(clientOptional);
+        for (Order order : clientOptional.get().getOrders()) {
+            viewOrder.showById(Optional.ofNullable(order));
+        }
         return clientOptional;
-    }
-    public void removeById() {
-        LOGGER.info("Following car will be deleted");
-        ClientService clientService = new ClientServiceImpl();
-        clientService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
     }
 }

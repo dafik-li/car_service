@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<car id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_car.xsd">
+    <brand>audi</brand>
+    <model>a4</model>
+    <year>2024</year>
+    <services> </services>
+    <details> </details>
+</car>

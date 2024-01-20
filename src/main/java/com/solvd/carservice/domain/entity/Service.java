@@ -1,16 +1,29 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Service {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private Double price;
     private Integer hoursToDo;
     private Car carId;
     private Department departmentId;
+
+    @XmlElementWrapper(name = "employees")
+    @XmlElement(name = "employee")
     private List<Employee> employees;
+
+    @XmlElementWrapper(name = "costs")
+    @XmlElement(name = "cost")
+    private List<Cost> costs;
+
 
     public Service() { }
     public Service(Long id) {
@@ -80,6 +93,12 @@ public class Service {
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
     }
+    public List<Cost> getCosts() {
+        return costs;
+    }
+    public void setCosts(List<Cost> costs) {
+        this.costs = costs;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,21 +109,21 @@ public class Service {
                 getPrice().equals(service.getPrice()) &&
                 getHoursToDo().equals(service.getHoursToDo()) &&
                 getCarId().equals(service.getCarId()) &&
-                getDepartmentId().equals(service.getDepartmentId());
+                getDepartmentId().equals(service.getDepartmentId()) &&
+                getEmployees().equals(service.getEmployees()) &&
+                getCosts().equals(service.getCosts());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getPrice(), getHoursToDo(), getCarId(), getDepartmentId());
+        return Objects.hash(getId(), getName(), getPrice(), getHoursToDo(), getCarId(), getDepartmentId(), getEmployees(), getCosts());
     }
     @Override
     public String toString() {
-        return "Service{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", hoursToDo=" + hoursToDo +
-                ", carId=" + carId +
-                ", departmentId=" + departmentId +
-                '}';
+        return  "Service id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "price - " + getPrice() + "|" +
+                "hours to do - " + getHoursToDo() + " - [" +
+                getCarId() + "] - [" +
+                getDepartmentId() + "]";
     }
 }

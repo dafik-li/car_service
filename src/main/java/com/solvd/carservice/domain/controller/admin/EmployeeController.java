@@ -1,156 +1,94 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.controller.Generator;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
-import com.solvd.carservice.domain.exception.TableException;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewEmployee;
+import com.solvd.carservice.domain.view.admin.ViewService;
 import com.solvd.carservice.service.EmployeeService;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.impl.EmployeeServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 import java.util.Optional;
 
-public class EmployeeController extends AbstractController {
-    static {
-        System.setProperty("log4j.configurationFile", "log4j2.xml");
-    }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(EmployeeController.class);
+public class EmployeeController extends AbstractController<Employee> {
+    private final ViewService viewService;
+    private final ViewEmployee viewEmployee;
+    private final EmployeeService employeeService;
 
-    public void moderate() {
-        consoleMenu.chooseModerateEmployee();
-        String menu = scanner.nextLine();
-        switch (menu) {
-            case "1": add(); break;
-            case "2": retrieveAll(); break;
-            case "3": retrieveById(); break;
-            case "4": change(); break;
-            case "5": removeById(); break;
-            case "6": addService(); break;
-            case "0": new Generator().moderateController(); break;
-        }
-        try {
-            validator.validateActionMenu(menu);
-        } catch (TableException e) {
-            LOGGER.error(e.toString());
-            moderate();
-        }
+    public EmployeeController(InterfaceView<Employee> view, InterfaceService<Employee> service) {
+        super(view, service);
+        this.viewService = new ViewService();
+        this.viewEmployee = new ViewEmployee();
+        this.employeeService = new EmployeeServiceImpl();
     }
     public void add() {
         Employee employee = new Employee(
-                getDataFromConsole.getStringFromConsole("name"),
-                getDataFromConsole.getStringFromConsole("surname"),
-                getDataFromConsole.getIntegerFromConsole("age"),
-                getDataFromConsole.getStringFromConsole("position"),
-                getDataFromConsole.getIntegerFromConsole("level"),
-                getDataFromConsole.getIntegerFromConsole("salary"),
-                getDataFromConsole.getStringFromConsole("phone number"),
+                getDataFromConsole.getString("name"),
+                getDataFromConsole.getString("surname"),
+                getDataFromConsole.getInteger("age"),
+                getDataFromConsole.getString("position"),
+                getDataFromConsole.getInteger("level"),
+                getDataFromConsole.getInteger("salary"),
+                getDataFromConsole.getString("phone number"),
                 new Department(
-                        getDataFromConsole.getLongFromConsole("department")));
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        employeeService.add(employee);
-        LOGGER.info(
-                "Employee - " +
-                employee.getName() + " " +
-                employee.getSurname() +
-                " - was added");
+                        getDataFromConsole.getLong("department")));
+        service.add(employee);
+        view.added(employee);
     }
     public void addService() {
-        LOGGER.info("Add service to employee");
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        Long employeeId = getDataFromConsole.getLongFromConsole("employee_id");
-        Long serviceId = getDataFromConsole.getLongFromConsole("service_id");
+        viewEmployee.addService();
+        Long employeeId = getDataFromConsole.getLong("employee_id");
+        Long serviceId = getDataFromConsole.getLong("service_id");
         employeeService.addService(employeeId, serviceId);
-        LOGGER.info("Service id - " + serviceId + " was assigned to the employee id - " + employeeId);
+        viewEmployee.addedService(employeeId, serviceId);
     }
     public void retrieveAll() {
-        LOGGER.info("List of employees");
-        for (Employee employee : new EmployeeServiceImpl().retrieveAll()) {
-            LOGGER.info(
-                    "Employee id - " + employee.getId() + "|" +
-                    "name - " + employee.getName() + "|" +
-                    "surname - " + employee.getSurname() + "|" +
-                    "age - " + employee.getAge() + "|" +
-                    "position - " + employee.getPosition() + "|" +
-                    "level - " + employee.getLevel() + "|" +
-                    "salary - " + employee.getSalary() + "|" +
-                    "phone - " + employee.getPhoneNumber() + "[");
+        view.showAll();
+        for (Employee employee : service.retrieveAll()) {
+            view.show(employee);
             for (Service service : employee.getServices()) {
-                LOGGER.info(
-                        "service id - " + service.getId() + "|" +
-                        "name - " + service.getName() + "|" +
-                        "price - " + service.getPrice() + "|" +
-                        "hours to do - " + service.getHoursToDo() + "[" +
-                        "department id - " + service.getDepartmentId().getId() + "|" +
-                        "name - " + service.getDepartmentId().getName() + "][" +
-                        "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
-                        "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
-                        "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+                viewService.show(service);
             }
         }
     }
     public void change() {
-        LOGGER.info("Update employee");
+        view.update();
         Optional<Employee> employee = retrieveById();
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        String field = getDataFromConsole.getStringFromConsole("select field");
+        String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                employee.get().setName(getDataFromConsole.getStringFromConsole("name"));
+                employee.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "surname":
-                employee.get().setSurname(getDataFromConsole.getStringFromConsole("surname"));
+                employee.get().setSurname(getDataFromConsole.getString("surname"));
                 break;
             case "age":
-                employee.get().setAge(getDataFromConsole.getIntegerFromConsole("age"));
+                employee.get().setAge(getDataFromConsole.getInteger("age"));
                 break;
             case "position":
-                employee.get().setPosition(getDataFromConsole.getStringFromConsole("position"));
+                employee.get().setPosition(getDataFromConsole.getString("position"));
                 break;
             case "level":
-                employee.get().setLevel(getDataFromConsole.getIntegerFromConsole("level"));
+                employee.get().setLevel(getDataFromConsole.getInteger("level"));
                 break;
             case "salary":
-                employee.get().setSalary(getDataFromConsole.getIntegerFromConsole("salary"));
+                employee.get().setSalary(getDataFromConsole.getInteger("salary"));
                 break;
             case "phone_number":
-                employee.get().setPhoneNumber(getDataFromConsole.getStringFromConsole("phone_number"));
+                employee.get().setPhoneNumber(getDataFromConsole.getString("phone_number"));
                 break;
         }
-        employeeService.change(employee, field);
-        LOGGER.info("Employee " + field + " was changed");
+        service.change(employee, field);
+        view.updated(field);
     }
     public Optional<Employee> retrieveById() {
-        Optional<Employee> employeeOptional = new EmployeeServiceImpl().retrieveById(
-                (getDataFromConsole.getLongFromConsole("id")));
-        LOGGER.info("\n|" +
-                "Employee id - " + employeeOptional.get().getId() + "|" +
-                "name - " + employeeOptional.get().getName() + "|" +
-                "surname - " + employeeOptional.get().getSurname() + "|" +
-                "age - " + employeeOptional.get().getAge() + "|" +
-                "position - " + employeeOptional.get().getPosition() + "|" +
-                "level - " + employeeOptional.get().getLevel() + "|" +
-                "salary - " + employeeOptional.get().getSalary() + "|" +
-                "phone - " + employeeOptional.get().getPhoneNumber() + "[");
+        Optional<Employee> employeeOptional = service.retrieveById(
+                (getDataFromConsole.getLong("id")));
+        view.showById(employeeOptional);
         for (Service service : employeeOptional.get().getServices()) {
-            LOGGER.info(
-                    "service id - " + service.getId() + "|" +
-                    "name - " + service.getName() + "|" +
-                    "price - " + service.getPrice() + "|" +
-                    "hours to do - " + service.getHoursToDo() + "[" +
-                    "department id - " + service.getDepartmentId().getId() + "|" +
-                    "name - " + service.getDepartmentId().getName() + "][" +
-                    "company id - " + service.getDepartmentId().getCompanyId().getId() + "|" +
-                    "name - " + service.getDepartmentId().getCompanyId().getName() + "|" +
-                    "address - " + service.getDepartmentId().getCompanyId().getAddress() + "]");
+            viewService.showById(Optional.ofNullable(service));
         }
         return employeeOptional;
-    }
-    public void removeById() {
-        LOGGER.info("Following employee will be fired");
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        employeeService.removeById(
-                getDataFromConsole.getLongFromConsole("id"));
-        LOGGER.info("Successful deleted");
     }
 }

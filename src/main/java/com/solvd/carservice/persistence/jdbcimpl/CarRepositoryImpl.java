@@ -1,6 +1,8 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
 import com.solvd.carservice.domain.entity.Car;
+import com.solvd.carservice.domain.entity.Detail;
+import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.CarRepository;
 import com.solvd.carservice.persistence.ConnectionPool;
 import java.sql.*;
@@ -8,18 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CarRepositoryImpl implements CarRepository {
+public class CarRepositoryImpl extends CarRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String INSERT_CAR_QUERY = "INSERT INTO cars (brand, model, year) VALUES (?, ?, ?);";
-    private static final String DELETE_CAR_QUERY = "DELETE FROM cars WHERE id = ?;";
-    private static final String UPDATE_CAR_BRAND_QUERY = "UPDATE cars SET brand = ? WHERE id = ?;";
-    private static final String UPDATE_CAR_MODEL_QUERY = "UPDATE cars SET model = ? WHERE id = ?;";
-    private static final String UPDATE_CAR_YEAR_QUERY = "UPDATE cars SET year = ? WHERE id = ?;";
-    private static final String GET_ALL_QUERY = "SELECT * FROM cars;";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM cars WHERE id = ?;";
-    private static final String GET_BY_CAR_BRAND_QUERY = "SELECT * FROM cars where brand = ?;";
-    private static final String GET_BY_CAR_MODEL_QUERY = "SELECT * FROM cars where model = ?;";
-    private static final String GET_BY_CAR_YEAR_QUERY = "SELECT * FROM cars where year = ?;";
+    private static final String INSERT_CAR_QUERY = "INSERT INTO cars (brand, model, year) VALUES (?, ?, ?) ";
+    private static final String DELETE_CAR_QUERY = "DELETE FROM cars WHERE id = ? ";
+    private static final String UPDATE_CAR_BRAND_QUERY = "UPDATE cars SET brand = ? WHERE id = ? ";
+    private static final String UPDATE_CAR_MODEL_QUERY = "UPDATE cars SET model = ? WHERE id = ? ";
+    private static final String UPDATE_CAR_YEAR_QUERY = "UPDATE cars SET year = ? WHERE id = ? ";
+    private static final String GET_ALL_QUERY = "SELECT * FROM cars ";
+    private static final String GET_SERVICES_BY_CAR_ID =
+            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year, " +
+                    "d.id, d.name, com.id, com.name, com.address " +
+            "FROM services " +
+            "LEFT JOIN cars ON services.car_id = cars.id " +
+            "LEFT JOIN departments d ON services.department_id = d.id " +
+            "LEFT JOIN companies com ON d.company_id = com.id " +
+            "WHERE cars.id = ? ";
+    private static final String GET_DETAILS_BY_CAR_ID =
+            "SELECT details.id, details.name, details.price, cars.id, cars.brand, cars.model, cars.year, details.in_stock, details.delivery_days " +
+            "FROM details " +
+            "LEFT JOIN cars ON details.car_id = cars.id " +
+            "WHERE cars.id = ? ";
+    private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE id = ? ");
+    private static final String GET_BY_CAR_BRAND_QUERY = GET_ALL_QUERY.concat("WHERE brand = ? ");
+    private static final String GET_BY_CAR_MODEL_QUERY = GET_ALL_QUERY.concat("WHERE model = ? ");
+    private static final String GET_BY_CAR_YEAR_QUERY = GET_ALL_QUERY.concat("WHERE year = ? ");
 
     @Override
     public List<Car> getByBrand(String brand) {
@@ -95,6 +110,36 @@ public class CarRepositoryImpl implements CarRepository {
         }
     }
     @Override
+    public List<Service> getServicesByCarId(Car car) {
+        List<Service> services;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_SERVICES_BY_CAR_ID)) {
+            preparedStatement.setLong(1, car.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            services = mapperService.map(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get employee services", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return services;
+    }
+    @Override
+    public List<Detail> getDetailByCarId(Car car) {
+        List<Detail> details;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_DETAILS_BY_CAR_ID)) {
+            preparedStatement.setLong(1, car.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            details = mapperDetail.map(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get employee services", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return details;
+    }
+    @Override
     public List<Car> getAll() {
         List<Car> cars;
         Connection connection = CONNECTION_POOL.getConnection();
@@ -106,6 +151,12 @@ public class CarRepositoryImpl implements CarRepository {
             throw new RuntimeException("Unable to get all", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
+        }
+        for (Car car : cars) {
+            car.setServices(getServicesByCarId(car));
+        }
+        for (Car car : cars) {
+            car.setDetails(getDetailByCarId(car));
         }
         return cars;
     }
@@ -129,6 +180,8 @@ public class CarRepositoryImpl implements CarRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+        carOptional.get().setServices(getServicesByCarId(carOptional.get()));
+        carOptional.get().setDetails(getDetailByCarId(carOptional.get()));
         return carOptional;
     }
     @Override

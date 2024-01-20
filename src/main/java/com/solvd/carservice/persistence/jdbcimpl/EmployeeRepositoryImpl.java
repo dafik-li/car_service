@@ -1,5 +1,7 @@
 package com.solvd.carservice.persistence.jdbcimpl;
 
+import com.solvd.carservice.domain.entity.Company;
+import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
 import com.solvd.carservice.persistence.ConnectionPool;
@@ -8,53 +10,43 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepositoryImpl implements EmployeeRepository {
+public class EmployeeRepositoryImpl extends EmployeeRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private final MapperService mapperService;
-    private final MapperEmployee mapperEmployee;
     private static final String INSERT_EMPLOYEE_QUERY = "INSERT INTO employees " +
-            "(name, surname, age, position, level, salary, phone_number, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (employee_id, service_id) VALUES (?, ?);";
-    private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_NAME_QUERY = "UPDATE employees SET name = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_SURNAME_QUERY = "UPDATE employees SET surname = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_AGE_QUERY = "UPDATE employees SET age = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_POSITION_QUERY = "UPDATE employees SET position = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_LEVEL_QUERY = "UPDATE employees SET level = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ?;";
-    private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ?;";
+            "(name, surname, age, position, level, salary, phone_number, department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+    private static final String INSERT_EMPLOYEE_SERVICE_QUERY = "INSERT INTO employee_services (employee_id, service_id) VALUES (?, ?) ";
+    private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_NAME_QUERY = "UPDATE employees SET name = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_SURNAME_QUERY = "UPDATE employees SET surname = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_AGE_QUERY = "UPDATE employees SET age = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_POSITION_QUERY = "UPDATE employees SET position = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_LEVEL_QUERY = "UPDATE employees SET level = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_SALARY_QUERY = "UPDATE employees SET salary = ? WHERE id = ? ";
+    private static final String UPDATE_EMPLOYEE_PHONE_NUMBER_QUERY = "UPDATE employees SET phone_number = ? WHERE id = ? ";
     private static final String GET_ALL_QUERY =
-            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "services.id, services.name, services.price, services.hours_to_do, d.id, d.name, c.id, c.name, c.address " +
+            "SELECT e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, d.id, d.name, c.id, c.name, c.address " +
             "FROM employees e " +
-            "LEFT JOIN employee_services es ON es.employee_id = e.id " +
-            "LEFT JOIN services ON es.service_id = services.id " +
             "LEFT JOIN departments d ON e.department_id = d.id " +
             "LEFT JOIN companies c ON d.company_id = c.id ";
     private static final String GET_SERVICES_BY_EMPLOYEE_ID =
-            "SELECT services.id, services.name, services.price, services.hours_to_do, " +
-                    "e.id, e.name, e.surname, e.age, e.position, e.level, e.salary, e.phone_number, " +
-                    "cars.id, cars.brand, cars.model, cars.year, d.id, d.name, com.id, com.name, com.address " +
+            "SELECT services.id, services.name, services.price, services.hours_to_do, cars.id, cars.brand, cars.model, cars.year," +
+                    "d.id, d.name, com.id, com.name, com.address " +
             "FROM services " +
             "LEFT JOIN employee_services es ON es.service_id = services.id " +
             "LEFT JOIN employees e ON es.employee_id = e.id " +
             "LEFT JOIN cars ON services.car_id = cars.id " +
             "LEFT JOIN departments d ON services.department_id = d.id " +
             "LEFT JOIN companies com ON d.company_id = com.id " +
-            "WHERE employee_id = ? ";
+            "WHERE e.id = ? ";
     private static final String GET_BY_ID_QUERY = GET_ALL_QUERY.concat("WHERE e.id = ? ");
-    private static final String GET_BY_EMPLOYEE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE name = ? ");
-    private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE surname = ? ");
-    private static final String GET_BY_EMPLOYEE_AGE_QUERY = GET_ALL_QUERY.concat("WHERE age = ? ");
-    private static final String GET_BY_EMPLOYEE_POSITION_QUERY = GET_ALL_QUERY.concat("WHERE position = ? ");
-    private static final String GET_BY_EMPLOYEE_LEVEL_QUERY = GET_ALL_QUERY.concat("WHERE level = ? ");
-    private static final String GET_BY_EMPLOYEE_SALARY_QUERY = GET_ALL_QUERY.concat("WHERE salary = ? ");
-    private static final String GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY = GET_ALL_QUERY.concat("WHERE phone_number = ? ");
+    private static final String GET_BY_EMPLOYEE_NAME_QUERY = GET_ALL_QUERY.concat("WHERE e.name = ? ");
+    private static final String GET_BY_EMPLOYEE_SURNAME_QUERY = GET_ALL_QUERY.concat("WHERE e.surname = ? ");
+    private static final String GET_BY_EMPLOYEE_AGE_QUERY = GET_ALL_QUERY.concat("WHERE e.age = ? ");
+    private static final String GET_BY_EMPLOYEE_POSITION_QUERY = GET_ALL_QUERY.concat("WHERE e.position = ? ");
+    private static final String GET_BY_EMPLOYEE_LEVEL_QUERY = GET_ALL_QUERY.concat("WHERE e.level = ? ");
+    private static final String GET_BY_EMPLOYEE_SALARY_QUERY = GET_ALL_QUERY.concat("WHERE e.salary = ? ");
+    private static final String GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY = GET_ALL_QUERY.concat("WHERE e.phone_number = ? ");
 
-    public EmployeeRepositoryImpl() {
-        this.mapperService = new MapperService();
-        this.mapperEmployee = new MapperEmployee();
-    }
     @Override
     public List<Employee> getByName(String name) {
         List<Employee> employees;
@@ -62,7 +54,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_NAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("name");
             }
@@ -80,7 +72,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_SURNAME_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("surname");
             }
@@ -98,7 +90,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_AGE_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("age");
             }
@@ -116,7 +108,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_POSITION_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("position");
             }
@@ -134,7 +126,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_LEVEL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("level");
             }
@@ -152,7 +144,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_SALARY_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("salary");
             }
@@ -170,7 +162,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_EMPLOYEE_PHONE_NUMBER_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
             while (resultSet.next()) {
                 resultSet.getString("phone_number");
             }
@@ -225,7 +217,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_SERVICES_BY_EMPLOYEE_ID)) {
             preparedStatement.setLong(1, employee.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
-            services = mapperService.mapServices(resultSet);
+            services = mapperService.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get employee services", e);
         } finally {
@@ -240,7 +232,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
-            employees = mapperEmployee.mapEmployees(resultSet);
+            employees = mapperEmployee.map(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get all", e);
         } finally {
@@ -269,7 +261,14 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                             resultSet.getString(5),
                             resultSet.getInt(6),
                             resultSet.getInt(7),
-                            resultSet.getString(8)));
+                            resultSet.getString(8),
+                            new Department(
+                                    resultSet.getLong(9),
+                                    resultSet.getString(10),
+                                    new Company(
+                                            resultSet.getLong(11),
+                                            resultSet.getString(12),
+                                            resultSet.getString(13)))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get id", e);
         } finally {

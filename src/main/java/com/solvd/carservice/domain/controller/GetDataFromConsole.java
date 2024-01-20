@@ -1,5 +1,6 @@
-package com.solvd.carservice.util;
+package com.solvd.carservice.domain.controller;
 
+import com.solvd.carservice.domain.exception.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import java.sql.Date;
@@ -13,57 +14,67 @@ public class GetDataFromConsole {
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(GetDataFromConsole.class);
     private final Scanner scanner;
+    private final Validator validator;
 
     public GetDataFromConsole() {
         this.scanner = new Scanner(System.in);
+        this.validator = new Validator();
     }
-    public Long getLongFromConsole(String name) {
+    public Long getLong(String name) {
         LOGGER.info("Enter the " + name);
         long fromConsole = 0;
         String query = scanner.nextLine();
         try {
+            validator.validateIsNumber(name);
             LOGGER.info("You typed - " + query);
             fromConsole = Long.parseLong(query);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NotIntegerException e) {
             LOGGER.error(e.toString());
+            getLong(name);
         }
         return fromConsole;
     }
-    public Integer getIntegerFromConsole(String name) {
+    public Integer getInteger(String name) {
         LOGGER.info("Enter the " + name);
         int fromConsole = 0;
         String query = scanner.nextLine();
         try {
+            validator.validateIsNumber(name);
             LOGGER.info("You typed - " + query);
             fromConsole = Integer.parseInt(query);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NotIntegerException e) {
             LOGGER.error(e.toString());
+            getInteger(name);
         }
         return fromConsole;
     }
-    public Double getDoubleFromConsole(String name) {
+    public Double getDouble(String name) {
         LOGGER.info("Enter the " + name);
         double fromConsole = 0;
         String query = scanner.nextLine();
         try {
+            validator.validateIsDouble(name);
             LOGGER.info("You typed - " + query);
             fromConsole = Double.parseDouble(query);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NotDoubleException e) {
             LOGGER.error(e.toString());
+            getDouble(name);
         }
         return fromConsole;
     }
-    public String getStringFromConsole(String name) {
+    public String getString(String name) {
         LOGGER.info("Enter the " + name);
         String fromConsole = scanner.nextLine();
         try {
+            validator.validateIsString(fromConsole);
             LOGGER.info("You typed - " + fromConsole);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NotStringException e) {
             LOGGER.error(e.toString());
+            getString(name);
         }
         return fromConsole;
     }
-    public Date getDateFromConsole(String name) {
+    public Date getDate(String name) {
         LOGGER.info("Enter the " + name + "in format YYYY-MM-DD");
         java.util.Date fromConsole;
         Date fromConsoleSql = null;
@@ -78,15 +89,17 @@ public class GetDataFromConsole {
         }
         return fromConsoleSql;
     }
-    public Boolean getBooleanFromConsole(String name) {
-        LOGGER.info("Enter the " + name + "true/false");
+    public Boolean getBoolean(String name) {
+        LOGGER.info("Enter the " + name + " 1 - yes, 0 - no");
         boolean fromConsole = false;
         String query = scanner.nextLine();
         try {
+            validator.validateIsBoolean(query);
             LOGGER.info("You typed - " + query);
             fromConsole = Boolean.parseBoolean(query);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NotBooleanException e) {
             LOGGER.error(e.toString());
+            getBoolean(name);
         }
         return fromConsole;
     }

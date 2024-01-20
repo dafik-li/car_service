@@ -1,11 +1,26 @@
 package com.solvd.carservice.domain.entity;
 
+import jakarta.xml.bind.annotation.*;
+import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "department")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Department {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private Company companyId;
+
+    @XmlElementWrapper(name = "employees")
+    @XmlElement(name = "employee")
+    private List<Employee> employees;
+
+    @XmlElementWrapper(name = "services")
+    @XmlElement(name = "service")
+    private List<Service> services;
+
 
     public Department() { }
     public Department(Long id) {
@@ -38,6 +53,18 @@ public class Department {
     public void setCompanyId(Company companyId) {
         this.companyId = companyId;
     }
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+    public List<Service> getServices() {
+        return services;
+    }
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,18 +72,18 @@ public class Department {
         Department that = (Department) o;
         return getId().equals(that.getId()) &&
                 getName().equals(that.getName()) &&
-                getCompanyId().equals(that.getCompanyId());
+                getCompanyId().equals(that.getCompanyId()) &&
+                getEmployees().equals(that.getEmployees()) &&
+                getServices().equals(that.getServices());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getCompanyId());
+        return Objects.hash(getId(), getName(), getCompanyId(), getEmployees(), getServices());
     }
     @Override
     public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", company_id=" + companyId +
-                '}';
+        return "Department id - " + getId() + "|" +
+                "name - " + getName() + " - [" +
+                getCompanyId() + "]";
     }
 }

@@ -3,7 +3,7 @@ package com.solvd.carservice.service.impl;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.persistence.CarRepository;
 import com.solvd.carservice.service.CarService;
-import com.solvd.carservice.util.SwitcherRepository;
+import com.solvd.carservice.domain.controller.SwitcherRepository;
 import java.util.List;
 import java.util.Optional;
 

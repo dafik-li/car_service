@@ -42,13 +42,33 @@
         cars ON details.car_id = cars.id
     </sql>
 
+    <select id="getCostsByDetailId" resultMap="DetailResultMap">
+        SELECT
+        c.id, c.cost, s.id, s.name, s.price, s.hours_to_do, cars.id, cars.brand, cars.model, cars.year,
+        d.id, d.name, com.id, com.name, com.address, det.id, det.name, det.price, det.in_stock, det.delivery_days
+        FROM
+        costs c
+        LEFT JOIN
+        services s ON c.service_id = s.id
+        LEFT JOIN
+        cars ON s.car_id = cars.id
+        LEFT JOIN
+        departments d ON s.department_id = d.id
+        LEFT JOIN
+        companies com ON d.company_id = c.id
+        LEFT JOIN
+        details det ON c.detail_id = det.id
+        WHERE
+        det.id = #{det.id}
+    </select>
+
     <select id="getAll" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
     </select>
 
     <select id="getById" resultMap="DetailResultMap">
         <include refid="detailSelect"/>
-        WHERE id = #{id}
+        WHERE details.id = #{id}
     </select>
 
     <select id="getByName" resultMap="DetailResultMap">
@@ -79,6 +99,8 @@
         <result column="delivery_days" property="deliveryDays"/>
         <association property="carId"
                     resultMap="com.solvd.carservice.persistence.CarRepository.CarResultMap"/>
+        <collection property="costs"
+                     resultMap="com.solvd.carservice.persistence.CostRepository.CostResultMap"/>
     </resultMap>
 
 </mapper>

@@ -1,14 +1,33 @@
 package com.solvd.carservice.domain.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solvd.carservice.domain.parse.JsonDateAdapter;
+import com.solvd.carservice.domain.parse.XmlDateAdapter;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "client")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Client {
+
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
     private String surname;
     private String phoneNumber;
-    private Date birthday;
+
+    @JsonDeserialize(using = JsonDateAdapter.class)
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
+    private java.util.Date birthday;
+
+    @XmlElementWrapper(name = "orders")
+    @XmlElement(name = "order")
+    private List<Order> orders;
+
 
     public Client() { }
     public Client(Long id) {
@@ -51,11 +70,17 @@ public class Client {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    public Date getBirthday() {
+    public java.util.Date getBirthday() {
         return birthday;
     }
-    public void setBirthday(Date birthday) {
+    public void setBirthday(java.util.Date birthday) {
         this.birthday = birthday;
+    }
+    public List<Order> getOrders() {
+        return orders;
+    }
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
     @Override
     public boolean equals(Object o) {
@@ -66,21 +91,19 @@ public class Client {
                 getName().equals(client.getName()) &&
                 getSurname().equals(client.getSurname()) &&
                 getPhoneNumber().equals(client.getPhoneNumber()) &&
-                getBirthday().equals(client.getBirthday());
+                getBirthday().equals(client.getBirthday()) &&
+                getOrders().equals(client.getOrders());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSurname(), getPhoneNumber(), getBirthday());
+        return Objects.hash(getId(), getName(), getSurname(), getPhoneNumber(), getBirthday(), getOrders());
     }
-
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phone_number='" + phoneNumber + '\'' +
-                ", birthday=" + birthday +
-                '}';
+        return  "Client id - " + getId() + "|" +
+                "name - " + getName() + "|" +
+                "surname - " + getSurname() + "|" +
+                "phone number - " + getPhoneNumber() + "|" +
+                "birthday - " + getBirthday();
     }
 }

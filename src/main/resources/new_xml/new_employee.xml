@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<employee id="10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="new_employee.xsd">
+    <name>Arnold</name>
+    <surname>Schwarzenegger</surname>
+    <age>76</age>
+    <position>CEO</position>
+    <level>10</level>
+    <salary>100000</salary>
+    <phoneNumber>375299000000</phoneNumber>
+    <departmentId id="7">
+        <name>Director</name>
+        <companyId id="7">
+            <name>Tony Montana Service - Minsk</name>
+            <address>Minsk, av. F. Skaryny, 8</address>
+            <departments> </departments>
+        </companyId>
+        <employees> </employees>
+        <services> </services>
+    </departmentId>
+    <services> </services>
+</employee>

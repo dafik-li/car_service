@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<carservice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="car_service.xsd">
+    <companies>
+        <company id="1">
+            <name>a</name>
+            <address>s</address>
+            <departments>
+                <department id="1">
+                    <name>a</name>
+                    <companyId id="1">
+                        <name>g</name>
+                        <address>g</address>
+                        <departments> </departments>
+                    </companyId>
+                    <employees>
+                        <employee id="1">
+                            <name>s</name>
+                            <surname>a</surname>
+                            <age>1</age>
+                            <position>f</position>
+                            <level>1</level>
+                            <salary>1</salary>
+                            <phoneNumber>g</phoneNumber>
+                            <departmentId id="1">
+                                <name>f</name>
+                                <companyId id="2">
+                                    <name>f</name>
+                                    <address>f</address>
+                                    <departments> </departments>
+                                </companyId>
+                                <employees> </employees>
+                                <services> </services>
+                            </departmentId>
+                            <services> </services>
+                        </employee>
+                    </employees>
+                    <services>
+                        <service id="1">
+                            <name>d</name>
+                            <price>2.5</price>
+                            <hoursToDo>3</hoursToDo>
+                            <carId id="1">
+                                <brand>f</brand>
+                                <model>f</model>
+                                <year>1</year>
+                                <services> </services>
+                            </carId>
+                            <departmentId id="1">
+                                <name>f</name>
+                                <companyId id="1">
+                                    <name>g</name>
+                                    <address>g</address>
+                                    <departments> </departments>
+                                </companyId>
+                                <employees> </employees>
+                                <services> </services>
+                            </departmentId>
+                            <employees> </employees>
+                        </service>
+                    </services>
+                </department>
+            </departments>
+        </company>
+    </companies>
+</carservice>
