@@ -19,6 +19,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -28,6 +29,9 @@ public class ParseCost extends AbstractParse<Cost>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCost.class);
+    private final static File xmlFileCost = new File("src/main/resources/new_xml/new_cost.xml");
+    private final static File xsdFileCost = new File("src/main/resources/new_xml/new_cost.xsd");
+    private final static File jsonFileCost = new File("src/main/resources/json/cost.json");
     private Cost cost;
     private final Detail detail;
     private final Service service;

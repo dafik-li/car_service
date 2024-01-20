@@ -2,7 +2,6 @@ package com.solvd.carservice.domain.controller.admin.navigate;
 
 import com.solvd.carservice.domain.controller.SwitcherRepository;
 import com.solvd.carservice.domain.controller.Validator;
-import com.solvd.carservice.domain.controller.admin.ControllerFactory;
 import com.solvd.carservice.domain.controller.user.UserNavigator;
 import com.solvd.carservice.domain.exception.AuthorizationException;
 import com.solvd.carservice.domain.exception.ModerateException;
@@ -11,24 +10,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import java.util.Scanner;
 
-public class MainMenuNavigate {
+public class MainMenuNavigator {
     static {
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
-    private final static Logger LOGGER = (Logger) LogManager.getLogger(MainMenuNavigate.class);
+    private final static Logger LOGGER = (Logger) LogManager.getLogger(MainMenuNavigator.class);
     private final Scanner scanner;
     private final Validator validator;
     private final ViewConsoleAdminMenu viewConsoleAdminMenu;
     private final UserNavigator userNavigator;
-    private final ControllerFactory controllerFactory;
+    private final NavigatorFactory navigatorFactory;
     private final SwitcherRepository switcherRepository;
 
-    public MainMenuNavigate() {
+    public MainMenuNavigator() {
         this.scanner = new Scanner(System.in);
         this.validator = new Validator();
         this.viewConsoleAdminMenu = new ViewConsoleAdminMenu();
         this.userNavigator = new UserNavigator();
-        this.controllerFactory = new ControllerFactory();
+        this.navigatorFactory = new NavigatorFactory();
         this.switcherRepository = new SwitcherRepository();
     }
     public void selectDBRepository() {
@@ -65,8 +64,12 @@ public class MainMenuNavigate {
     public void moderateController() {
         viewConsoleAdminMenu.chooseControllerMenu();
         String menu = scanner.nextLine();
-        controllerFactory.create(menu);
         try {
+            if (menu.equals("0")) {
+                authorization();
+            } else {
+                navigatorFactory.create(menu).navigate();
+            }
             validator.validateControllerMenu(menu);
         } catch (ModerateException e) {
             LOGGER.error(e.toString());

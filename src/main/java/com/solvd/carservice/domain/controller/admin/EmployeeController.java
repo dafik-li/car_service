@@ -3,12 +3,25 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewEmployee;
+import com.solvd.carservice.domain.view.admin.ViewService;
 import com.solvd.carservice.service.EmployeeService;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.impl.EmployeeServiceImpl;
 import java.util.Optional;
 
-public class EmployeeController extends AbstractController {
+public class EmployeeController extends AbstractController<Employee> {
+    private final ViewService viewService;
+    private final ViewEmployee viewEmployee;
+    private final EmployeeService employeeService;
 
+    public EmployeeController(InterfaceView<Employee> view, InterfaceService<Employee> service) {
+        super(view, service);
+        this.viewService = new ViewService();
+        this.viewEmployee = new ViewEmployee();
+        this.employeeService = new EmployeeServiceImpl();
+    }
     public void add() {
         Employee employee = new Employee(
                 getDataFromConsole.getString("name"),
@@ -20,31 +33,28 @@ public class EmployeeController extends AbstractController {
                 getDataFromConsole.getString("phone number"),
                 new Department(
                         getDataFromConsole.getLong("department")));
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        employeeService.add(employee);
-        viewEmployee.added(employee);
+        service.add(employee);
+        view.added(employee);
     }
     public void addService() {
         viewEmployee.addService();
-        EmployeeService employeeService = new EmployeeServiceImpl();
         Long employeeId = getDataFromConsole.getLong("employee_id");
         Long serviceId = getDataFromConsole.getLong("service_id");
         employeeService.addService(employeeId, serviceId);
         viewEmployee.addedService(employeeId, serviceId);
     }
     public void retrieveAll() {
-        viewEmployee.showAll();
-        for (Employee employee : new EmployeeServiceImpl().retrieveAll()) {
-            viewEmployee.show(employee);
+        view.showAll();
+        for (Employee employee : service.retrieveAll()) {
+            view.show(employee);
             for (Service service : employee.getServices()) {
                 viewService.show(service);
             }
         }
     }
     public void change() {
-        viewEmployee.update();
+        view.update();
         Optional<Employee> employee = retrieveById();
-        EmployeeService employeeService = new EmployeeServiceImpl();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
@@ -69,23 +79,16 @@ public class EmployeeController extends AbstractController {
                 employee.get().setPhoneNumber(getDataFromConsole.getString("phone_number"));
                 break;
         }
-        employeeService.change(employee, field);
-        viewEmployee.updated(field);
+        service.change(employee, field);
+        view.updated(field);
     }
     public Optional<Employee> retrieveById() {
-        Optional<Employee> employeeOptional = new EmployeeServiceImpl().retrieveById(
+        Optional<Employee> employeeOptional = service.retrieveById(
                 (getDataFromConsole.getLong("id")));
-        viewEmployee.showById(employeeOptional);
+        view.showById(employeeOptional);
         for (Service service : employeeOptional.get().getServices()) {
             viewService.showById(Optional.ofNullable(service));
         }
         return employeeOptional;
-    }
-    public void removeById() {
-        viewEmployee.delete();
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        employeeService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewEmployee.successfulDeleted();
     }
 }

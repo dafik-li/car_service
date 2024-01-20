@@ -2,12 +2,18 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Order;
-import com.solvd.carservice.service.ClientService;
-import com.solvd.carservice.service.impl.ClientServiceImpl;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewOrder;
+import com.solvd.carservice.service.InterfaceService;
 import java.util.Optional;
 
-public class ClientController extends AbstractController {
+public class ClientController extends AbstractController<Client> {
+    private final ViewOrder viewOrder;
 
+    public ClientController(InterfaceView<Client> view, InterfaceService<Client> service) {
+        super(view, service);
+        this.viewOrder = new ViewOrder();
+    }
     public void add() {
         Client client =
                 new Client(
@@ -15,23 +21,21 @@ public class ClientController extends AbstractController {
                         getDataFromConsole.getString("surname"),
                         getDataFromConsole.getString("phone number"),
                         getDataFromConsole.getDate("birthday"));
-        ClientService clientService = new ClientServiceImpl();
-        clientService.add(client);
-        viewClient.added(client);
+        service.add(client);
+        view.added(client);
     }
     public void retrieveAll() {
-        viewClient.showAll();
-        for (Client client : new ClientServiceImpl().retrieveAll()) {
-            viewClient.show(client);
+        view.showAll();
+        for (Client client : service.retrieveAll()) {
+            view.show(client);
             for (Order order : client.getOrders()) {
                 viewOrder.show(order);
             }
         }
     }
     public void change() {
-        viewClient.update();
+        view.update();
         Optional<Client> client = retrieveById();
-        ClientService clientService = new ClientServiceImpl();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
@@ -47,23 +51,16 @@ public class ClientController extends AbstractController {
                 client.get().setBirthday(getDataFromConsole.getDate("birthday"));
                 break;
         }
-        clientService.change(client, field);
-        viewClient.updated(field);
+        service.change(client, field);
+        view.updated(field);
     }
     public Optional<Client> retrieveById() {
-        Optional<Client> clientOptional = new ClientServiceImpl().retrieveById(
+        Optional<Client> clientOptional = service.retrieveById(
                 (getDataFromConsole.getLong("id")));
-        viewClient.showById(clientOptional);
+        view.showById(clientOptional);
         for (Order order : clientOptional.get().getOrders()) {
             viewOrder.showById(Optional.ofNullable(order));
         }
         return clientOptional;
-    }
-    public void removeById() {
-        viewClient.delete();
-        ClientService clientService = new ClientServiceImpl();
-        clientService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewClient.successfulDeleted();
     }
 }

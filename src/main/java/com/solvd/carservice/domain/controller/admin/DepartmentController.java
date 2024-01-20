@@ -1,29 +1,36 @@
 package com.solvd.carservice.domain.controller.admin;
 
-import com.solvd.carservice.domain.entity.Company;
-import com.solvd.carservice.domain.entity.Department;
-import com.solvd.carservice.domain.entity.Employee;
-import com.solvd.carservice.domain.entity.Service;
+import com.solvd.carservice.domain.entity.*;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewEmployee;
+import com.solvd.carservice.domain.view.admin.ViewService;
 import com.solvd.carservice.service.DepartmentService;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.impl.DepartmentServiceImpl;
 import java.util.Optional;
 
-public class DepartmentController extends AbstractController {
+public class DepartmentController extends AbstractController<Department> {
+    private final ViewService viewService;
+    private final ViewEmployee viewEmployee;
 
+    public DepartmentController(InterfaceView<Department> view, InterfaceService<Department> service) {
+        super(view, service);
+        this.viewService = new ViewService();
+        this.viewEmployee = new ViewEmployee();
+    }
     public void add() {
         Department department =
                 new Department(
                         getDataFromConsole.getString("name"),
                 new Company(
                         getDataFromConsole.getLong("company")));
-        DepartmentService departmentService = new DepartmentServiceImpl();
-        departmentService.add(department);
-        viewDepartment.added(department);
+        service.add(department);
+        view.added(department);
     }
     public void retrieveAll() {
-        viewDepartment.showAll();
-        for (Department department : new DepartmentServiceImpl().retrieveAll()) {
-            viewDepartment.show(department);
+        view.showAll();
+        for (Department department : service.retrieveAll()) {
+            view.show(department);
             for (Service service : department.getServices()) {
                 viewService.show(service);
             }
@@ -33,23 +40,21 @@ public class DepartmentController extends AbstractController {
         }
     }
     public void change() {
-        viewDepartment.update();
+        view.update();
         Optional<Department> department = retrieveById();
-        DepartmentService departmentService = new DepartmentServiceImpl();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
                 department.get().setName(getDataFromConsole.getString("name"));
                 break;
         }
-        departmentService.change(department, field);
-        viewDepartment.updated(field);
+        service.change(department, field);
+        view.updated(field);
     }
     public Optional<Department> retrieveById() {
-        Optional<Department> departmentOptional =
-                new DepartmentServiceImpl().retrieveById(
+        Optional<Department> departmentOptional = service.retrieveById(
                         (getDataFromConsole.getLong("id")));
-        viewDepartment.showById(departmentOptional);
+        view.showById(departmentOptional);
         for (Service service : departmentOptional.get().getServices()) {
             viewService.showById(Optional.ofNullable(service));
         }
@@ -57,12 +62,5 @@ public class DepartmentController extends AbstractController {
             viewEmployee.showById(Optional.ofNullable(employee));
         }
         return departmentOptional;
-    }
-    public void removeById() {
-        viewDepartment.delete();
-        DepartmentService departmentService = new DepartmentServiceImpl();
-        departmentService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewDepartment.successfulDeleted();
     }
 }

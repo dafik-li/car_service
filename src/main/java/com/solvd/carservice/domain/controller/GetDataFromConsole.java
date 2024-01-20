@@ -1,6 +1,6 @@
 package com.solvd.carservice.domain.controller;
 
-import com.solvd.carservice.domain.exception.AuthorizationException;
+import com.solvd.carservice.domain.exception.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import java.sql.Date;
@@ -28,7 +28,7 @@ public class GetDataFromConsole {
             validator.validateIsNumber(name);
             LOGGER.info("You typed - " + query);
             fromConsole = Long.parseLong(query);
-        } catch (NumberFormatException | AuthorizationException e) {
+        } catch (NumberFormatException | NotIntegerException e) {
             LOGGER.error(e.toString());
             getLong(name);
         }
@@ -42,7 +42,7 @@ public class GetDataFromConsole {
             validator.validateIsNumber(name);
             LOGGER.info("You typed - " + query);
             fromConsole = Integer.parseInt(query);
-        } catch (NumberFormatException | AuthorizationException e) {
+        } catch (NumberFormatException | NotIntegerException e) {
             LOGGER.error(e.toString());
             getInteger(name);
         }
@@ -56,7 +56,7 @@ public class GetDataFromConsole {
             validator.validateIsDouble(name);
             LOGGER.info("You typed - " + query);
             fromConsole = Double.parseDouble(query);
-        } catch (NumberFormatException | AuthorizationException e) {
+        } catch (NumberFormatException | NotDoubleException e) {
             LOGGER.error(e.toString());
             getDouble(name);
         }
@@ -68,7 +68,7 @@ public class GetDataFromConsole {
         try {
             validator.validateIsString(fromConsole);
             LOGGER.info("You typed - " + fromConsole);
-        } catch (NumberFormatException | AuthorizationException e) {
+        } catch (NumberFormatException | NotStringException e) {
             LOGGER.error(e.toString());
             getString(name);
         }
@@ -97,7 +97,7 @@ public class GetDataFromConsole {
             validator.validateIsBoolean(query);
             LOGGER.info("You typed - " + query);
             fromConsole = Boolean.parseBoolean(query);
-        } catch (NumberFormatException | AuthorizationException e) {
+        } catch (NumberFormatException | NotBooleanException e) {
             LOGGER.error(e.toString());
             getBoolean(name);
         }

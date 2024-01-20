@@ -20,6 +20,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -29,6 +30,9 @@ public class ParseEmployee extends AbstractParse<Employee>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseEmployee.class);
+    private final static File xmlFileEmployee = new File("src/main/resources/new_xml/new_employee.xml");
+    private final static File xsdFileEmployee = new File("src/main/resources/new_xml/new_employee.xsd");
+    private final static File jsonFileEmployee = new File("src/main/resources/json/employee.json");
     private Employee employee;
     private final Department department;
     private final ParseCompany parseCompany;

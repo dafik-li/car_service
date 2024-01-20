@@ -17,6 +17,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -25,6 +26,9 @@ public class ParseCompany extends AbstractParse<Company>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCompany.class);
+    private final static File xmlFileCompany = new File("src/main/resources/new_xml/new_company.xml");
+    private final static File xsdFileCompany = new File("src/main/resources/new_xml/new_company.xsd");
+    private final static File jsonFileCompany = new File("src/main/resources/json/company.json");
     private Company company;
 
     public ParseCompany() {

@@ -19,6 +19,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
@@ -29,6 +30,9 @@ public class ParseOrder extends AbstractParse<Order>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseOrder.class);
+    private final static File xmlFileOrder = new File("src/main/resources/new_xml/new_order.xml");
+    private final static File xsdFileOrder = new File("src/main/resources/new_xml/new_order.xsd");
+    private final static File jsonFileOrder = new File("src/main/resources/json/order.json");
     private Order order;
     private final Client client;
     private final Cost cost;

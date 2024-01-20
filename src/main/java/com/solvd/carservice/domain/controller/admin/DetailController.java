@@ -3,12 +3,20 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Detail;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewCost;
 import com.solvd.carservice.service.DetailService;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.impl.DetailServiceImpl;
 import java.util.Optional;
 
-public class DetailController extends AbstractController {
+public class DetailController extends AbstractController<Detail> {
+    private final ViewCost viewCost;
 
+    public DetailController(InterfaceView<Detail> view, InterfaceService<Detail> service) {
+        super(view, service);
+        this.viewCost = new ViewCost();
+    }
     public void add() {
         Detail detail = new Detail(
                 getDataFromConsole.getString("name"),
@@ -17,23 +25,21 @@ public class DetailController extends AbstractController {
                         getDataFromConsole.getLong("car")),
                 getDataFromConsole.getBoolean("in stock"),
                 getDataFromConsole.getInteger("delivery days"));
-        DetailService detailService = new DetailServiceImpl();
-        detailService.add(detail);
-        viewDetail.added(detail);
+        service.add(detail);
+        view.added(detail);
     }
     public void retrieveAll() {
-        viewDetail.showAll();
-        for (Detail detail : new DetailServiceImpl().retrieveAll()) {
-            viewDetail.show(detail);
+        view.showAll();
+        for (Detail detail : service.retrieveAll()) {
+            view.show(detail);
             for (Cost cost : detail.getCosts()) {
                 viewCost.show(cost);
             }
         }
     }
     public void change() {
-        viewDetail.update();
+        view.update();
         Optional<Detail> detail = retrieveById();
-        DetailService detailService = new DetailServiceImpl();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
@@ -49,23 +55,16 @@ public class DetailController extends AbstractController {
                 detail.get().setDeliveryDays(getDataFromConsole.getInteger("delivery_days"));
                 break;
         }
-        detailService.change(detail, field);
-        viewDetail.updated(field);
+        service.change(detail, field);
+        view.updated(field);
     }
     public Optional<Detail> retrieveById() {
-        Optional<Detail> detailOptional = new DetailServiceImpl().retrieveById(
+        Optional<Detail> detailOptional = service.retrieveById(
                 (getDataFromConsole.getLong("id")));
-        viewDetail.showById(detailOptional);
+        view.showById(detailOptional);
         for (Cost cost : detailOptional.get().getCosts()) {
             viewCost.showById(Optional.ofNullable(cost));
         }
         return detailOptional;
-    }
-    public void removeById() {
-        viewDetail.delete();
-        DetailService detailService = new DetailServiceImpl();
-        detailService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewDetail.successfulDeleted();
     }
 }

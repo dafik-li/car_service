@@ -19,6 +19,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -28,6 +29,9 @@ public class ParseDepartment extends AbstractParse<Department>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseDepartment.class);
+    private final static File xmlFileDepartment = new File("src/main/resources/new_xml/new_department.xml");
+    private final static File xsdFileDepartment = new File("src/main/resources/new_xml/new_department.xsd");
+    private final static File jsonFileDepartment = new File("src/main/resources/json/department.json");
     private Department department;
     private final Company company;
 

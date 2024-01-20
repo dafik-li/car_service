@@ -2,24 +2,29 @@ package com.solvd.carservice.domain.controller.admin;
 
 import com.solvd.carservice.domain.entity.Company;
 import com.solvd.carservice.domain.entity.Department;
-import com.solvd.carservice.service.CompanyService;
-import com.solvd.carservice.service.impl.CompanyServiceImpl;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewDepartment;
+import com.solvd.carservice.service.InterfaceService;
 import java.util.Optional;
 
-public class CompanyController extends AbstractController {
+public class CompanyController extends AbstractController<Company> {
+    private final ViewDepartment viewDepartment;
 
+    public CompanyController(InterfaceView<Company> view, InterfaceService<Company> service) {
+        super(view, service);
+        this.viewDepartment = new ViewDepartment();
+    }
     public void add() {
         Company company = new Company(
                 getDataFromConsole.getString("name"),
                 getDataFromConsole.getString("address"));
-        CompanyService companyService = new CompanyServiceImpl();
-        companyService.add(company);
-        viewCompany.added(company);
+        service.add(company);
+        view.added(company);
     }
     public void retrieveAll() {
-        viewCompany.showAll();
-        for (Company company : new CompanyServiceImpl().retrieveAll()) {
-            viewCompany.show(company);
+        view.showAll();
+        for (Company company : service.retrieveAll()) {
+            view.show(company);
             for (Department department : company.getDepartments()) {
                 viewDepartment.show(department);
             }
@@ -27,9 +32,8 @@ public class CompanyController extends AbstractController {
     }
     @Override
     public void change() {
-        viewCompany.update();
+        view.update();
         Optional<Company> company = retrieveById();
-        CompanyService companyService = new CompanyServiceImpl();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
@@ -39,23 +43,16 @@ public class CompanyController extends AbstractController {
                 company.get().setAddress(getDataFromConsole.getString("address"));
                 break;
         }
-        companyService.change(company, field);
-        viewCompany.updated(field);
+        service.change(company, field);
+        view.updated(field);
     }
     public Optional<Company> retrieveById() {
-        Optional<Company> companyOptional = new CompanyServiceImpl().retrieveById(
+        Optional<Company> companyOptional = service.retrieveById(
                 (getDataFromConsole.getLong("id")));
-        viewCompany.showById(companyOptional);
+        view.showById(companyOptional);
         for (Department department : companyOptional.get().getDepartments()) {
             viewDepartment.showById(Optional.ofNullable(department));
         }
         return companyOptional;
-    }
-    public void removeById() {
-        viewCompany.delete();
-        CompanyService companyService = new CompanyServiceImpl();
-        companyService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewCompany.successfulDeleted();
     }
 }

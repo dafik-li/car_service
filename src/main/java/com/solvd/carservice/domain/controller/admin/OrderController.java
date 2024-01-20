@@ -3,11 +3,16 @@ package com.solvd.carservice.domain.controller.admin;
 import com.solvd.carservice.domain.entity.Client;
 import com.solvd.carservice.domain.entity.Cost;
 import com.solvd.carservice.domain.entity.Order;
-import com.solvd.carservice.service.OrderService;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.impl.OrderServiceImpl;
 import java.util.Optional;
 
-public class OrderController extends AbstractController {
+public class OrderController extends AbstractController<Order> {
+
+    public OrderController(InterfaceView<Order> view, InterfaceService<Order> service) {
+        super(view, service);
+    }
 
     public void add() {
         Order order = new Order(
@@ -16,40 +21,31 @@ public class OrderController extends AbstractController {
                         getDataFromConsole.getLong("client")),
                 new Cost(
                         getDataFromConsole.getLong("cost")));
-        OrderService orderService = new OrderServiceImpl();
-        orderService.add(order);
-        viewOrder.added(order);
+        service.add(order);
+        view.added(order);
     }
     public void retrieveAll() {
-        viewOrder.showAll();
-        for (Order order : new OrderServiceImpl().retrieveAll()) {
-            viewOrder.show(order);
+        view.showAll();
+        for (Order order : service.retrieveAll()) {
+            view.show(order);
         }
     }
     public void change() {
-        viewOrder.update();
+        view.update();
         Optional<Order> order = retrieveById();
-        OrderService orderService = new OrderServiceImpl();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "date":
                 order.get().setDate(getDataFromConsole.getDate("date"));
                 break;
         }
-        orderService.change(order, field);
-        viewOrder.updated(field);
+        service.change(order, field);
+        view.updated(field);
     }
     public Optional<Order> retrieveById() {
-        Optional<Order> orderOptional = new OrderServiceImpl().retrieveById(
+        Optional<Order> orderOptional = service.retrieveById(
                 (getDataFromConsole.getLong("id")));
-        viewOrder.showById(orderOptional);
+        view.showById(orderOptional);
         return orderOptional;
-    }
-    public void removeById() {
-        viewOrder.delete();
-        OrderService orderService = new OrderServiceImpl();
-        orderService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewOrder.successfulDeleted();
     }
 }

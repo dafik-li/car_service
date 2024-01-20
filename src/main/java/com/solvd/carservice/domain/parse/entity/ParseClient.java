@@ -18,6 +18,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Date;
@@ -27,6 +28,9 @@ public class ParseClient extends AbstractParse<Client>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseClient.class);
+    private final static File xmlFileClient = new File("src/main/resources/new_xml/new_client.xml");
+    private final static File xsdFileClient = new File("src/main/resources/new_xml/new_client.xsd");
+    private final static File jsonFileClient = new File("src/main/resources/json/client.json");
     private Client client;
 
     public ParseClient() {

@@ -17,6 +17,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -25,6 +26,9 @@ public class ParseCar extends AbstractParse<Car>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseCar.class);
+    private final static File xmlFileCar = new File("src/main/resources/new_xml/new_car.xml");
+    private final static File xsdFileCar = new File("src/main/resources/new_xml/new_car.xsd");
+    private final static File jsonFileCar = new File("src/main/resources/json/car.json");
     private Car car;
 
     public ParseCar() {

@@ -4,14 +4,27 @@ import com.solvd.carservice.domain.entity.Car;
 import com.solvd.carservice.domain.entity.Department;
 import com.solvd.carservice.domain.entity.Employee;
 import com.solvd.carservice.domain.entity.Service;
+import com.solvd.carservice.domain.view.admin.InterfaceView;
+import com.solvd.carservice.domain.view.admin.ViewEmployee;
+import com.solvd.carservice.domain.view.admin.ViewService;
+import com.solvd.carservice.service.InterfaceService;
 import com.solvd.carservice.service.ServiceService;
 import com.solvd.carservice.service.impl.ServiceServiceImpl;
 import java.util.Optional;
 
-public class ServiceController extends AbstractController {
+public class ServiceController extends AbstractController<Service> {
+    private final ViewService viewService;
+    private final ViewEmployee viewEmployee;
+    private final ServiceService serviceService;
 
+    public ServiceController(InterfaceView<Service> view, InterfaceService<Service> service) {
+        super(view, service);
+        this.viewService = new ViewService();
+        this.viewEmployee = new ViewEmployee();
+        this.serviceService = new ServiceServiceImpl();
+    }
     public void add() {
-        Service service = new Service(
+        Service serviceEntity = new Service(
                 getDataFromConsole.getString("name"),
                 getDataFromConsole.getDouble("price"),
                 getDataFromConsole.getInteger("hours to do"),
@@ -19,60 +32,50 @@ public class ServiceController extends AbstractController {
                         getDataFromConsole.getLong("car")),
                 new Department(
                         getDataFromConsole.getLong("department")));
-        ServiceService serviceService = new ServiceServiceImpl();
-        serviceService.add(service);
-        viewService.added(service);
+        service.add(serviceEntity);
+        view.added(serviceEntity);
     }
     public void addEmployee() {
         viewService.addEmployee();
-        ServiceService serviceService = new ServiceServiceImpl();
         Long serviceId = getDataFromConsole.getLong("service_id");
         Long employeeId = getDataFromConsole.getLong("employee_id");
         serviceService.addEmployee(employeeId, serviceId);
         viewService.addedEmployee(employeeId, serviceId);
     }
     public void retrieveAll() {
-        viewService.showAll();
-        for (Service service : new ServiceServiceImpl().retrieveAll()) {
-            viewService.show(service);
+        view.showAll();
+        for (Service service : service.retrieveAll()) {
+            view.show(service);
             for (Employee employee : service.getEmployees()) {
                 viewEmployee.show(employee);
             }
         }
     }
     public void change() {
-        viewService.update();
-        Optional<Service> service = retrieveById();
-        ServiceService serviceService = new ServiceServiceImpl();
+        view.update();
+        Optional<Service> serviceEntity = retrieveById();
         String field = getDataFromConsole.getString("select field");
         switch (field) {
             case "name":
-                service.get().setName(getDataFromConsole.getString("name"));
+                serviceEntity.get().setName(getDataFromConsole.getString("name"));
                 break;
             case "price":
-                service.get().setPrice(getDataFromConsole.getDouble("price"));
+                serviceEntity.get().setPrice(getDataFromConsole.getDouble("price"));
                 break;
             case "hours_to_do":
-                service.get().setHoursToDo(getDataFromConsole.getInteger("hours_to_do"));
+                serviceEntity.get().setHoursToDo(getDataFromConsole.getInteger("hours_to_do"));
                 break;
         }
-        serviceService.change(service, field);
-        viewService.updated(field);
+        service.change(serviceEntity, field);
+        view.updated(field);
     }
     public Optional<Service> retrieveById() {
-        Optional<Service> serviceOptional = new ServiceServiceImpl().retrieveById(
+        Optional<Service> serviceOptional = service.retrieveById(
                 (getDataFromConsole.getLong("id")));
-        viewService.showById(serviceOptional);
+        view.showById(serviceOptional);
         for (Employee employee : serviceOptional.get().getEmployees()) {
             viewEmployee.showById(Optional.ofNullable(employee));
         }
         return serviceOptional;
-    }
-    public void removeById() {
-        viewService.delete();
-        ServiceService serviceService = new ServiceServiceImpl();
-        serviceService.removeById(
-                getDataFromConsole.getLong("id"));
-        viewService.successfulDeleted();
     }
 }

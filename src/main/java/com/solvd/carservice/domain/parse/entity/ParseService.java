@@ -19,6 +19,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -28,6 +29,9 @@ public class ParseService extends AbstractParse<Service>{
         System.setProperty("log4j.configurationFile", "log4j2.xml");
     }
     private final static Logger LOGGER = (Logger) LogManager.getLogger(ParseService.class);
+    private final static File xmlFileService = new File("src/main/resources/new_xml/new_service.xml");
+    private final static File xsdFileService = new File("src/main/resources/new_xml/new_service.xsd");
+    private final static File jsonFileService = new File("src/main/resources/json/service.json");
     private Service service;
     private final Department department;
     private final Car car;
